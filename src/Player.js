@@ -1,5 +1,6 @@
 import { BoxGeometry, Mesh, MeshStandardMaterial, Object3D } from 'three'
 import * as RAPIER from '@dimforge/rapier3d'
+import Inputs from './Inputs'
 
 export default class Player extends Object3D {
 	constructor({ scene, world }) {
@@ -15,7 +16,7 @@ export default class Player extends Object3D {
 
 	async init() {
 		this.createMesh()
-		this.initControls()
+		this.initInputs()
 	}
 
 	createMesh() {
@@ -50,7 +51,15 @@ export default class Player extends Object3D {
 		this.position.set(x, y, z)
 	}
 
-	initControls() {
+	initInputs() {
+		this.inputs = new Inputs([
+			{ name: 'right', keys: ['ArrowRight', 'KeyD'] },
+			{ name: 'down', keys: ['ArrowDown', 'KeyS'] },
+			{ name: 'left', keys: ['ArrowLeft', 'KeyA'] },
+			{ name: 'jump', keys: ['ArrowUp', 'KeyW'] },
+			{ name: 'attack', keys: ['MouseLeft', 'Space'] },
+		])
+
 		window.addEventListener('keydown', (e) => {
 			const code = e.code
 
