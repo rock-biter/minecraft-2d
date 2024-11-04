@@ -8,19 +8,22 @@ console.log(RAPIER)
 // __gui_import__
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import * as dat from 'lil-gui'
 import MapBuilder from './src/MapBuilder'
 import Player from './src/Player'
+import Debug from './src/Debug'
+import PhysicsDebug from './src/PhysicsDebug'
 
 /**
  * Debug
  */
 // __gui__
-const configs = {
-	uDepth: 0,
-}
-const gui = new dat.GUI()
-gui.add(configs, 'uDepth', 0, 10, 1).onChange((val) => console.log(val))
+// const configs = {
+// 	uDepth: 0,
+// }
+// const gui = new dat.GUI()
+// gui.add(configs, 'uDepth', 0, 10, 1).onChange((val) => console.log(val))
+const debug = new Debug()
+const physicsDebug = new PhysicsDebug()
 
 /**
  * Scene
@@ -112,6 +115,10 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 4.5)
 directionalLight.position.set(3, 10, 7)
 scene.add(ambientLight, directionalLight)
 
+physicsDebug.update(world)
+
+scene.add(physicsDebug.lineSegments)
+
 /**
  * Three js Clock
  */
@@ -135,6 +142,7 @@ function tic() {
 	controls.update()
 	world.step()
 	player.update()
+	physicsDebug.update(world)
 
 	renderer.render(scene, camera)
 

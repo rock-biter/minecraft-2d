@@ -20,7 +20,7 @@
   "dependencies": {
     "@dimforge/rapier3d": "^0.14.0",
     "gsap": "^3.12.5",
-    "lil-gui": "^0.19.2",
-    "three": "^0.170.0"
+    "three": "^0.170.0",
+    "tweakpane": "^4.0.5"
   }
 }

@@ -215,14 +215,14 @@ export default class MapBuilder {
 		const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
 		const collider = this.world.createCollider(colliderDesc, body)
 
-		const bodyMesh = new Mesh(
-			new BoxGeometry(1, 1, 1),
-			new MeshStandardMaterial({ wireframe: true })
-		)
+		// const bodyMesh = new Mesh(
+		// 	new BoxGeometry(1, 1, 1),
+		// 	new MeshStandardMaterial({ wireframe: true })
+		// )
 		const position = body.translation()
-		bodyMesh.position.set(position.x, position.y, position.z)
+		// bodyMesh.position.set(position.x, position.y, position.z)
 
-		this.scene.add(bodyMesh)
+		// this.scene.add(bodyMesh)
 	}
 
 	async createMesh() {

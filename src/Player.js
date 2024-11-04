@@ -15,7 +15,6 @@ export default class Player extends Object3D {
 
 	async init() {
 		this.createMesh()
-		this.createBody()
 		this.initControls()
 	}
 
@@ -35,7 +34,6 @@ export default class Player extends Object3D {
 			.setTranslation(0.0, 4, 0)
 			.lockTranslations() // prevent translations along along all axes.
 			.lockRotations() // prevent rotations along all axes.
-			.enabledRotations(false, true, false)
 			.enabledTranslations(true, true, false)
 		this.body = this.world.createRigidBody(bodyDesc)
 
