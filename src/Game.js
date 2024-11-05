@@ -1,6 +1,13 @@
 import Debug from './Debug'
 import Inputs from './Inputs'
+import PhysicsDebug from './PhysicsDebug'
 import Player from './Player'
+import Rendering from './Rendering'
+import Resources from './Resources'
+import Time from './Time'
+import View from './View'
+import Viewport from './Viewport'
+import World from './World'
 
 export default class Game {
 	constructor() {
@@ -21,12 +28,13 @@ export default class Game {
 			{ name: 'attack', keys: ['MouseLeft', 'Space'] },
 		])
 		this.time = new Time()
-		this.viewport = new Viewport(this.domElement)
-		this.physics = new Physics()
-		this.world = new World()
+		this.viewport = new Viewport(this.domElement) // this is the Size class of course why pass dom element?
+		this.resources = new Resources([]) // pass all the resources to load
+		// this.physics = new Physics() // this init the physics engine
+		this.world = new World() // this create the world game and contains scene
 		this.physicsDebug = new PhysicsDebug()
-		this.view = new View()
+		this.view = new View() // this contains the camera
 		this.rendering = new Rendering()
-		this.player = new Player()
+		// this.player = new Player()
 	}
 }
