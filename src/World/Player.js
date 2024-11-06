@@ -89,14 +89,14 @@ export default class Player extends Events {
 			y: -1,
 			z: 0,
 		})
-		const maxToi = 1
+		const maxToi = 0.3
 		let solid = false
 
 		const hit = this.physics.instance.castRay(ray, maxToi, solid)
 
 		if (hit != null) {
 			// const hitPoint = ray.pointAt(hit.timeOfImpact)
-			console.log('hit collider:', hit.collider)
+			// console.log('hit collider:', hit.collider)
 			return true
 		}
 
