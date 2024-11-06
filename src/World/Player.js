@@ -48,7 +48,7 @@ export default class Player extends Events {
 		this.inputs.on('jump', (args) => {
 			// console.log('jump', args)
 			// raycast to check if player il close to ground
-			args && this.velocity.add(_V.set(0, this.jump, 0))
+			this.checkGround() && args && this.velocity.add(_V.set(0, this.jump, 0))
 		})
 		// this.initInputs()
 	}
@@ -79,6 +79,28 @@ export default class Player extends Events {
 		this.entity.mesh = this.getMesh()
 
 		// this.update()
+	}
+
+	checkGround() {
+		_V.copy(this.entity.body.translation())
+		_V.y -= 0.9
+		const ray = new RAPIER.Ray(_V, {
+			x: 0,
+			y: -1,
+			z: 0,
+		})
+		const maxToi = 1
+		let solid = false
+
+		const hit = this.physics.instance.castRay(ray, maxToi, solid)
+
+		if (hit != null) {
+			// const hitPoint = ray.pointAt(hit.timeOfImpact)
+			console.log('hit collider:', hit.collider)
+			return true
+		}
+
+		return false
 	}
 
 	updateVelocity() {
