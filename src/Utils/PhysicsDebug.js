@@ -4,9 +4,21 @@ import {
 	LineBasicMaterial,
 	LineSegments,
 } from 'three'
+import Game from '../Game'
 
 export default class PhysicsDebug {
 	constructor() {
+		this.game = new Game()
+		this.physics = this.game.physics
+		this.scene = this.game.world.scene
+		this.time = this.game.time
+
+		if (this.game.debug.active) {
+			this.initDebug()
+		}
+	}
+
+	initDebug() {
 		this.geometry = new BufferGeometry()
 		this.geometry.setAttribute('position', new Float32BufferAttribute([], 3))
 		this.geometry.setAttribute('color', new Float32BufferAttribute([], 4))
@@ -14,11 +26,21 @@ export default class PhysicsDebug {
 		this.material = new LineBasicMaterial({ vertexColors: true })
 
 		this.lineSegments = new LineSegments(this.geometry, this.material)
+		this.scene.add(this.lineSegments)
+
+		this.time.on(
+			'tick',
+			() => {
+				this.update()
+			},
+			3
+		)
 	}
 
-	update(world) {
-		const { vertices, colors } = world.debugRender()
+	update() {
+		const { vertices, colors } = this.physics.instance.debugRender()
 
+		// console.log('physics debug')
 		this.geometry.setAttribute(
 			'position',
 			new Float32BufferAttribute(vertices, 3)

@@ -1,5 +1,9 @@
-export default class Inputs {
+import Events from './Events'
+
+export default class Inputs extends Events {
 	constructor(map) {
+		super()
+
 		this.map = map
 		this.keys = map.reduce((acc, val) => {
 			acc[val.name] = false
@@ -20,7 +24,7 @@ export default class Inputs {
 
 		if (map && !this.keys[map.name]) {
 			this.keys[map.name] = true
-			// this.events.trigger(map.name,[true]) ??
+			this.trigger(map.name, [true])
 		}
 	}
 
@@ -29,7 +33,7 @@ export default class Inputs {
 
 		if (map && !this.keys[map.name]) {
 			this.keys[map.name] = false
-			// this.events.trigger(map.name,[false]) ??
+			this.trigger(map.name, [false])
 		}
 	}
 }
