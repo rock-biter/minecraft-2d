@@ -26,13 +26,16 @@ export default class Inputs extends Events {
 			this.keys[map.name] = true
 			this.trigger(map.name, [true])
 		}
+
+		// console.log(this.keys)
 	}
 
 	up(code) {
 		const map = this.map.find((m) => m.keys.indexOf(code) !== -1)
 
-		if (map && !this.keys[map.name]) {
+		if (map && this.keys[map.name]) {
 			this.keys[map.name] = false
+
 			this.trigger(map.name, [false])
 		}
 	}

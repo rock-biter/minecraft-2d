@@ -26,7 +26,7 @@ export default class World {
 			console.log('load')
 			console.log('ready to generate world')
 			this.environment = new Environment()
-			this.floor = new Floor()
+			this.floor = new Floor(50)
 			this.player = new Player()
 			// this.environment = new Environment() // => lights
 		})

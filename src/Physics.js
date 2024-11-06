@@ -10,7 +10,7 @@ export default class Physics extends Events {
 		this.game = new Game()
 		this.time = this.game.time
 
-		this.gravity = new RAPIER.Vector3(0, -9.81, 0)
+		this.gravity = new RAPIER.Vector3(0, -9.81 * 5, 0)
 		// // const gravity = new RAPIER.Vector3(0, -9.81, 0)
 		this.instance = new RAPIER.World(this.gravity)
 
@@ -41,6 +41,7 @@ export default class Physics extends Events {
 
 	update() {
 		this.instance.timestep = this.time.delta * 0.001
+		// console.log(this.instance.timestep)
 		this.instance.step()
 
 		for (const entity of this.entities) {

@@ -32,9 +32,9 @@ export default class View extends Events {
 			35,
 			this.viewport.width / this.viewport.height,
 			0.1,
-			100
+			200
 		)
-		this.camera.position.set(0, 5, 10)
+		this.camera.position.set(0, 1, 100)
 		this.scene.add(this.camera)
 	}
 
