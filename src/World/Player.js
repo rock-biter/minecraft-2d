@@ -1,54 +1,50 @@
 import { BoxGeometry, Mesh, MeshStandardMaterial, Object3D } from 'three'
 import * as RAPIER from '@dimforge/rapier3d'
-import Inputs from './Inputs'
+import Inputs from '../Utils/Inputs'
+import Events from '../Utils/Events'
+import Game from '../Game'
 
-export default class Player extends Object3D {
-	constructor({ scene, world }) {
+export default class Player extends Events {
+	constructor() {
 		super()
 
-		this.scene = scene
-		this.world = world
-
-		this.scene.add(this)
+		this.game = new Game()
+		this.scene = this.game.world.scene
+		this.physics = this.game.physics
+		this.time = this.game.time
 
 		this.init()
 	}
 
 	async init() {
-		this.createMesh()
-		this.initInputs()
+		this.createBody()
+		// this.initInputs()
 	}
 
-	createMesh() {
+	getMesh() {
 		const geometry = new BoxGeometry(1, 2, 1)
-		const material = new MeshStandardMaterial({ color: 0x000000 })
+		const material = new MeshStandardMaterial({ color: 'orange' })
 
 		const mesh = new Mesh(geometry, material)
-		this.mesh = mesh
+		this.scene.add(mesh)
 
-		this.add(mesh)
-		this.createBody()
+		return mesh
 	}
 
 	createBody() {
-		const bodyDesc = RAPIER.RigidBodyDesc.dynamic()
-			.setTranslation(0.0, 4, 0)
-			.lockTranslations() // prevent translations along along all axes.
-			.lockRotations() // prevent rotations along all axes.
-			.enabledTranslations(true, true, false)
-		this.body = this.world.createRigidBody(bodyDesc)
+		const bodyDesc = RAPIER.RigidBodyDesc.dynamic().setTranslation(0, 4, 0)
+		const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 1, 0.5)
 
-		let colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 1, 0.5)
-		this.collider = this.world.createCollider(colliderDesc, this.body)
+		this.entity = this.physics.addEntity(bodyDesc, colliderDesc)
+		this.entity.mesh = this.getMesh()
 
 		this.update()
 	}
 
-	update(dt) {
-		const { x, y, z } = this.body.translation()
-		// this.body.setTranslation(x, y, z)
-
-		this.position.set(x, y, z)
+	update() {
+		// const { x, y, z } = this.body.translation()
+		this.entity.mesh.position.copy(this.entity.body.translation())
+		this.entity.mesh.quaternion.copy(this.entity.body.rotation())
 	}
 
 	initInputs() {

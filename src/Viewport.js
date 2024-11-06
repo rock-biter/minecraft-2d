@@ -1,4 +1,4 @@
-import Events from './Events'
+import Events from './Utils/Events'
 
 export default class Viewport extends Events {
 	constructor() {

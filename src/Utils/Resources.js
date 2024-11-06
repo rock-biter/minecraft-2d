@@ -42,6 +42,10 @@ export default class Resources extends Events {
 			 *
 			 */
 		}
+
+		setTimeout(() => {
+			this.trigger('load')
+		}, 100)
 	}
 
 	sourceLoaded(source, file) {

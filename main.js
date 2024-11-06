@@ -7,12 +7,6 @@ console.log(RAPIER)
 // __controls_import__
 // __gui_import__
 
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import MapBuilder from './src/MapBuilder'
-import Player from './src/Player'
-import Debug from './src/Debug'
-import PhysicsDebug from './src/PhysicsDebug'
-import Events from './src/Events'
 import Game from './src/Game'
 
 new Game()

@@ -1,5 +1,5 @@
 import { PerspectiveCamera } from 'three'
-import Events from './Events'
+import Events from './Utils/Events'
 import Game from './Game'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
 
@@ -18,9 +18,13 @@ export default class View extends Events {
 			this.resize()
 		})
 
-		this.game.time.on('tick', () => {
-			this.update()
-		})
+		this.game.time.on(
+			'tick',
+			() => {
+				this.update()
+			},
+			2
+		)
 	}
 
 	setCamera() {
