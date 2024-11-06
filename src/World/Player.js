@@ -25,10 +25,12 @@ export default class Player extends Events {
 		this.time = this.game.time
 		this.inputs = this.game.inputs
 		this.controller = Controller.create(0.1)
-		this.controller.enableAutostep(0.2, 0.2, true)
+		this.controller.enableAutostep(0.1, 0.2, true)
+		this.controller.enableSnapToGround(0.5)
+		this.controller.setApplyImpulsesToDynamicBodies(true)
 		this.velocity = new Vector3()
-		this.speed = 8
-		this.jump = 15
+		this.speed = 5
+		this.jump = 20
 
 		this.init()
 	}
@@ -62,11 +64,18 @@ export default class Player extends Events {
 	}
 
 	createBody() {
-		const bodyDesc =
-			RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(0, 10, 0)
-		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38)
+		const bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased()
+			.lockTranslations()
+			.enabledTranslations(true, true, false)
+			.setTranslation(0, 10, 0)
+		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38).setActiveEvents(
+			RAPIER.ActiveEvents['COLLISION_EVENTS']
+		)
+
+		colliderDesc.setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
 
 		this.entity = this.physics.addEntity(bodyDesc, colliderDesc)
+		this.entity.collider
 		this.entity.mesh = this.getMesh()
 
 		// this.update()
@@ -100,16 +109,29 @@ export default class Player extends Events {
 
 		// console.log(desiredMov.x)
 
-		this.controller.computeColliderMovement(this.entity.collider, desiredMov)
+		this.controller.computeColliderMovement(
+			this.entity.collider,
+			desiredMov,
+			undefined,
+			undefined,
+			(coll) => !coll.isSensor()
+		)
+
+		// for (let i = 0; i < this.controller.numComputedCollisions(); i++) {
+		// 	const collision = this.controller.computedCollision(i)
+
+		// 	console.log('constroller collision', collision)
+		// }
 
 		const newPosition = _V
 			.copy(this.controller.computedMovement())
 			.add(this.entity.body.translation())
+		newPosition.z = 0
 
-		this.entity.body.setTranslation(newPosition)
+		this.entity.body.setNextKinematicTranslation(newPosition)
 
 		this.velocity.copy(newPosition.sub(prevPosition).divideScalar(dt))
-		this.velocity.x *= 1 - dt * 3
+		this.velocity.x *= 1 - dt * 10
 		this.velocity.z = 0
 	}
 

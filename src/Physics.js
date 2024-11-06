@@ -10,9 +10,10 @@ export default class Physics extends Events {
 		this.game = new Game()
 		this.time = this.game.time
 
-		this.gravity = new RAPIER.Vector3(0, -9.81 * 5, 0)
+		this.gravity = new RAPIER.Vector3(0, -9.81 * 4, 0)
 		// // const gravity = new RAPIER.Vector3(0, -9.81, 0)
 		this.instance = new RAPIER.World(this.gravity)
+		this.eventQueue = new RAPIER.EventQueue(true)
 
 		this.time.on('tick', () => {
 			this.update()
@@ -35,14 +36,37 @@ export default class Physics extends Events {
 		return entity
 	}
 
-	removeEntity() {
+	addSensor(colliderDesc) {
+		const entity = {
+			collider: this.instance.createCollider(colliderDesc),
+		}
+
+		return entity
+	}
+
+	removeEntity(entity) {
 		//
+		entity.body && this.instance.removeRigidBody(entity.body)
+		entity.collider && this.instance.removeCollider(entity.collider)
+
+		const index = this.entities.indexOf(entity)
+
+		if (index !== -1) {
+			this.entities.splice(index, 1)
+		}
 	}
 
 	update() {
 		this.instance.timestep = this.time.delta * 0.001
 		// console.log(this.instance.timestep)
-		this.instance.step()
+		this.instance.step(this.eventQueue)
+
+		this.eventQueue.drainCollisionEvents((h1, h2, started) => {
+			// console.log('collision', h1, h2, started)
+			this.trigger('collide', [h1, h2, started])
+
+			// console.log('collision', coll2)
+		})
 
 		for (const entity of this.entities) {
 			const { body, mesh } = entity

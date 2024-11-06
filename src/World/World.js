@@ -28,6 +28,7 @@ export default class World {
 			this.environment = new Environment()
 			this.floor = new Floor(50)
 			this.player = new Player()
+
 			// this.environment = new Environment() // => lights
 		})
 
