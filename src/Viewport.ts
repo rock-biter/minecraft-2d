@@ -15,6 +15,16 @@ export default class Viewport extends Events {
 			this.setSizes()
 			this.trigger('resize')
 		})
+
+		window.addEventListener('visibilitychange',() => {
+			
+			if(document.hidden) {
+				this.trigger('focus',false)
+			} else {
+				this.trigger('focus',true)
+			}
+
+		})
 	}
 
 	setSizes() {

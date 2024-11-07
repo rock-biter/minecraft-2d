@@ -1,15 +1,22 @@
+import Game from '../Game'
+import Viewport from '../Viewport'
 import Events from './Events'
 
 export default class Time extends Events {
 
+	game: Game
+	viewport: Viewport
 	start: number
 	current: number
 	elapsed: number
 	delta: number
+	focus = true
 
 	constructor() {
 		super()
 
+		this.game = new Game()
+		this.viewport = this.game.viewport
 		this.start = Date.now()
 		this.current = this.start
 		this.elapsed = 0
@@ -17,6 +24,12 @@ export default class Time extends Events {
 
 		window.requestAnimationFrame(() => {
 			this.tick()
+		})
+
+		this.viewport.on('focus',(isFocusOn) => {
+			this.focus = isFocusOn as boolean
+
+			console.log('focus',this.focus)
 		})
 	}
 
@@ -32,5 +45,6 @@ export default class Time extends Events {
 		window.requestAnimationFrame(() => {
 			this.tick()
 		})
+
 	}
 }

@@ -54,8 +54,8 @@ export default class Game {
 
 		this.debug = new Debug()
 		this.inputs = new Inputs(inputsKeys as inputMap)
-		this.time = new Time()
 		this.viewport = new Viewport() // this is the Size class of course why pass dom element?
+		this.time = new Time()
 		this.resources = new Resources([]) // pass all the resources to load
 		this.physics = new Physics() // this init the physics engine
 		this.world = new World() // this create the world game and contains scene
