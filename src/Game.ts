@@ -17,6 +17,7 @@ import dirtSrc from './textures/dirt.png?url'
 import stoneSrc from './textures/stone.png?url'
 import graniteSrc from './textures/granite.png?url'
 import snowyGrassSrc from './textures/snowy-grass.png?url'
+import questionMark from './textures/question-mark.png?url'
 
 import { inputMap } from './Types/input.types'
 
@@ -45,6 +46,7 @@ const sources = [
 			stoneSrc,
 			graniteSrc,
 			snowyGrassSrc,
+			questionMark, // ? 
 		],
 	},
 ]
