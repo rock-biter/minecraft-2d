@@ -1,9 +1,23 @@
-import { MathUtils, PerspectiveCamera } from 'three'
+import { Camera, MathUtils, OrthographicCamera, PerspectiveCamera, Scene } from 'three'
 import Events from './Utils/Events'
 import Game from './Game'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import Viewport from './Viewport'
+import World from './World/World'
+import Time from './Utils/Time'
+
+
 
 export default class View extends Events {
+
+	game: Game
+	viewport: Viewport
+	world: World
+	time: Time
+	scene: Scene
+	camera!: PerspectiveCamera | OrthographicCamera
+	controls: OrbitControls | undefined
+
 	constructor() {
 		super()
 
@@ -41,19 +55,20 @@ export default class View extends Events {
 	}
 
 	setControls() {
-		this.controls = new OrbitControls(this.camera, this.game.domElement)
+		this.controls = new OrbitControls(this.camera as Camera, this.game.domElement)
 		this.controls.target.set(0, 5, 0)
 		this.controls.enableDamping = true
 	}
 
 	resize() {
-		this.camera.aspect = this.viewport.width / this.viewport.height
+		if(this.camera instanceof PerspectiveCamera)
+			this.camera.aspect = this.viewport.width / this.viewport.height
 		this.camera.updateProjectionMatrix()
 	}
 
 	update() {
 		// this.controls.update()
-		if (this.world?.player) {
+		if (this.world?.player?.entity?.mesh) {
 			this.camera.position.x = MathUtils.lerp(
 				this.camera.position.x,
 				this.world.player.entity.mesh.position.x,

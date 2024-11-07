@@ -1,11 +1,20 @@
 import Game from '../Game'
 import * as RAPIER from '@dimforge/rapier3d'
 import Events from '../Utils/Events'
-import { BoxGeometry, Mesh, MeshStandardMaterial } from 'three'
+import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from 'three'
 import Diamond from './Diamond'
+import Physics from '../Physics'
+import { Entity } from '../Types/entity.types'
 
 export default class Floor extends Events {
-	constructor(size = 10) {
+
+	size: number
+	game: Game
+	physics: Physics
+	scene: Scene
+	entity: Entity
+
+	constructor(size: number = 10) {
 		super()
 
 		this.size = size
@@ -67,7 +76,7 @@ export default class Floor extends Events {
 		}
 	}
 
-	createBox(x, y, z, type = 'dynamic') {
+	createBox(x: number, y: number, z: number, type = 'dynamic') {
 		const desc =
 			type === 'dynamic'
 				? RAPIER.RigidBodyDesc.dynamic

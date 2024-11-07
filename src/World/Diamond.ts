@@ -1,11 +1,22 @@
-import { CylinderGeometry, Mesh, MeshStandardMaterial } from 'three'
+import { CylinderGeometry, Mesh, MeshStandardMaterial, Scene } from 'three'
 import Game from '../Game'
 import Events from '../Utils/Events'
 import * as RAPIER from '@dimforge/rapier3d'
 import gsap from 'gsap'
+import Physics from '../Physics'
+
+import { Entity } from '../Types/entity.types'
+
+import { CollideArg } from '../Types/callbacks.types'
 
 export default class Diamond extends Events {
-	constructor(x, y, z) {
+
+	game: Game
+	physics: Physics
+	scene: Scene
+	entity: Entity = {}
+
+	constructor(x: number, y: number, z: number) {
 		super()
 
 		this.game = new Game()
@@ -15,7 +26,7 @@ export default class Diamond extends Events {
 		this.create(x, y, z)
 	}
 
-	create(x, y, z) {
+	create(x: number, y: number, z: number) {
 		const geometry = new CylinderGeometry(0.3, 0.3, 0.1)
 		const mesh = new Mesh(
 			geometry,
@@ -41,15 +52,23 @@ export default class Diamond extends Events {
 
 		this.scene.add(this.entity.mesh)
 
-		this.game.physics.on('collide', (handle1, handle2, started) => {
-			if ([handle1, handle2].includes(this.entity.collider.handle)) {
+		this.physics.on('collide', (arg) => {
+
+			const {handle1, handle2} = arg as CollideArg
+			if(!this.entity || !this.entity?.collider) return
+
+			if ([handle1, handle2].includes(this.entity?.collider?.handle)) {
+				
 				this.physics.removeEntity(this.entity)
+
+				if(!this.entity.mesh) return 
+				
 				gsap.to(this.entity.mesh.position, { y: '+=2' })
 				gsap.to(this.entity.mesh.rotation, { y: Math.PI * 2 })
 				gsap.to(this.entity.mesh.material, {
 					opacity: 0,
 					onComplete: () => {
-						this.scene.remove(this.entity.mesh)
+						this.scene.remove(this.entity.mesh as Mesh)
 					},
 				})
 			}

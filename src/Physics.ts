@@ -1,9 +1,20 @@
 import Game from './Game'
 import Events from './Utils/Events'
 import * as RAPIER from '@dimforge/rapier3d'
+import Time from './Utils/Time'
+import { Mesh } from 'three'
+
+import { Entity } from './Types/entity.types'
+import { CollideArg } from './Types/callbacks.types'
+
 
 export default class Physics extends Events {
-	entities = []
+	entities: Entity[] = []
+	game: Game
+	time: Time
+	eventQueue: RAPIER.EventQueue
+	gravity: RAPIER.Vector3
+	instance: RAPIER.World
 
 	constructor() {
 		super()
@@ -20,7 +31,7 @@ export default class Physics extends Events {
 		})
 	}
 
-	addEntity(rigidBodyDesc, colliderDesc = null) {
+	addEntity(rigidBodyDesc: RAPIER.RigidBodyDesc, colliderDesc: RAPIER.ColliderDesc | null = null) {
 		// add entity to the physics
 		const RB = this.instance.createRigidBody(rigidBodyDesc)
 
@@ -29,14 +40,14 @@ export default class Physics extends Events {
 			collider: colliderDesc
 				? this.instance.createCollider(colliderDesc, RB)
 				: null,
-		}
+		} as Entity
 
 		this.entities.push(entity)
 
 		return entity
 	}
 
-	addSensor(colliderDesc) {
+	addSensor(colliderDesc: RAPIER.ColliderDesc) {
 		const entity = {
 			collider: this.instance.createCollider(colliderDesc),
 		}
@@ -44,10 +55,10 @@ export default class Physics extends Events {
 		return entity
 	}
 
-	removeEntity(entity) {
+	removeEntity(entity: Entity) {
 		//
 		entity.body && this.instance.removeRigidBody(entity.body)
-		entity.collider && this.instance.removeCollider(entity.collider)
+		entity.collider && this.instance.removeCollider(entity.collider, false)
 
 		const index = this.entities.indexOf(entity)
 
@@ -63,7 +74,7 @@ export default class Physics extends Events {
 
 		this.eventQueue.drainCollisionEvents((h1, h2, started) => {
 			// console.log('collision', h1, h2, started)
-			this.trigger('collide', [h1, h2, started])
+			this.trigger('collide', { handle1: h1, handle2: h2, started })
 
 			// console.log('collision', coll2)
 		})
@@ -71,7 +82,7 @@ export default class Physics extends Events {
 		for (const entity of this.entities) {
 			const { body, mesh } = entity
 
-			if (mesh) {
+			if (mesh && body) {
 				mesh.position.copy(body.translation())
 				mesh.quaternion.copy(body.rotation())
 			}

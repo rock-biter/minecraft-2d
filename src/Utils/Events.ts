@@ -1,10 +1,17 @@
+
+import { CallbackArg } from '../Types/callbacks.types'
+
+type callback = (arg?: CallbackArg) => void
+
+interface callbacks {
+	[key: string] : callback[][]
+}
+
 export default class Events {
-	constructor() {
-		this.callbacks = {}
-	}
+	callbacks: callbacks = {}
 
 	// ...
-	on(name, callback, order = 1) {
+	on(name: string, callback: callback, order = 1) {
 		// register callbacks
 		if (!Array.isArray(this.callbacks[name])) {
 			this.callbacks[name] = []
@@ -17,7 +24,7 @@ export default class Events {
 		this.callbacks[name][order].push(callback)
 	}
 
-	off(name, callback = null) {
+	off(name: string, callback: callback | null = null) {
 		if (typeof callback === 'function') {
 			const callbacks = this.callbacks[name]
 
@@ -37,11 +44,11 @@ export default class Events {
 	}
 
 	// trigger events
-	trigger(name, args) {
+	trigger(name: string , args?: CallbackArg) {
 		if (Array.isArray(this.callbacks[name])) {
 			for (const order in this.callbacks[name]) {
 				for (const callback of this.callbacks[name][order]) {
-					callback.apply(this, args)
+					callback.apply(this, [args])
 				}
 			}
 		}

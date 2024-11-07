@@ -1,6 +1,12 @@
 import Events from './Events'
 
 export default class Time extends Events {
+
+	start: number
+	current: number
+	elapsed: number
+	delta: number
+
 	constructor() {
 		super()
 

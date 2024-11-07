@@ -1,6 +1,11 @@
 import Events from './Utils/Events'
 
 export default class Viewport extends Events {
+
+	width: number = 0
+	height: number = 0
+	pixelRatio: number = 0
+
 	constructor() {
 		super()
 
