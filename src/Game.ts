@@ -9,6 +9,15 @@ import Viewport from './Viewport'
 import World from './World/World'
 import Physics from './Physics'
 
+import cobblestoneSrc from './textures/cobblestone.png?url'
+import grassSrc from './textures/grass.png?url'
+import gravelSrc from './textures/gravel.png?url'
+import sandstoneSrc from './textures/sandstone.png?url'
+import dirtSrc from './textures/dirt.png?url'
+import stoneSrc from './textures/stone.png?url'
+import graniteSrc from './textures/granite.png?url'
+import snowyGrassSrc from './textures/snowy-grass.png?url'
+
 import { inputMap } from './Types/input.types'
 
 const inputsKeys = [
@@ -18,6 +27,27 @@ const inputsKeys = [
 			{ name: 'jump', keys: ['ArrowUp', 'KeyW'] },
 			{ name: 'attack', keys: ['MouseLeft', 'Space'] },
 		]
+
+const sources = [
+	{
+		name: 'blocks',
+		type: 'arrayTexture',
+		sizes: {
+			width: 16,
+			height: 16
+		},
+		path: [
+			cobblestoneSrc,
+			grassSrc,
+			gravelSrc,
+			sandstoneSrc,
+			dirtSrc,
+			stoneSrc,
+			graniteSrc,
+			snowyGrassSrc,
+		],
+	},
+]
 
 export default class Game {
 
@@ -56,7 +86,7 @@ export default class Game {
 		this.inputs = new Inputs(inputsKeys as inputMap)
 		this.viewport = new Viewport() // this is the Size class of course why pass dom element?
 		this.time = new Time()
-		this.resources = new Resources([]) // pass all the resources to load
+		this.resources = new Resources(sources) // pass all the resources to load
 		this.physics = new Physics() // this init the physics engine
 		this.world = new World() // this create the world game and contains scene
 		this.physicsDebug = new PhysicsDebug()
