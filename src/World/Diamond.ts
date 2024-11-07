@@ -16,7 +16,7 @@ export default class Diamond extends Events {
 	scene: Scene
 	entity: Entity = {}
 
-	constructor(x: number, y: number, z: number) {
+	constructor(x: number, y: number, z: number = 0) {
 		super()
 
 		this.game = new Game()

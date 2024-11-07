@@ -76,7 +76,7 @@ export default class Physics extends Events {
 			// console.log('collision', h1, h2, started)
 			this.trigger('collide', { handle1: h1, handle2: h2, started })
 
-			// console.log('collision', coll2)
+			// console.log('collision', h1,h2,started)
 		})
 
 		for (const entity of this.entities) {

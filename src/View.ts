@@ -28,7 +28,10 @@ export default class View extends Events {
 		this.scene = this.game.world.scene
 
 		this.setCamera()
-		// this.setControls()
+
+		if(this.game.debug.active) {
+			this.setControls()
+		}
 
 		this.viewport.on('resize', () => {
 			this.resize()
@@ -67,8 +70,9 @@ export default class View extends Events {
 	}
 
 	update() {
-		// this.controls.update()
-		if (this.world?.player?.entity?.mesh) {
+		if(this.game.debug.active) {
+			this.controls?.update()
+		} else if (this.world?.player?.entity?.mesh) {
 			this.camera.position.x = MathUtils.lerp(
 				this.camera.position.x,
 				this.world.player.entity.mesh.position.x,
