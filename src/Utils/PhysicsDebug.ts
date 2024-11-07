@@ -3,10 +3,22 @@ import {
 	Float32BufferAttribute,
 	LineBasicMaterial,
 	LineSegments,
+	Scene,
 } from 'three'
 import Game from '../Game'
+import Physics from '../Physics'
+import Time from './Time'
 
 export default class PhysicsDebug {
+
+	game: Game
+	physics: Physics
+	scene: Scene
+	time: Time
+	geometry: BufferGeometry = new BufferGeometry()
+	material: LineBasicMaterial | undefined
+	lineSegments: LineSegments | undefined
+
 	constructor() {
 		this.game = new Game()
 		this.physics = this.game.physics
@@ -19,7 +31,6 @@ export default class PhysicsDebug {
 	}
 
 	initDebug() {
-		this.geometry = new BufferGeometry()
 		this.geometry.setAttribute('position', new Float32BufferAttribute([], 3))
 		this.geometry.setAttribute('color', new Float32BufferAttribute([], 4))
 

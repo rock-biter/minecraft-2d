@@ -1,13 +1,26 @@
-import { WebGLRenderer } from 'three'
+import { OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
 import Game from './Game'
+import Viewport from './Viewport'
 
 export default class Rendering {
+
+	game: Game
+	viewport: Viewport
+	camera: PerspectiveCamera | OrthographicCamera
+	scene: Scene
+	instance: WebGLRenderer 
+
 	constructor() {
 		this.game = new Game()
 		this.viewport = this.game.viewport
 		this.camera = this.game.view.camera
 		this.scene = this.game.world.scene
-		this.setInstance()
+		this.instance = new WebGLRenderer({
+			canvas: this.game.domElement,
+			antialias: true,
+		})
+
+		this.resize()
 
 		this.game.time.on(
 			'tick',
@@ -20,15 +33,6 @@ export default class Rendering {
 		this.game.viewport.on('resize', () => {
 			this.resize()
 		})
-	}
-
-	setInstance() {
-		this.instance = new WebGLRenderer({
-			canvas: this.game.domElement,
-			antialias: true,
-		})
-
-		this.resize()
 	}
 
 	resize() {

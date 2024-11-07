@@ -11,16 +11,28 @@ import Game from '../Game'
 import Environment from './Environment'
 import Floor from './Floor'
 import Player from './Player'
+import Physics from '../Physics'
+import Time from '../Utils/Time'
+import Resources from '../Utils/Resources'
 
 export default class World {
+
+	game: Game
+	scene: Scene
+	physics: Physics
+	time: Time
+	resources: Resources
+
+	environment: Environment | undefined
+	floor: Floor | undefined
+	player: Player | undefined
+
 	constructor() {
 		this.game = new Game()
 		this.scene = new Scene()
-		this.game.physics = this.game.physics
+		this.physics = this.game.physics
 		this.time = this.game.time
-
 		this.resources = this.game.resources
-		// this.scene = this.game.scene
 
 		this.resources.on('load', () => {
 			console.log('load')

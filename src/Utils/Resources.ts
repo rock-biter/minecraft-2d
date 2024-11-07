@@ -2,6 +2,14 @@ import { TextureLoader } from 'three'
 import Events from './Events'
 import { GLTFLoader } from 'three/examples/jsm/Addons.js'
 
+type path = string | Array<string>
+
+interface source {
+	name: string,
+	type: string,
+	path: path
+}
+
 const sources = [
 	{
 		name: 'nomeSorce',
@@ -10,8 +18,28 @@ const sources = [
 	},
 ]
 
+interface file {
+	[key: string]: any // TODO definire queste props
+}
+
+interface items {
+	[key: string]: file
+}
+
+interface loaders {
+	gltfLoader?: GLTFLoader
+	textureLoader?: TextureLoader
+}
+
 // loaders for all the resources
 export default class Resources extends Events {
+
+	sources: source[]
+	items: items
+	toLoad: number
+	loaded: number
+	loaders: loaders = {}
+
 	constructor(sources = []) {
 		super()
 
@@ -48,7 +76,7 @@ export default class Resources extends Events {
 		}, 100)
 	}
 
-	sourceLoaded(source, file) {
+	sourceLoaded(source: source, file: file) {
 		this.items[source.name] = file
 
 		this.loaded++
