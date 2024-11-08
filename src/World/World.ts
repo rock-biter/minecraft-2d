@@ -14,6 +14,7 @@ import Player from './Player'
 import Physics from '../Physics'
 import Time from '../Utils/Time'
 import Resources from '../Utils/Resources'
+import MapBuilder from '../MapBuilder'
 
 export default class World {
 
@@ -38,7 +39,10 @@ export default class World {
 			console.log('load')
 			console.log('ready to generate world')
 			this.environment = new Environment()
-			this.floor = new Floor(50)
+			// this.floor = new Floor(50)
+
+			new MapBuilder().build()
+			
 			this.player = new Player()
 
 			// this.environment = new Environment() // => lights

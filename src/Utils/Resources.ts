@@ -1,37 +1,18 @@
-import { DataArrayTexture, LinearFilter, NearestFilter, TextureLoader } from 'three'
+import { DataArrayTexture, LinearFilter, NearestFilter, Texture, TextureLoader } from 'three'
 import Events from './Events'
 import { GLTFLoader } from 'three/examples/jsm/Addons.js'
+import { File, Items, Loaders, Source } from '../Types/resources.types'
 
-type path = string | Array<string>
 
-interface source {
-	name: string,
-	type: string,
-	path: path
-	sizes?: { width: number, height: number }
-}
-
-interface file {
-	[key: string]: any // TODO definire queste props
-}
-
-interface items {
-	[key: string]: file
-}
-
-interface loaders {
-	gltfLoader?: GLTFLoader
-	textureLoader?: TextureLoader
-}
 
 // loaders for all the resources
 export default class Resources extends Events {
 
-	sources: source[]
-	items: items
+	sources: Source[]
+	items: Items
 	toLoad: number
 	loaded: number
-	loaders: loaders = {}
+	loaders: Loaders = {}
 
 	constructor(sources = []) {
 		super()
@@ -52,7 +33,7 @@ export default class Resources extends Events {
 		// altri loaders
 	}
 
-	loadImage(src: string) {
+	loadImage(src: string): Promise<HTMLImageElement> {
 		return new Promise((res,rej) => {
 			const img = new Image()
 			img.onload = () => {
@@ -62,11 +43,15 @@ export default class Resources extends Events {
 
 			img.onerror = (e) => {
 				console.error('errore',e)
-				rej()
+				rej(e)
 			}
 
 			img.src = src
 		})
+	}
+
+	getSourceByName(srcName: string) {
+		return this.sources.find(({name}) => name === srcName)
 	}
 
 	startLoading() {
@@ -76,9 +61,17 @@ export default class Resources extends Events {
 			switch(type) {
 				case 'arrayTexture':
 					console.log('texture array',source)
-					const s = source as Required<source>
+					const s = source as Required<Source>
 					this.loadArrayTexture(s)
 					break
+				case 'map':
+					this.loadImage(source.path as string).then((img) => {
+						source.sizes = {
+							width: img.width,
+							height: img.height
+						}
+						this.sourceLoaded(source,img)
+					})
 			}
 
 			// TODO gltfLoader, textureLoader
@@ -96,7 +89,7 @@ export default class Resources extends Events {
 		// }, 100)
 	}
 
-	async loadArrayTexture(source: Required<source>) {
+	async loadArrayTexture(source: Required<Source>) {
 
 		console.log('load array texture')
 		const { width, height } = source.sizes
@@ -107,7 +100,9 @@ export default class Resources extends Events {
 		const canvas = document.createElement('canvas')
 		canvas.width = width
 		canvas.height = height
-		const ctx = canvas.getContext('2d')
+		
+		const ctx = canvas.getContext('2d', { willReadFrequently: true })
+		
 
 		if(!ctx) return
 
@@ -154,7 +149,7 @@ export default class Resources extends Events {
 
 	}
 
-	sourceLoaded(source: source, file: file) {
+	sourceLoaded(source: Source, file: File) {
 		this.items[source.name] = file
 
 		this.loaded++

@@ -18,6 +18,7 @@ import stoneSrc from './textures/stone.png?url'
 import graniteSrc from './textures/granite.png?url'
 import snowyGrassSrc from './textures/snowy-grass.png?url'
 import questionMark from './textures/question-mark.png?url'
+import bodiesMap from './textures/map/bodies-2.png?url'
 
 import { inputMap } from './Types/input.types'
 
@@ -30,6 +31,15 @@ const inputsKeys = [
 		]
 
 const sources = [
+	{
+		name: 'bodies',
+		type: 'map',
+		path: bodiesMap,
+		sizes: {
+			width: 42,
+			height: 12
+		},
+	},
 	{
 		name: 'blocks',
 		type: 'arrayTexture',
