@@ -27,7 +27,7 @@ export default class Player extends Events {
 	physics: Physics 
 	time: Time 
 	inputs: Inputs 
-	controller: RAPIER.KinematicCharacterController = Controller.create(0.1)
+	controller: RAPIER.KinematicCharacterController = Controller.create(0.05)
 
 	velocity = new Vector3()
 	speed = 5
@@ -86,9 +86,7 @@ export default class Player extends Events {
 			.setTranslation(0, 10, 0)
 		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38).setActiveEvents(
 			RAPIER.ActiveEvents['COLLISION_EVENTS']
-		)
-
-		colliderDesc.setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
+		).setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
 
 		this.entity = this.physics.addEntity(bodyDesc, colliderDesc)
 		this.entity.collider

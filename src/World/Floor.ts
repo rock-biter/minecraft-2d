@@ -5,6 +5,7 @@ import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from 'three'
 import Diamond from './Diamond'
 import Physics from '../Physics'
 import { Entity } from '../Types/entity.types'
+import ChestBlock from './ChestBlock'
 
 export default class Floor extends Events {
 
@@ -36,31 +37,32 @@ export default class Floor extends Events {
 		this.createBox(0 + 5, 4, 0, 'fixed')
 		this.createBox(0 + 6, 4, 0, 'fixed')
 		this.createBox(0 + 7, 4, 0, 'fixed')
-		this.createBox(0 + 8, 4, 0, 'fixed')
+		// this.createBox(0 + 8, 4, 0, 'fixed')
+		new ChestBlock(0 + 8, 4, 0)
 		this.createBox(0 + 9, 4, 0, 'fixed')
 		this.createBox(0 + 10, 4, 0, 'fixed')
 		this.createBox(0 + 11, 4, 0, 'fixed')
 		// this.createBox(0 + 11, 1, 0, 'fixed')
 
-		new Diamond(0 + 6, 5.5, 0)
-		new Diamond(0 + 7, 5.5, 0)
-		new Diamond(0 + 8, 5.5, 0)
-		new Diamond(0 + 9, 5.5, 0)
-		new Diamond(0 + 10, 5.5, 0)
+		new Diamond(0 + 6, 5.5)
+		new Diamond(0 + 7, 5.5)
+		new Diamond(0 + 8, 5.5)
+		new Diamond(0 + 9, 5.5)
+		new Diamond(0 + 10, 5.5)
 
-		new Diamond(0 + 10, 2, 0)
-		new Diamond(0 + 11, 2, 0)
-		new Diamond(0 + 12, 2, 0)
-		new Diamond(0 + 13, 2, 0)
-		new Diamond(0 + 14, 2, 0)
+		new Diamond(0 + 10, 2)
+		new Diamond(0 + 11, 2)
+		new Diamond(0 + 12, 2)
+		new Diamond(0 + 13, 2)
+		new Diamond(0 + 14, 2)
 
-		new Diamond(-3, 2, 0)
-		new Diamond(-4, 4, 0)
-		new Diamond(-5, 5, 0)
-		new Diamond(-6, 5.3, 0)
-		new Diamond(-7, 5, 0)
-		new Diamond(-8, 4, 0)
-		new Diamond(-9, 2, 0)
+		new Diamond(-3, 2)
+		new Diamond(-4, 4)
+		new Diamond(-5, 5)
+		new Diamond(-6, 5.3)
+		new Diamond(-7, 5)
+		new Diamond(-8, 4)
+		new Diamond(-9, 2)
 
 		// this.createBox(1, 4, 0)
 		// this.addRandomBoxes(10)
@@ -76,7 +78,7 @@ export default class Floor extends Events {
 		}
 	}
 
-	createBox(x: number, y: number, z: number, type = 'dynamic') {
+	createBox(x: number, y: number, z: number = 0, type: string = 'dynamic') {
 		const desc =
 			type === 'dynamic'
 				? RAPIER.RigidBodyDesc.dynamic
