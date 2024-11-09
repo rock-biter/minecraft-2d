@@ -83,7 +83,7 @@ export default class Player extends Events {
 		const bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased()
 			.lockTranslations()
 			.enabledTranslations(true, true, false)
-			.setTranslation(0, 10, 0)
+			.setTranslation(0, 20, 0)
 		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38).setActiveEvents(
 			RAPIER.ActiveEvents['COLLISION_EVENTS']
 		).setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
