@@ -1,6 +1,7 @@
 import {
 	AmbientLight,
 	BoxGeometry,
+	Color,
 	DirectionalLight,
 	Mesh,
 	MeshStandardMaterial,
@@ -31,6 +32,7 @@ export default class World {
 	constructor() {
 		this.game = new Game()
 		this.scene = new Scene()
+		this.scene.background = new Color(0x8AE0FF)
 		this.physics = this.game.physics
 		this.time = this.game.time
 		this.resources = this.game.resources

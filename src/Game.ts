@@ -18,7 +18,7 @@ import stoneSrc from './textures/stone.png?url'
 import graniteSrc from './textures/granite.png?url'
 import snowyGrassSrc from './textures/snowy-grass.png?url'
 import questionMark from './textures/question-mark.png?url'
-import bodiesMap from './textures/map/bodies-3.png?url'
+import bodiesMap from './textures/map/map-08.png?url'
 
 import { inputMap } from './Types/input.types'
 

@@ -1,12 +1,20 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from "three";
+import { BoxGeometry, BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial, MeshStandardMaterialParameters, PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
 import RAPIER from "@dimforge/rapier3d";
+import fragment from './shaders/fragment.glsl'
+import vertex from './shaders/vertex.glsl'
 
 import { Source } from "./Types/resources.types";
 import { Entity } from "./Types/entity.types";
 import ChestBlock from "./World/ChestBlock";
+
+interface blockUniform {
+  [uniform: string]: IUniform<any>
+  uDepth: IUniform< number >
+  uDiffuse: IUniform< Texture | null>
+}
 
 export default class MapBuilder {
   
@@ -16,6 +24,15 @@ export default class MapBuilder {
   canvas: HTMLCanvasElement
   physics: Physics
 	scene: Scene
+  uniforms: blockUniform = {
+		uDepth: {
+			value: 0,
+		},
+		uDiffuse: {
+			value: null,
+		},
+	}
+  blocksMaterial: ShaderMaterial
 
   constructor() {
 
@@ -30,6 +47,15 @@ export default class MapBuilder {
     if(!this.context) {
       throw new Error('CanvasRenderingContext2D not supported')
     }
+
+    this.blocksMaterial = new ShaderMaterial({
+			uniforms: this.uniforms,
+			fragmentShader: fragment,
+			vertexShader: vertex,
+      transparent: true,
+		})
+
+    this.uniforms.uDiffuse.value = this.resources.items['blocks'] as Texture
 
   }
 
@@ -47,7 +73,7 @@ export default class MapBuilder {
 
       if(a === 0) continue
       
-      this.createBlock(i,r,g,b)
+      this.createBlock(i,r,g,b,a)
       
     }
 
@@ -62,47 +88,111 @@ export default class MapBuilder {
     return {x,y,z}
   }
 
-  getMesh(r: number,g: number,b: number) {
-
-    let color = 0xffffff
-    switch(r) {
-      case 0:
-        color = 0x555555
-      case 255:
-        color = 0xffffff
-      case 100:
-        color = 0x0000ff
-      default:
-        color = 0xfefefe
-    }
+  getMesh(textureDepth: number,brightness: number,opacity: number) {
 
     return new Mesh(
-			new BoxGeometry(1, 1, 1),
-			new MeshStandardMaterial({ color })
+			this.getGeometry(textureDepth, brightness,opacity),
+			this.blocksMaterial
 		)
   }
 
-  createBlock(i: number,r: number,g: number,b: number) {
+  getGeometry(textureDepth: number, brightness: number,opacity: number) {
+
+    console.log('alpha:',opacity,textureDepth)
+
+    const bright = MathUtils.mapLinear(brightness,0,200,-1,1)
+
+    const plane = new PlaneGeometry(1, 1)
+
+    const uvCount = 4
+    const uvSize = 3
+    const uvAttribute = plane.getAttribute('uv')
+    // console.log(uvAttribute)
+    const uvArray = new Float32Array(uvCount * uvSize)
+    const newUvAttribute = new BufferAttribute(uvArray, 3)
+    // console.log(newUvAttribute)
+
+    const brightArray = new Float32Array(uvCount * 1)
+    const brightAttribute = new BufferAttribute(brightArray, 1)
+
+    const opacityArray = new Float32Array(uvCount * 1)
+    const opacityAttribute = new BufferAttribute(opacityArray, 1)
+
+    for (let i = 0; i < uvCount; i++) {
+      const u = uvAttribute.getX(i)
+      const v = uvAttribute.getY(i)
+
+      newUvAttribute.setXYZ(i, u, v, textureDepth)
+      brightAttribute.setX(i,bright)
+      opacityAttribute.setX(i,opacity / 255)
+    }
+
+    newUvAttribute.needsUpdate = true
+    brightAttribute.needsUpdate = true
+    opacityAttribute.needsUpdate = true
+
+    // plane.deleteAttribute('uv')
+    plane.setAttribute('aUv', newUvAttribute)
+    plane.setAttribute('aBright', brightAttribute)
+    plane.setAttribute('aOpacity', opacityAttribute)
+
+    return plane
+  }
+
+  createBlock(i: number,r: number,g: number,b: number,a: number) {
 
     let entity: Entity = {}
     const bodiesSrc = this.resources.getSourceByName('bodies') as Required<Source>
-    const { x,y,z} = this.getCoordinatesBy(i,bodiesSrc.sizes.width,bodiesSrc.sizes.height)
+    const { x,y,z } = this.getCoordinatesBy(i,bodiesSrc.sizes.width,bodiesSrc.sizes.height)
 
-    if(r === 255 && b === 0) {
-      new ChestBlock(x,y,z)
-      return
-    } else if(r === 0) {
-      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
-			.setTranslation(x, y, z)
+    // Red channel for body type
+    const bodyDesc = this.getRigidBodyDesc(r)
+
+    if(bodyDesc) {
+      bodyDesc.setTranslation(x, y, z)
       const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
       entity = this.physics.addEntity(bodyDesc, colliderDesc)
     }
 
-		entity.mesh = this.getMesh(r,g,b)
-    entity.mesh.position.set(x,y,z)
+    const mesh = this.getMesh(g,b,a)
 
-		this.scene.add(entity.mesh)
+    if(mesh) {
+      mesh.position.set(x,y,z)
+      entity.mesh = mesh
+
+		  this.scene.add(entity.mesh)
+    }
+
+    // if(r === 255 && b === 0) {
+    //   new ChestBlock(x,y,z)
+    //   return
+    // } else if(r === 0) {
+    //   const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+		// 	.setTranslation(x, y, z)
+    //   const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+    //   entity = this.physics.addEntity(bodyDesc, colliderDesc)
+    // }
+
+		// entity.mesh = this.getMesh(r,g,b)
+    // entity.mesh.position.set(x,y,z)
+
+		// this.scene.add(entity.mesh)
 	}
+
+  getRigidBodyDesc(bodyType = 0 ) {
+
+    switch(bodyType) {
+      case 0:
+        return null
+      case 1: 
+        return RAPIER.RigidBodyDesc.fixed()
+      case 2:
+        RAPIER.RigidBodyDesc.dynamic()
+      default:
+        return null
+    }
+
+  }
 
   getTextureData(name: string) {
 

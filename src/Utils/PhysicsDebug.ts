@@ -37,6 +37,7 @@ export default class PhysicsDebug {
 		this.material = new LineBasicMaterial({ vertexColors: true })
 
 		this.lineSegments = new LineSegments(this.geometry, this.material)
+		this.lineSegments.frustumCulled = false
 		this.scene.add(this.lineSegments)
 
 		this.time.on(
