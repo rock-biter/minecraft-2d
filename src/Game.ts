@@ -9,7 +9,7 @@ import Viewport from './Viewport'
 import World from './World/World'
 import Physics from './Physics'
 
-import bodiesMap from './textures/map/map-10.png?url'
+import bodiesMap from './textures/map/map-11.png?url'
 import specialBodiesMap from './textures/map/specials-04.png?url'
 import ladderSrc from './textures/ladder.png?url'
 
