@@ -1,6 +1,7 @@
 import {
 	AmbientLight,
 	BoxGeometry,
+	Color,
 	DirectionalLight,
 	Mesh,
 	MeshStandardMaterial,
@@ -14,6 +15,8 @@ import Player from './Player'
 import Physics from '../Physics'
 import Time from '../Utils/Time'
 import Resources from '../Utils/Resources'
+import MapBuilder from '../MapBuilder'
+import Materials from '../Utils/Materials'
 
 export default class World {
 
@@ -22,6 +25,7 @@ export default class World {
 	physics: Physics
 	time: Time
 	resources: Resources
+	materials!: Materials
 
 	environment: Environment | undefined
 	floor: Floor | undefined
@@ -30,6 +34,7 @@ export default class World {
 	constructor() {
 		this.game = new Game()
 		this.scene = new Scene()
+		this.scene.background = new Color(0x8AE0FF)
 		this.physics = this.game.physics
 		this.time = this.game.time
 		this.resources = this.game.resources
@@ -38,7 +43,11 @@ export default class World {
 			console.log('load')
 			console.log('ready to generate world')
 			this.environment = new Environment()
-			this.floor = new Floor(50)
+			this.materials = new Materials()
+			// this.floor = new Floor(50)
+
+			new MapBuilder().build()
+			
 			this.player = new Player()
 
 			// this.environment = new Environment() // => lights

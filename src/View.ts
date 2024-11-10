@@ -1,4 +1,4 @@
-import { Camera, MathUtils, OrthographicCamera, PerspectiveCamera, Scene } from 'three'
+import { Camera, MathUtils, OrthographicCamera, PerspectiveCamera, Scene, Vector3 } from 'three'
 import Events from './Utils/Events'
 import Game from './Game'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
@@ -7,7 +7,7 @@ import World from './World/World'
 import Time from './Utils/Time'
 
 
-
+const _V = new Vector3()
 export default class View extends Events {
 
 	game: Game
@@ -53,7 +53,7 @@ export default class View extends Events {
 			0.1,
 			200
 		)
-		this.camera.position.set(0, 5, 40)
+		this.camera.position.set(0, 5, 30)
 		this.scene.add(this.camera)
 	}
 
@@ -73,11 +73,15 @@ export default class View extends Events {
 		if(this.game.debug.active) {
 			this.controls?.update()
 		} else if (this.world?.player?.entity?.mesh) {
-			this.camera.position.x = MathUtils.lerp(
-				this.camera.position.x,
-				this.world.player.entity.mesh.position.x,
-				this.time.delta * 0.001
-			)
+			// this.camera.position.x = MathUtils.lerp(
+			// 	this.camera.position.x,
+			// 	this.world.player.entity.mesh.position.x,
+			// 	this.time.delta * 0.001
+			// )
+			_V.copy(this.world.player.entity.mesh.position)
+			_V.z = this.camera.position.z
+
+			this.camera.position.lerp(_V,this.time.delta * 0.001)
 
 			this.camera.lookAt(this.camera.position.x, this.camera.position.y, 0)
 		}

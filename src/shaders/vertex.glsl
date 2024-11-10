@@ -1,6 +1,12 @@
 uniform vec2 size;
-varying vec3 vUv;
+
 attribute vec3 aUv;
+attribute float aBright;
+attribute float aOpacity;
+
+varying vec3 vUv;
+varying float vBrigth;
+varying float vOpacity;
 
 void main() {
 
@@ -8,5 +14,8 @@ void main() {
 
   vUv.xyz = aUv.xyz;
   vUv.y = 1. - vUv.y;
+
+  vBrigth = aBright;
+  vOpacity = aOpacity;
 
 }

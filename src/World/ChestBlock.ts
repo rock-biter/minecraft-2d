@@ -16,8 +16,10 @@ export default class ChestBlock {
   physics: Physics
   sensor!: Collider
   elevation = {
+    initial: 0,
     value: 0
   }
+
 
   constructor(x: number, y: number,z: number = 0) {
 
@@ -30,6 +32,8 @@ export default class ChestBlock {
   }
 
   createBlock(x: number, y: number, z: number ) {
+
+    this.elevation.initial = y + 0.1
 
 		const bodyDesc = RAPIER.RigidBodyDesc.fixed()
 			// .lockRotations()
@@ -65,7 +69,7 @@ export default class ChestBlock {
         if(!this.entity.body) return
 
         const p = this.entity.body.translation()
-        const h = p.y
+        const h = this.elevation.initial
 
         gsap.timeline({ onUpdate: () => {
 

@@ -32,6 +32,7 @@ export default class Player extends Events {
 	velocity = new Vector3()
 	speed = 5
 	jump = 20
+	isOnLadder = false
 
 	entity: Entity | undefined
 
@@ -83,7 +84,7 @@ export default class Player extends Events {
 		const bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased()
 			.lockTranslations()
 			.enabledTranslations(true, true, false)
-			.setTranslation(0, 10, 0)
+			.setTranslation(0, 20, 0)
 		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38).setActiveEvents(
 			RAPIER.ActiveEvents['COLLISION_EVENTS']
 		).setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
@@ -128,9 +129,13 @@ export default class Player extends Events {
 		const dt = this.time.delta * 0.001
 		// console.log(dt)
 		const prevPosition = this.entity.body.translation()
-		const force = _V.copy(this.physics.instance.gravity).multiplyScalar(dt)
-
-		this.velocity.add(force)
+		
+		if(this.isOnLadder) {
+			this.velocity.y = 0
+		}	else {
+			const force = _V.copy(this.physics.instance.gravity).multiplyScalar(dt)
+			this.velocity.add(force)
+		}
 
 		if (this.inputs.keys['left']) {
 			this.velocity.x = MathUtils.lerp(
@@ -142,6 +147,14 @@ export default class Player extends Events {
 
 		if (this.inputs.keys['right']) {
 			this.velocity.x = MathUtils.lerp(this.velocity.x, this.speed, 1 - dt * 10)
+		}
+
+		if (this.isOnLadder && this.inputs.keys['jump']) {
+			this.velocity.y = MathUtils.lerp(this.velocity.y, this.speed, 1 - dt * 10)
+		}
+
+		if (this.isOnLadder && this.inputs.keys['down']) {
+			this.velocity.y = MathUtils.lerp(this.velocity.y, -this.speed, 1 - dt * 10)
 		}
 
 		const desiredMov = _V.copy(this.velocity).multiplyScalar(dt).clone()
