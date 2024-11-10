@@ -1,4 +1,4 @@
-import { BoxGeometry, BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial, MeshStandardMaterialParameters, PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform } from "three";
+import { BoxGeometry, BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial, MeshStandardMaterialParameters, PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -9,6 +9,7 @@ import vertex from './shaders/vertex.glsl'
 import { Source } from "./Types/resources.types";
 import { Entity } from "./Types/entity.types";
 import ChestBlock from "./World/ChestBlock";
+import Ladder from "./World/Ladder";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -61,6 +62,32 @@ export default class MapBuilder {
 
   build() {
 
+    this.buildFixedBlocks()
+    this.buildSpecialBlocks()
+
+  }
+
+  buildSpecialBlocks() {
+    console.log('build special blcoks')
+    const specialBlocksData: ImageData | undefined = this.getTextureData('special-bodies')
+
+    if(!specialBlocksData) return
+    const data = specialBlocksData.data
+
+    for (let i = 0; i < data.length / 4; i++) {
+      const r = data[i * 4 + 0]
+      const g = data[i * 4 + 1]
+      const b = data[i * 4 + 2]
+      const a = data[i * 4 + 3]
+
+      if(a === 0) continue
+      
+      this.createSpecialBlock(i,r,g,b,a)
+      
+    }
+  }
+
+  buildFixedBlocks() {
     const bodiesData: ImageData | undefined = this.getTextureData('bodies')
     if(!bodiesData) return
     const data = bodiesData.data
@@ -76,7 +103,6 @@ export default class MapBuilder {
       this.createBlock(i,r,g,b,a)
       
     }
-
   }
 
   getCoordinatesBy(index: number, width: number, height: number) {
@@ -90,15 +116,17 @@ export default class MapBuilder {
 
   getMesh(textureDepth: number,brightness: number,opacity: number) {
 
+    const material = this.game.debug.active ? new MeshStandardMaterial() : this.blocksMaterial
+
     return new Mesh(
 			this.getGeometry(textureDepth, brightness,opacity),
-			this.blocksMaterial
+			material
 		)
   }
 
   getGeometry(textureDepth: number, brightness: number,opacity: number) {
 
-    console.log('alpha:',opacity,textureDepth)
+    // console.log('alpha:',opacity,textureDepth)
 
     const bright = MathUtils.mapLinear(brightness,0,200,-1,1)
 
@@ -139,6 +167,25 @@ export default class MapBuilder {
     return plane
   }
 
+  createSpecialBlock(i: number,r: number,g: number,b: number,a: number) {
+
+    console.log('special block',i,r,g,b,a)
+    const specialBodiesSrc = this.resources.getSourceByName('special-bodies') as Required<Source>
+
+    const { x,y,z } = this.getCoordinatesBy(i,specialBodiesSrc.sizes.width,specialBodiesSrc.sizes.height)
+
+    switch(r) {
+      case 1:
+        // build a ladder
+        const length = g
+        new Ladder(new Vector3(x,y,z),length)
+        return
+      default:
+        return null
+    }
+
+  }
+
   createBlock(i: number,r: number,g: number,b: number,a: number) {
 
     let entity: Entity = {}
@@ -163,20 +210,6 @@ export default class MapBuilder {
 		  this.scene.add(entity.mesh)
     }
 
-    // if(r === 255 && b === 0) {
-    //   new ChestBlock(x,y,z)
-    //   return
-    // } else if(r === 0) {
-    //   const bodyDesc = RAPIER.RigidBodyDesc.fixed()
-		// 	.setTranslation(x, y, z)
-    //   const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
-    //   entity = this.physics.addEntity(bodyDesc, colliderDesc)
-    // }
-
-		// entity.mesh = this.getMesh(r,g,b)
-    // entity.mesh.position.set(x,y,z)
-
-		// this.scene.add(entity.mesh)
 	}
 
   getRigidBodyDesc(bodyType = 0 ) {
@@ -206,7 +239,10 @@ export default class MapBuilder {
     const width = item.width
     const height = item.height
 
-    console.log(width,height)
+    // console.log(width,height)
+
+    // clear the canvas from previous drawn image
+    this.context.clearRect(0, 0, width, height)
 
     this.context.drawImage(item , 0, 0, width, height)
 		return this.context.getImageData(0, 0, width, height)

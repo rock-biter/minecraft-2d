@@ -1,0 +1,69 @@
+import cobblestoneSrc from '../textures/cobblestone.png?url'
+import grassSrc from '../textures/grass.png?url'
+import gravelSrc from '../textures/gravel.png?url'
+import sandstoneSrc from '../textures/sandstone.png?url'
+import dirtSrc from '../textures/dirt.png?url'
+import stoneSrc from '../textures/stone.png?url'
+import graniteSrc from '../textures/granite.png?url'
+import snowyGrassSrc from '../textures/snowy-grass.png?url'
+import ladderSrc from '../textures/ladder.png?url'
+import questionMarkSrc from '../textures/question-mark.png?url'
+
+interface TextureIndexes {
+  [name: string] : number
+}
+
+interface Texture {
+  name: string,
+  path: string
+}
+
+export const blocksTextures: Texture[] = [
+  {
+    name: 'COBBLESTONE',
+    path: cobblestoneSrc,
+  },
+  {
+    name: 'GRASS',
+    path: grassSrc,
+  },
+  {
+    name: 'GRAVEL',
+    path: gravelSrc,
+  },
+  {
+    name: 'SANDOSTONE',
+    path: sandstoneSrc,
+  },
+  {
+    name: 'DIRT',
+    path: dirtSrc,
+  },
+  {
+    name: 'STONE',
+    path: stoneSrc,
+  },
+  {
+    name: 'GRANITE',
+    path: graniteSrc,
+  },
+  {
+    name: 'SNOWY_GRASS',
+    path: snowyGrassSrc,
+  },
+  {
+    name: 'LADDER',
+    path: ladderSrc,
+  },
+  {
+    name: 'QUESTION_MARK',
+    path: questionMarkSrc,
+  }
+]
+
+export const texturesPaths: string[] = blocksTextures.map(({ path }) => path)
+
+export const texturesIndexes = blocksTextures.reduce((acc,texture,index) => {
+  acc[texture.name] = index
+  return acc
+},{} as TextureIndexes)

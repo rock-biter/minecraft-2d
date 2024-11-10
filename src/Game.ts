@@ -9,18 +9,11 @@ import Viewport from './Viewport'
 import World from './World/World'
 import Physics from './Physics'
 
-import cobblestoneSrc from './textures/cobblestone.png?url'
-import grassSrc from './textures/grass.png?url'
-import gravelSrc from './textures/gravel.png?url'
-import sandstoneSrc from './textures/sandstone.png?url'
-import dirtSrc from './textures/dirt.png?url'
-import stoneSrc from './textures/stone.png?url'
-import graniteSrc from './textures/granite.png?url'
-import snowyGrassSrc from './textures/snowy-grass.png?url'
-import questionMark from './textures/question-mark.png?url'
-import bodiesMap from './textures/map/map-08.png?url'
+import bodiesMap from './textures/map/map-09.png?url'
+import specialBodiesMap from './textures/map/specials-03.png?url'
 
 import { inputMap } from './Types/input.types'
+import { texturesPaths } from './Utils/BlocksTexture'
 
 const inputsKeys = [
 			{ name: 'right', keys: ['ArrowRight', 'KeyD'] },
@@ -41,23 +34,22 @@ const sources = [
 		},
 	},
 	{
+		name: 'special-bodies',
+		type: 'map',
+		path: specialBodiesMap,
+		sizes: {
+			width: 42,
+			height: 12
+		},
+	},
+	{
 		name: 'blocks',
 		type: 'arrayTexture',
 		sizes: {
 			width: 16,
 			height: 16
 		},
-		path: [
-			cobblestoneSrc,
-			grassSrc,
-			gravelSrc,
-			sandstoneSrc,
-			dirtSrc,
-			stoneSrc,
-			graniteSrc,
-			snowyGrassSrc,
-			questionMark, // ? 
-		],
+		path: texturesPaths,
 	},
 ]
 
