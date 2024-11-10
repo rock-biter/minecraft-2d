@@ -58,7 +58,7 @@ export default class Physics extends Events {
 	removeEntity(entity: Entity) {
 		//
 		entity.body && this.instance.removeRigidBody(entity.body)
-		entity.collider && this.instance.removeCollider(entity.collider, false)
+		entity.collider && this.instance.removeCollider(entity.collider, true)
 
 		const index = this.entities.indexOf(entity)
 

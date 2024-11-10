@@ -11,10 +11,16 @@ import Physics from './Physics'
 
 import bodiesMap from './textures/map/map-11.png?url'
 import specialBodiesMap from './textures/map/specials-04.png?url'
+import collectablesMap from './textures/map/collectables-03.png?url'
 import ladderSrc from './textures/ladder.png?url'
+import goldenAppleSrc from './textures/golden-apple.png?url'
+import goldenCarrotSrc from './textures/golden-carrot.png?url'
+import emeraldSrc from './textures/emerald.png?url'
+import diamondSrc from './textures/diamond.png?url'
 
 import { inputMap } from './Types/input.types'
 import { texturesPaths } from './Utils/BlocksTexture'
+import { Source } from './Types/resources.types'
 
 const inputsKeys = [
 			{ name: 'right', keys: ['ArrowRight', 'KeyD'] },
@@ -24,7 +30,7 @@ const inputsKeys = [
 			{ name: 'attack', keys: ['MouseLeft', 'Space'] },
 		]
 
-const sources = [
+const sources: Source[] = [
 	{
 		name: 'bodies',
 		type: 'map',
@@ -41,6 +47,51 @@ const sources = [
 		sizes: {
 			width: 16,
 			height: 16
+		},
+	},
+	{
+		name: 'emerald',
+		type: 'texture',
+		path: emeraldSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'diamond',
+		type: 'texture',
+		path: diamondSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'golden-apple',
+		type: 'texture',
+		path: goldenAppleSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'golden-carrot',
+		type: 'texture',
+		path: goldenCarrotSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'collectables',
+		type: 'map',
+		path: collectablesMap,
+		sizes: {
+			width: 42,
+			height: 12
 		},
 	},
 	{

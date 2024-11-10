@@ -14,7 +14,7 @@ export default class Resources extends Events {
 	loaded: number
 	loaders: Loaders = {}
 
-	constructor(sources = []) {
+	constructor(sources: Source[]) {
 		super()
 
 		this.sources = sources
