@@ -72,6 +72,13 @@ export default class Resources extends Events {
 						}
 						this.sourceLoaded(source,img)
 					})
+					break
+				case 'texture':
+					this.loaders.textureLoader?.load(source.path as string,(texture) => {
+						texture.minFilter = LinearFilter
+						texture.magFilter = NearestFilter		
+						this.sourceLoaded(source,texture)
+					})
 			}
 
 			// TODO gltfLoader, textureLoader

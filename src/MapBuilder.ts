@@ -49,14 +49,7 @@ export default class MapBuilder {
       throw new Error('CanvasRenderingContext2D not supported')
     }
 
-    this.blocksMaterial = new ShaderMaterial({
-			uniforms: this.uniforms,
-			fragmentShader: fragment,
-			vertexShader: vertex,
-      transparent: true,
-		})
-
-    this.uniforms.uDiffuse.value = this.resources.items['blocks'] as Texture
+    this.blocksMaterial = this.game.world.materials.blocksMaterial
 
   }
 
@@ -163,6 +156,8 @@ export default class MapBuilder {
     plane.setAttribute('aUv', newUvAttribute)
     plane.setAttribute('aBright', brightAttribute)
     plane.setAttribute('aOpacity', opacityAttribute)
+
+    plane.translate(0,0,-0.5)
 
     return plane
   }

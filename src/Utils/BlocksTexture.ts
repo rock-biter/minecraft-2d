@@ -8,6 +8,7 @@ import graniteSrc from '../textures/granite.png?url'
 import snowyGrassSrc from '../textures/snowy-grass.png?url'
 import ladderSrc from '../textures/ladder.png?url'
 import questionMarkSrc from '../textures/question-mark.png?url'
+import transparentSrc from '../textures/transparent.png?url'
 
 interface TextureIndexes {
   [name: string] : number
@@ -52,13 +53,17 @@ export const blocksTextures: Texture[] = [
     path: snowyGrassSrc,
   },
   {
-    name: 'LADDER',
-    path: ladderSrc,
-  },
-  {
     name: 'QUESTION_MARK',
     path: questionMarkSrc,
-  }
+  },
+  // {
+  //   name: 'TRANSPARENT-LADDER',
+  //   path: transparentSrc,
+  // },
+  // {
+  //   name: 'LADDER',
+  //   path: ladderSrc,
+  // }
 ]
 
 export const texturesPaths: string[] = blocksTextures.map(({ path }) => path)

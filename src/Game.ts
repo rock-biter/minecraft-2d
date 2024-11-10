@@ -9,8 +9,9 @@ import Viewport from './Viewport'
 import World from './World/World'
 import Physics from './Physics'
 
-import bodiesMap from './textures/map/map-09.png?url'
-import specialBodiesMap from './textures/map/specials-03.png?url'
+import bodiesMap from './textures/map/map-10.png?url'
+import specialBodiesMap from './textures/map/specials-04.png?url'
+import ladderSrc from './textures/ladder.png?url'
 
 import { inputMap } from './Types/input.types'
 import { texturesPaths } from './Utils/BlocksTexture'
@@ -31,6 +32,15 @@ const sources = [
 		sizes: {
 			width: 42,
 			height: 12
+		},
+	},
+	{
+		name: 'ladder',
+		type: 'texture',
+		path: ladderSrc,
+		sizes: {
+			width: 16,
+			height: 16
 		},
 	},
 	{

@@ -1,10 +1,12 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial, Plane, PlaneGeometry, Scene, Vector3 } from "three";
+import { BoxGeometry, BufferAttribute, Mesh, MeshStandardMaterial, Plane, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
 import Game from "../Game";
 import Physics from "../Physics";
 import Resources from "../Utils/Resources";
 import { Entity } from "../Types/entity.types";
 import RAPIER from "@dimforge/rapier3d";
 import { CollideArg } from "../Types/callbacks.types";
+import { texturesIndexes } from "../Utils/BlocksTexture";
+import { BufferGeometryUtils } from "three/examples/jsm/Addons";
 
 export default class Ladder {
 
@@ -16,6 +18,7 @@ export default class Ladder {
   length: number
   textureName = 'LADDER'
   entity!: Entity
+  blocksMaterial: ShaderMaterial
 
   constructor(position = new Vector3(), length: number) {
     this.game = new Game()
@@ -25,6 +28,8 @@ export default class Ladder {
 
     this.position = position
     this.length = length
+
+    this.blocksMaterial = this.game.world.materials.blocksMaterial
 
     this.create(position,length)
   }
@@ -42,9 +47,10 @@ export default class Ladder {
 
   getMesh(position: Vector3, length: number) {
 
-    const material = new MeshStandardMaterial({ color: 'black'})
-    const geometry = new PlaneGeometry(1,length)
-    geometry.translate(0,-length/2 + 0.5,0)
+    const material = this.game.debug.active ? new MeshStandardMaterial({ color: 0x666666}) : this.game.world.materials.ladderMaterial
+
+    const geometry = this.getGeometry(length)
+    geometry.translate(0,0,-0.4)
     const mesh = new Mesh(
 			geometry,
 			material
@@ -52,6 +58,63 @@ export default class Ladder {
 
     mesh.position.copy(position)
     return mesh
+  }
+
+  getGeometry(length: number) {
+
+    const geometries = []
+
+    for (let i = 0; i < length; i++) {
+      const plane = this.getPlaneGeometry();
+      plane.translate(0,-i,0)
+
+      geometries.push(plane)
+      
+    }
+
+    const geometry = BufferGeometryUtils.mergeGeometries(geometries)
+
+    return geometry
+
+  }
+
+  getPlaneGeometry() {
+    const plane = new PlaneGeometry(1, 1)
+
+    const uvCount = 4
+    const uvSize = 3
+    const uvAttribute = plane.getAttribute('uv')
+    // console.log(uvAttribute)
+    const uvArray = new Float32Array(uvCount * uvSize)
+    const newUvAttribute = new BufferAttribute(uvArray, 3)
+    // console.log(newUvAttribute)
+
+    const brightArray = new Float32Array(uvCount * 1)
+    const brightAttribute = new BufferAttribute(brightArray, 1)
+
+    const opacityArray = new Float32Array(uvCount * 1)
+    const opacityAttribute = new BufferAttribute(opacityArray, 1)
+
+    for (let i = 0; i < uvCount; i++) {
+      const u = uvAttribute.getX(i)
+      const v = uvAttribute.getY(i)
+
+      // newUvAttribute.setXYZ(i, u, v, texturesIndexes['LADDER'])
+      newUvAttribute.setXYZ(i, u, v,9.6)
+      brightAttribute.setX(i,0)
+      opacityAttribute.setX(i,1)
+    }
+
+    newUvAttribute.needsUpdate = true
+    brightAttribute.needsUpdate = true
+    opacityAttribute.needsUpdate = true
+
+    // plane.deleteAttribute('uv')
+    plane.setAttribute('aUv', newUvAttribute)
+    plane.setAttribute('aBright', brightAttribute)
+    plane.setAttribute('aOpacity', opacityAttribute)
+
+    return plane
   }
 
   getCollider(position: Vector3, height = 1) {
