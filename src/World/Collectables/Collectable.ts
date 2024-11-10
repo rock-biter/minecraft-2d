@@ -45,7 +45,7 @@ export default class Collectable extends Events {
 
   getColliderDesc(colliderDescType = RAPIER.ColliderDesc.cuboid) {
 
-    const colliderDesc = colliderDescType(this.size/2,this.size/2,this.size/2)
+    const colliderDesc = colliderDescType(this.size/3,this.size/3,this.size/3)
       .setSensor(true)
 
     return colliderDesc
