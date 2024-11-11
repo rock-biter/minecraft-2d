@@ -1,19 +1,16 @@
-import { BoxGeometry, BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial, MeshStandardMaterialParameters, PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
 import RAPIER from "@dimforge/rapier3d";
-import fragment from './shaders/fragment.glsl'
-import vertex from './shaders/vertex.glsl'
 
 import { Source } from "./Types/resources.types";
 import { Entity } from "./Types/entity.types";
-import ChestBlock from "./World/ChestBlock";
+// import ChestBlock from "./World/ChestBlock";
 import Ladder from "./World/Ladder";
-import Collectable from "./World/Collectables/Collectable";
-import GoldApple from "./World/Collectables/GoldenApple";
+import GoldenApple from "./World/Collectables/GoldenApple";
 import { collectableType } from "./Utils/CollectablesType";
-import { bodyType, getRigidBodyDesc } from "./Utils/BodyTypes";
+import { getRigidBodyDesc } from "./Utils/BodyTypes";
 import GoldenCarrot from "./World/Collectables/GoldenCarrot";
 import Diamond from "./World/Collectables/Diamond";
 import Emerald from "./World/Collectables/Emerald";
@@ -76,8 +73,8 @@ export default class MapBuilder {
     const data = collectablesData.data
 
     for (let i = 0; i < data.length / 4; i++) {
-      const r = data[i * 4 + 0]
-      const g = data[i * 4 + 1]
+      const bodyType = data[i * 4 + 0]
+      const collectable = data[i * 4 + 1]
       const b = data[i * 4 + 2]
       const a = data[i * 4 + 3]
 
@@ -85,23 +82,23 @@ export default class MapBuilder {
 
       const collectableSrc = this.resources.getSourceByName('collectables') as Required<Source>
       const { x,y,z } = this.getCoordinatesBy(i,collectableSrc.sizes.width,collectableSrc.sizes.height)
-      console.log('collectables',g)
-      switch(g) {
+      console.log('collectables',collectable)
+      switch(collectable) {
         case collectableType.GOLDEN_APPLE:
           // console.log('apple')
-          new GoldApple(new Vector3(x,y,z),g)
+          new GoldenApple(new Vector3(x,y,z),bodyType)
           break;
         case collectableType.GOLDEN_CARROT:
           // console.log('apple')
-          new GoldenCarrot(new Vector3(x,y,z),g)
+          new GoldenCarrot(new Vector3(x,y,z),bodyType)
           break;
         case collectableType.DIAMOND:
           // console.log('apple')
-          new Diamond(new Vector3(x,y,z),g)
+          new Diamond(new Vector3(x,y,z),bodyType)
           break;
         case collectableType.EMERALD:
           // console.log('apple')
-          new Emerald(new Vector3(x,y,z),g)
+          new Emerald(new Vector3(x,y,z),bodyType)
           break;
       }
       // new GoldApple(new Vector3(x,y,z),g)

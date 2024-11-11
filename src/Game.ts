@@ -11,7 +11,7 @@ import Physics from './Physics'
 
 import bodiesMap from './textures/map/map-11.png?url'
 import specialBodiesMap from './textures/map/specials-04.png?url'
-import collectablesMap from './textures/map/collectables-03.png?url'
+import collectablesMap from './textures/map/collectables-06.png?url'
 import ladderSrc from './textures/ladder.png?url'
 import goldenAppleSrc from './textures/golden-apple.png?url'
 import goldenCarrotSrc from './textures/golden-carrot.png?url'

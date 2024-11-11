@@ -177,8 +177,6 @@ export default class Enemy extends Events {
 
     this.drop()
 
-    
-
     this.physics.removeEntity(this.entity)
 
     if(!this.entity.mesh) return 

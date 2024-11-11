@@ -15,6 +15,7 @@ export default class GoldenApple extends Collectable {
     
     // this.init()
     this.texture = this.resources.items['golden-apple'] as Texture
+    // console.log('golden apple type',type)
     this.build(type)
 
     this.on('collect',() => {
