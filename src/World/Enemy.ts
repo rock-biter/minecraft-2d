@@ -1,14 +1,14 @@
 import { BoxGeometry, Mesh, MeshStandardMaterial, Vector3 } from "three";
-import Game from "../../Game";
-import Events from "../../Utils/Events";
-import { Entity } from "../../Types/entity.types";
+import Game from "../Game";
+import Events from "../Utils/Events";
+import { Entity } from "../Types/entity.types";
 import RAPIER from "@dimforge/rapier3d";
-import Controller from "../../Utils/Controller";
-import { CollideArg } from "../../Types/callbacks.types";
+import Controller from "../Utils/Controller";
+import { CollideArg } from "../Types/callbacks.types";
 import gsap from "gsap";
-import GoldenApple from "./GoldenApple";
-import Diamond from "./Diamond";
-import { bodyType } from "../../Utils/BodyTypes";
+import GoldenApple from "./Collectables/GoldenApple";
+import Diamond from "./Collectables/Diamond";
+import { bodyType } from "../Utils/BodyTypes";
 
 const _V = new Vector3()
 
@@ -168,7 +168,7 @@ export default class Enemy extends Events {
     if(Math.random() < 0.3) return  
     const drop = new Diamond(this.entity.body?.translation() as Vector3,bodyType.DYNAMIC)
 
-    drop.entity.body?.applyImpulse({x: 3 * Math.sign(Math.random() - 0.5), y: 2, z: 0},true)
+    drop.entity.body?.applyImpulse({x: 1.5 * Math.sign(Math.random() - 0.5), y: 2, z: 0},true)
   }
 
   destroy() {

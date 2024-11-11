@@ -19,7 +19,10 @@ export default class GoldenApple extends Collectable {
     this.build(type)
 
     this.on('collect',() => {
-      console.log('collect golden apple')
+      // console.log('collect golden apple')
+      if(this.game.world.player) {
+        this.game.world.player.life.points += 8
+      }
     })
 
   }

@@ -18,7 +18,7 @@ import Time from '../Utils/Time'
 import Resources from '../Utils/Resources'
 import MapBuilder from '../MapBuilder'
 import Materials from '../Utils/Materials'
-import Enemy from './Collectables/Enemy'
+import Enemy from './Enemy'
 
 export default class World {
 
@@ -50,7 +50,7 @@ export default class World {
 
 			new MapBuilder().build()
 			
-			this.player = new Player()
+			this.player = new Player(new Vector3(-9.5, 12, 0))
 			
 			Enemy.spawn(new Vector3(-2.5,5.5,0))
 

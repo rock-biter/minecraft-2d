@@ -17,6 +17,7 @@ import goldenAppleSrc from './textures/golden-apple.png?url'
 import goldenCarrotSrc from './textures/golden-carrot.png?url'
 import emeraldSrc from './textures/emerald.png?url'
 import diamondSrc from './textures/diamond.png?url'
+import lifeHeartSrc from './textures/life-heart.png?url'
 
 import { inputMap } from './Types/input.types'
 import { texturesPaths } from './Utils/BlocksTexture'
@@ -38,6 +39,15 @@ const sources: Source[] = [
 		sizes: {
 			width: 42,
 			height: 12
+		},
+	},
+	{
+		name: 'heart',
+		type: 'texture',
+		path: lifeHeartSrc,
+		sizes: {
+			width: 15,
+			height: 15
 		},
 	},
 	{

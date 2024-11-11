@@ -18,7 +18,9 @@ export default class GoldenCarrot extends Collectable {
     this.build(type)
 
     this.on('collect',() => {
-      console.log('collect golden carrot')
+      if(this.game.world.player) {
+        this.game.world.player.life.points += 2
+      }
     })
 
   }

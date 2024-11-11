@@ -17,6 +17,7 @@ import Physics from '../Physics'
 import Time from '../Utils/Time'
 import { Entity } from '../Types/entity.types'
 import { InputsArg } from '../Types/callbacks.types'
+import Life from '../Utils/Life'
 
 const _V = new Vector3()
 
@@ -28,6 +29,7 @@ export default class Player extends Events {
 	time: Time 
 	inputs: Inputs 
 	controller: RAPIER.KinematicCharacterController = Controller.create(0.05)
+	life = new Life()
 
 	velocity = new Vector3()
 	speed = 5
@@ -35,12 +37,14 @@ export default class Player extends Events {
 	isOnLadder = false
 	grabLadder = false
 	grounded = false
+	initialPosition: Vector3
 
 	entity: Entity | undefined
 
-	constructor() {
+	constructor(position: Vector3) {
 		super()
 
+		this.initialPosition = position
 		this.game = new Game()
 		this.scene = this.game.world.scene
 		this.physics = this.game.physics
@@ -69,6 +73,7 @@ export default class Player extends Events {
 
 			if(this.isOnLadder) {
 				this.grabLadder = true
+				this.velocity.x = 0
 			}
 
 			this.controller.computedGrounded() &&
@@ -77,12 +82,19 @@ export default class Player extends Events {
 		// this.initInputs()
 
 		this.on('damage',() => {
+
 			this.onDamage()
 		})
 	}
 
-	onDamage() {
-		console.log('player damage!')
+	onDamage(damage = 2) {
+		console.log('player damage!',this.life.points)
+		this.life.points -= damage
+
+		if(this.life.points <= 0) {
+			this.death()
+			this.life.points = this.life.MAX_LIFE
+		}
 	}
 
 	getMesh() {
@@ -96,10 +108,11 @@ export default class Player extends Events {
 	}
 
 	createBody() {
+		const { x,y,z} = this.initialPosition
 		const bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased()
 			.lockTranslations()
 			.enabledTranslations(true, true, false)
-			.setTranslation(-9.5, 12, 0)
+			.setTranslation(x,y,z)
 		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38).setActiveEvents(
 			RAPIER.ActiveEvents['COLLISION_EVENTS']
 		).setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
@@ -134,6 +147,10 @@ export default class Player extends Events {
 		}
 
 		return false
+	}
+
+	death() {
+		this.entity?.body?.setTranslation(this.initialPosition as RAPIER.Vector3,true)
 	}
 
 	updateVelocity() {
