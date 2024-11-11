@@ -7,6 +7,7 @@ import {
 	MeshStandardMaterial,
 	PlaneGeometry,
 	Scene,
+	Vector3,
 } from 'three'
 import Game from '../Game'
 import Environment from './Environment'
@@ -17,6 +18,7 @@ import Time from '../Utils/Time'
 import Resources from '../Utils/Resources'
 import MapBuilder from '../MapBuilder'
 import Materials from '../Utils/Materials'
+import Enemy from './Collectables/Enemy'
 
 export default class World {
 
@@ -49,6 +51,8 @@ export default class World {
 			new MapBuilder().build()
 			
 			this.player = new Player()
+			
+			Enemy.spawn(new Vector3(-2.5,5.5,0))
 
 			// this.environment = new Environment() // => lights
 		})

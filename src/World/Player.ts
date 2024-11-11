@@ -84,7 +84,7 @@ export default class Player extends Events {
 		const bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased()
 			.lockTranslations()
 			.enabledTranslations(true, true, false)
-			.setTranslation(0, 20, 0)
+			.setTranslation(-9.5, 12, 0)
 		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38).setActiveEvents(
 			RAPIER.ActiveEvents['COLLISION_EVENTS']
 		).setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
@@ -167,7 +167,13 @@ export default class Player extends Events {
 			desiredMov,
 			undefined,
 			undefined,
-			(coll) => !coll.isSensor()
+			(coll) => {
+				// console.log(coll.parent())
+				// if(coll.isSensor()) {
+				// 	console.log(coll.parent())
+				// }
+				return !coll.isSensor() 
+			}
 		)
 
 		// for (let i = 0; i < this.controller.numComputedCollisions(); i++) {
