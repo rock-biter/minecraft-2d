@@ -18,7 +18,7 @@ export default class Enemy extends Events {
   entity!: Entity
   position: Vector3
   static controller: RAPIER.KinematicCharacterController
-  velocity = new Vector3(-1,-3,0)
+  velocity = new Vector3(-1,0,0)
   bounds = 5
 
   constructor(position: Vector3) {
@@ -112,6 +112,11 @@ export default class Enemy extends Events {
     if(!body) return
     // move the enemy
 
+    const dt = this.time.delta * 0.001
+
+    const force = _V.copy(this.physics.instance.gravity).multiplyScalar(dt)
+		this.velocity.add(force)
+
     const currentPosition = this.entity.body.translation()
     
     if(currentPosition.x < this.position.x - this.bounds ||
@@ -120,7 +125,9 @@ export default class Enemy extends Events {
       this.velocity.x *= -1
     }
 
-    const desMove = _V.copy(this.velocity).multiplyScalar(this.time.delta * 0.001)
+    
+
+    const desMove = _V.copy(this.velocity).multiplyScalar(dt)
     Enemy.controller.computeColliderMovement(
       this.entity.collider,
       desMove, 
@@ -136,6 +143,9 @@ export default class Enemy extends Events {
     newPos.z = 0
 
     this.entity.body.setNextKinematicTranslation(newPos)
+    if(Enemy.controller.computedGrounded() && this.velocity.y < 0) {
+			this.velocity.y = 0
+		}
 
   }
 
