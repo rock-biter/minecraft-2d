@@ -165,11 +165,19 @@ export default class Enemy extends Events {
 			}
   }
 
+  drop() {
+    // TODO random items from a collection of droppables 
+    if(Math.random() < 0.3) return  
+    const drop = new Diamond(this.entity.body?.translation() as Vector3,bodyType.DYNAMIC)
+
+    drop.entity.body?.applyImpulse({x: 3 * Math.sign(Math.random() - 0.5), y: 2, z: 0},true)
+  }
+
   destroy() {
 
-    const d = new Diamond(this.entity.body?.translation() as Vector3,bodyType.DYNAMIC)
+    this.drop()
 
-    d.entity.body?.applyImpulse({x: 3 * Math.sign(Math.random() - 0.5), y: 2, z: 0},true)
+    
 
     this.physics.removeEntity(this.entity)
 
