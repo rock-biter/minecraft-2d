@@ -1,4 +1,4 @@
-import { DoubleSide, Mesh, MeshBasicMaterial,  PlaneGeometry, Texture, Vector3 } from "three";
+import { Color, DoubleSide, Mesh, MeshBasicMaterial,  PlaneGeometry, Texture, Vector3 } from "three";
 import Game from "../../Game";
 import Events from "../../Utils/Events";
 import { Entity } from "../../Types/entity.types";
@@ -59,7 +59,10 @@ export default class Collectable extends Events {
 
   getMaterial() {
     const material = new MeshBasicMaterial({ transparent: true, side: DoubleSide })
-    if(this.texture) {
+
+    if(this.game.debug.active) {
+      material.color.set('gold')
+    } else if(this.texture) {
       material.map = this.texture
     }
 
