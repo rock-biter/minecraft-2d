@@ -144,19 +144,17 @@ export default class Enemy extends Events {
 
 			if ([handle1, handle2].includes(this.entity?.collider?.handle)) {
 				//hit the body
-        console.log('damage to player!!')
-        const v = this.game.world.player?.velocity
-        if(!v) return
-        
-        v.x = -15 * Math.sign(v.x)
+        // console.log('damage to player!!')
+        this.game.world.player?.trigger('damage')
 			}
 
       if ([handle1, handle2].includes(this.entity?.sensor?.handle)) {
 				//hit the body
         const v = this.game.world.player?.velocity
         if(!v || v.y >= 0) return
-        console.log('damage to enemy!!')
-          this.destroy()
+        // console.log('damage to enemy!!')
+        this.drop()
+        this.destroy()
         
 
         // console.log(v)
@@ -174,8 +172,6 @@ export default class Enemy extends Events {
   }
 
   destroy() {
-
-    this.drop()
 
     this.physics.removeEntity(this.entity)
 

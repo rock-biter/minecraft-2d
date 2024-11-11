@@ -33,6 +33,7 @@ export default class Player extends Events {
 	speed = 5
 	jump = 20
 	isOnLadder = false
+	grabLadder = false
 	grounded = false
 
 	entity: Entity | undefined
@@ -65,10 +66,23 @@ export default class Player extends Events {
 
 		this.inputs.on('jump', (isJump) => {
 			// isJump as InputsArg
+
+			if(this.isOnLadder) {
+				this.grabLadder = true
+			}
+
 			this.controller.computedGrounded() &&
 			isJump && this.velocity.add(_V.set(0, this.jump, 0))
 		})
 		// this.initInputs()
+
+		this.on('damage',() => {
+			this.onDamage()
+		})
+	}
+
+	onDamage() {
+		console.log('player damage!')
 	}
 
 	getMesh() {
@@ -131,12 +145,12 @@ export default class Player extends Events {
 		// console.log(dt)
 		const prevPosition = this.entity.body.translation()
 		
-		// if(this.isOnLadder && this.inputs.keys['left']) {
-		// 	this.velocity.y = -2
-		// }	else {
+		if(this.grabLadder ) {
+			this.velocity.y = 0
+		}	else {
 			const force = _V.copy(this.physics.instance.gravity).multiplyScalar(dt)
 			this.velocity.add(force)
-		// }
+		}
 
 		if (this.inputs.keys['left']) {
 			this.velocity.x = MathUtils.lerp(

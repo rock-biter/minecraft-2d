@@ -44,13 +44,14 @@ export default class Collectable extends Events {
       }
 
 			if ([handle1, handle2].includes(collider.handle)) {
+        this.trigger('collect',true)
 				this.destroy()
 			}
   }
 
   getColliderDesc(isSensor = true,colliderDescType = RAPIER.ColliderDesc.cuboid) {
 
-    const size = isSensor ? this.size/3 : this.size/4
+    const size = isSensor ? this.size/3 : this.size/5
     const height = isSensor ? size : this.size / 2
 
     const colliderDesc = colliderDescType(size,height,size)
@@ -116,8 +117,6 @@ export default class Collectable extends Events {
   }
 
   destroy() {
-
-    this.trigger('collect',true)
 
     this.physics.removeEntity(this.entity)
 

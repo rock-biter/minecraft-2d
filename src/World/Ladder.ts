@@ -134,6 +134,9 @@ export default class Ladder {
         console.log('collision with ladder')
 
         this.game.world.player.isOnLadder = started
+        if(!started) {
+          this.game.world.player.grabLadder = false
+        }
 
       }
     })
