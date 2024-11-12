@@ -66,16 +66,16 @@ export default class Life extends Events {
   }
 
   createMesh() {
+
     const texture = this.resources.items['heart'] as Texture
     this.uniforms.uDiffuse.value = texture
-    texture.wrapS = RepeatWrapping
-    texture.repeat.x = this.points
     this.geometry = this.getGeometry()
     // this.material = new MeshBasicMaterial({
     //   map: texture,
     //   transparent: true
     // })
-    this.material = this.getMaterial(texture)
+    // TODO add debug material
+    this.material = this.getMaterial()
 
     this.mesh = new Mesh(this.geometry,this.material)
     this.mesh.scale.setScalar(0.5)
@@ -84,7 +84,7 @@ export default class Life extends Events {
 
   }
 
-  getMaterial(map: Texture) {
+  getMaterial() {
     return new ShaderMaterial({
       uniforms: this.uniforms,
       fragmentShader: fragment,
