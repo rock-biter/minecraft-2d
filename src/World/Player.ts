@@ -88,7 +88,7 @@ export default class Player extends Events {
 	}
 
 	onDamage(damage = 2) {
-		console.log('player damage!',this.life.points)
+		// console.log('player damage!',this.life.points)
 		this.life.points -= damage
 
 		if(this.life.points <= 0) {

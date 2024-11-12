@@ -42,8 +42,8 @@ export default class World {
 		this.resources = this.game.resources
 
 		this.resources.on('load', () => {
-			console.log('load')
-			console.log('ready to generate world')
+			// console.log('load')
+			// console.log('ready to generate world')
 			this.environment = new Environment()
 			this.materials = new Materials()
 			// this.floor = new Floor(50)

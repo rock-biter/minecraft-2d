@@ -67,7 +67,7 @@ export default class Life extends Events {
 
     this.mesh = new Mesh(this.geometry,this.material)
     this.mesh.scale.setScalar(0.5)
-    this.mesh.position.set(0,-5.5,-20)
+    this.mesh.position.set(0,-7,-420)
     this.game.view.camera.add(this.mesh)
 
   }
