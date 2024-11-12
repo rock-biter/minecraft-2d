@@ -20,6 +20,9 @@ export default class Enemy extends Events {
   static controller: RAPIER.KinematicCharacterController
   velocity = new Vector3(-1,0,0)
   bounds = 5
+  damage = 0.5
+  damageRate = 500
+  damageTimer: number | undefined = undefined
 
   constructor(position: Vector3) {
     super()
@@ -149,13 +152,32 @@ export default class Enemy extends Events {
 
   }
 
+  attack() {
+    this.game.world.player?.onDamage(this.damage)
+  }
+
   onCollide({handle1, handle2, started}: CollideArg) {
-			if(!this.entity || !this.entity?.collider || !started || !this.entity.sensor) return
+    
+			if(!this.entity || !this.entity?.collider || !this.entity.sensor) return
+
+      if(!started) {
+        if(this.damageTimer) {
+          clearInterval(this.damageTimer)
+          console.log('termina attack')
+          this.damageTimer = undefined
+        }
+        return
+      }
 
 			if ([handle1, handle2].includes(this.entity?.collider?.handle)) {
 				//hit the body
         // console.log('damage to player!!')
-        this.game.world.player?.trigger('damage')
+        // this.game.world.player?.trigger('damage')
+        this.attack()
+        this.damageTimer = setInterval(() =>{
+          this.attack()
+          console.log('attack')
+        }, this.damageRate)
 			}
 
       if ([handle1, handle2].includes(this.entity?.sensor?.handle)) {

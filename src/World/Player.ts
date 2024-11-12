@@ -81,13 +81,13 @@ export default class Player extends Events {
 		})
 		// this.initInputs()
 
-		this.on('damage',() => {
+		// this.on('damage',() => {
 
-			this.onDamage()
-		})
+		// 	this.onDamage()
+		// })
 	}
 
-	onDamage(damage = 2) {
+	onDamage(damage = 0) {
 		// console.log('player damage!',this.life.points)
 		this.life.points -= damage
 
