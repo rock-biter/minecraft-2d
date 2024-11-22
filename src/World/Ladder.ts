@@ -131,9 +131,12 @@ export default class Ladder {
 			if(!this.entity || !this.entity?.collider || !this.game.world.player) return
 
       if ([handle1, handle2].includes(this.entity?.collider?.handle)) {
-        console.log('collision with ladder')
+        // console.log('collision with ladder')
 
         this.game.world.player.isOnLadder = started
+        if(!started) {
+          this.game.world.player.grabLadder = false
+        }
 
       }
     })

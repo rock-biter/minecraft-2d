@@ -38,15 +38,28 @@ export default class Collectable extends Events {
   onCollide({handle1, handle2, started}: CollideArg) {
 			if(!this.entity || !this.entity?.collider || !started) return
 
-			if ([handle1, handle2].includes(this.entity?.collider?.handle)) {
+      let collider = this.entity?.collider
+      if(this.entity?.sensor) {
+        collider = this.entity?.sensor
+      }
+
+			if ([handle1, handle2].includes(collider.handle)) {
+        this.trigger('collect',true)
 				this.destroy()
 			}
   }
 
-  getColliderDesc(colliderDescType = RAPIER.ColliderDesc.cuboid) {
+  getColliderDesc(isSensor = true,colliderDescType = RAPIER.ColliderDesc.cuboid) {
 
-    const colliderDesc = colliderDescType(this.size/3,this.size/3,this.size/3)
-      .setSensor(true)
+    const size = isSensor ? this.size/3 : this.size/5
+    const height = isSensor ? size : this.size / 2
+
+    const colliderDesc = colliderDescType(size,height,size)
+      .setSensor(isSensor)
+
+    if(!isSensor) {
+      colliderDesc.setTranslation(0,-0.3,0)
+    }
 
     return colliderDesc
 
@@ -85,8 +98,9 @@ export default class Collectable extends Events {
     const { x,y,z } = this.position
 
     if(bodyDesc) {
-      bodyDesc.setTranslation(x,y,z)
-      this.entity = this.physics.addEntity(bodyDesc,colliderDesc)
+      bodyDesc.setTranslation(x,y,z).lockRotations()
+      this.entity = this.physics.addEntity(bodyDesc,this.getColliderDesc(false))
+      this.entity.sensor = this.physics.instance.createCollider(colliderDesc,this.entity.body)
     } else {
       colliderDesc.setTranslation(x,y,z)
       mesh.position.copy(this.position)
@@ -103,8 +117,6 @@ export default class Collectable extends Events {
   }
 
   destroy() {
-
-    this.trigger('collect',true)
 
     this.physics.removeEntity(this.entity)
 

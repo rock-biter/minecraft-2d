@@ -9,14 +9,17 @@ import Viewport from './Viewport'
 import World from './World/World'
 import Physics from './Physics'
 
-import bodiesMap from './textures/map/map-11.png?url'
-import specialBodiesMap from './textures/map/specials-04.png?url'
-import collectablesMap from './textures/map/collectables-03.png?url'
+import bodiesMap from './textures/map/map-14.png?url'
+import backgroundMap from './textures/map/background-04.png?url'
+import frontgroundMap from './textures/map/frontground-01.png?url'
+import specialBodiesMap from './textures/map/specials-05.png?url'
+import collectablesMap from './textures/map/collectables-07.png?url'
 import ladderSrc from './textures/ladder.png?url'
 import goldenAppleSrc from './textures/golden-apple.png?url'
 import goldenCarrotSrc from './textures/golden-carrot.png?url'
 import emeraldSrc from './textures/emerald.png?url'
 import diamondSrc from './textures/diamond.png?url'
+import lifeHeartSrc from './textures/life-heart.png?url'
 
 import { inputMap } from './Types/input.types'
 import { texturesPaths } from './Utils/BlocksTexture'
@@ -38,6 +41,33 @@ const sources: Source[] = [
 		sizes: {
 			width: 42,
 			height: 12
+		},
+	},
+	{
+		name: 'background',
+		type: 'map',
+		path: backgroundMap,
+		sizes: {
+			width: 42,
+			height: 12
+		},
+	},
+	{
+		name: 'frontground',
+		type: 'map',
+		path: frontgroundMap,
+		sizes: {
+			width: 42,
+			height: 12
+		},
+	},
+	{
+		name: 'heart',
+		type: 'texture',
+		path: lifeHeartSrc,
+		sizes: {
+			width: 15,
+			height: 15
 		},
 	},
 	{

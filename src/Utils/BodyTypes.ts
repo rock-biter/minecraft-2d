@@ -17,7 +17,7 @@ export function getRigidBodyDesc(type = bodyType.NONE) {
     case bodyType.FIXED: 
       return RAPIER.RigidBodyDesc.fixed()
     case bodyType.DYNAMIC:
-      RAPIER.RigidBodyDesc.dynamic()
+      return RAPIER.RigidBodyDesc.dynamic()
     default:
       return null
   }

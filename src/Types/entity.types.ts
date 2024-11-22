@@ -4,5 +4,6 @@ import { Mesh } from "three"
 export interface Entity {
 	body?: RAPIER.RigidBody
 	mesh?: Mesh,
-	collider?: RAPIER.Collider
+	collider?: RAPIER.Collider,
+	sensor?: RAPIER.Collider
 }

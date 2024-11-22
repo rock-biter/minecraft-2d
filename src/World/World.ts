@@ -7,6 +7,7 @@ import {
 	MeshStandardMaterial,
 	PlaneGeometry,
 	Scene,
+	Vector3,
 } from 'three'
 import Game from '../Game'
 import Environment from './Environment'
@@ -17,6 +18,7 @@ import Time from '../Utils/Time'
 import Resources from '../Utils/Resources'
 import MapBuilder from '../MapBuilder'
 import Materials from '../Utils/Materials'
+import Enemy from './Enemy'
 
 export default class World {
 
@@ -40,15 +42,17 @@ export default class World {
 		this.resources = this.game.resources
 
 		this.resources.on('load', () => {
-			console.log('load')
-			console.log('ready to generate world')
+			// console.log('load')
+			// console.log('ready to generate world')
 			this.environment = new Environment()
 			this.materials = new Materials()
 			// this.floor = new Floor(50)
 
 			new MapBuilder().build()
 			
-			this.player = new Player()
+			this.player = new Player(new Vector3(-9.5, 12, 0))
+			
+			Enemy.spawn(new Vector3(-5,14.5,0))
 
 			// this.environment = new Environment() // => lights
 		})

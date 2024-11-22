@@ -65,7 +65,7 @@ export default class ChestBlock {
 
 
       if ([handle1, handle2].includes(this.sensor.handle)) { 
-        console.log('check colpita')
+        // console.log('check colpita')
         if(!this.entity.body) return
 
         const p = this.entity.body.translation()

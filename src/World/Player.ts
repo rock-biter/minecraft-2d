@@ -17,6 +17,7 @@ import Physics from '../Physics'
 import Time from '../Utils/Time'
 import { Entity } from '../Types/entity.types'
 import { InputsArg } from '../Types/callbacks.types'
+import Life from '../Utils/Life'
 
 const _V = new Vector3()
 
@@ -28,17 +29,22 @@ export default class Player extends Events {
 	time: Time 
 	inputs: Inputs 
 	controller: RAPIER.KinematicCharacterController = Controller.create(0.05)
+	life = new Life()
 
 	velocity = new Vector3()
 	speed = 5
 	jump = 20
 	isOnLadder = false
+	grabLadder = false
+	grounded = false
+	initialPosition: Vector3
 
 	entity: Entity | undefined
 
-	constructor() {
+	constructor(position: Vector3) {
 		super()
 
+		this.initialPosition = position
 		this.game = new Game()
 		this.scene = this.game.world.scene
 		this.physics = this.game.physics
@@ -65,9 +71,30 @@ export default class Player extends Events {
 		this.inputs.on('jump', (isJump) => {
 			// isJump as InputsArg
 
-			this.checkGround() && isJump && this.velocity.add(_V.set(0, this.jump, 0))
+			if(this.isOnLadder) {
+				this.grabLadder = true
+				this.velocity.x = 0
+			}
+
+			this.controller.computedGrounded() &&
+			isJump && this.velocity.add(_V.set(0, this.jump, 0))
 		})
 		// this.initInputs()
+
+		// this.on('damage',() => {
+
+		// 	this.onDamage()
+		// })
+	}
+
+	onDamage(damage = 0) {
+		// console.log('player damage!',this.life.points)
+		this.life.points -= damage
+
+		if(this.life.points <= 0) {
+			this.death()
+			this.life.points = this.life.MAX_LIFE
+		}
 	}
 
 	getMesh() {
@@ -81,10 +108,11 @@ export default class Player extends Events {
 	}
 
 	createBody() {
+		const { x,y,z} = this.initialPosition
 		const bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased()
 			.lockTranslations()
 			.enabledTranslations(true, true, false)
-			.setTranslation(0, 20, 0)
+			.setTranslation(x,y,z)
 		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38).setActiveEvents(
 			RAPIER.ActiveEvents['COLLISION_EVENTS']
 		).setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
@@ -121,6 +149,10 @@ export default class Player extends Events {
 		return false
 	}
 
+	death() {
+		this.entity?.body?.setTranslation(this.initialPosition as RAPIER.Vector3,true)
+	}
+
 	updateVelocity() {
 		if(!this.entity || !this.entity.body || !this.entity.collider) return
 		// const { x, y, z } = this.body.translation()
@@ -130,7 +162,7 @@ export default class Player extends Events {
 		// console.log(dt)
 		const prevPosition = this.entity.body.translation()
 		
-		if(this.isOnLadder) {
+		if(this.grabLadder ) {
 			this.velocity.y = 0
 		}	else {
 			const force = _V.copy(this.physics.instance.gravity).multiplyScalar(dt)
@@ -167,7 +199,13 @@ export default class Player extends Events {
 			desiredMov,
 			undefined,
 			undefined,
-			(coll) => !coll.isSensor()
+			(coll) => {
+				// console.log(coll.parent())
+				// if(coll.isSensor()) {
+				// 	console.log(coll.parent())
+				// }
+				return !coll.isSensor() 
+			}
 		)
 
 		// for (let i = 0; i < this.controller.numComputedCollisions(); i++) {
@@ -186,6 +224,9 @@ export default class Player extends Events {
 		this.velocity.copy(newPosition.sub(prevPosition).divideScalar(dt))
 		this.velocity.x *= 1 - dt * 10
 		this.velocity.z = 0
+		if(this.controller.computedGrounded() && this.velocity.y < 0) {
+			this.velocity.y = 0
+		}
 	}
 
 }

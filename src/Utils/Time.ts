@@ -29,7 +29,7 @@ export default class Time extends Events {
 		this.viewport.on('focus',(isFocusOn) => {
 			this.focus = isFocusOn as boolean
 
-			console.log('focus',this.focus)
+			// console.log('focus',this.focus)
 		})
 	}
 

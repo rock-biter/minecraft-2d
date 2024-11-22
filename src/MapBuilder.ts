@@ -1,19 +1,16 @@
-import { BoxGeometry, BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial, MeshStandardMaterialParameters, PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
 import RAPIER from "@dimforge/rapier3d";
-import fragment from './shaders/fragment.glsl'
-import vertex from './shaders/vertex.glsl'
 
 import { Source } from "./Types/resources.types";
 import { Entity } from "./Types/entity.types";
-import ChestBlock from "./World/ChestBlock";
+// import ChestBlock from "./World/ChestBlock";
 import Ladder from "./World/Ladder";
-import Collectable from "./World/Collectables/Collectable";
-import GoldApple from "./World/Collectables/GoldenApple";
+import GoldenApple from "./World/Collectables/GoldenApple";
 import { collectableType } from "./Utils/CollectablesType";
-import { bodyType, getRigidBodyDesc } from "./Utils/BodyTypes";
+import { getRigidBodyDesc } from "./Utils/BodyTypes";
 import GoldenCarrot from "./World/Collectables/GoldenCarrot";
 import Diamond from "./World/Collectables/Diamond";
 import Emerald from "./World/Collectables/Emerald";
@@ -61,23 +58,27 @@ export default class MapBuilder {
   }
 
   build() {
-
-    this.buildFixedBlocks()
+    const bodiesData: ImageData | undefined = this.getTextureData('bodies')
+    const backgroundData: ImageData | undefined = this.getTextureData('background')
+    const frontgroundData: ImageData | undefined = this.getTextureData('frontground')
+    this.buildFixedBlocks(bodiesData)
+    this.buildFixedBlocks(backgroundData, 'BACKGROUND')
+    this.buildFixedBlocks(frontgroundData, 'FRONTGROUND')
     this.buildSpecialBlocks()
     this.createCollectables()
 
   }
 
   createCollectables() {
-    console.log('build collectables')
+    // console.log('build collectables')
     const collectablesData: ImageData | undefined = this.getTextureData('collectables')
 
     if(!collectablesData) return
     const data = collectablesData.data
 
     for (let i = 0; i < data.length / 4; i++) {
-      const r = data[i * 4 + 0]
-      const g = data[i * 4 + 1]
+      const bodyType = data[i * 4 + 0]
+      const collectable = data[i * 4 + 1]
       const b = data[i * 4 + 2]
       const a = data[i * 4 + 3]
 
@@ -85,23 +86,23 @@ export default class MapBuilder {
 
       const collectableSrc = this.resources.getSourceByName('collectables') as Required<Source>
       const { x,y,z } = this.getCoordinatesBy(i,collectableSrc.sizes.width,collectableSrc.sizes.height)
-      console.log('collectables',g)
-      switch(g) {
+      // console.log('collectables',collectable)
+      switch(collectable) {
         case collectableType.GOLDEN_APPLE:
           // console.log('apple')
-          new GoldApple(new Vector3(x,y,z),g)
+          new GoldenApple(new Vector3(x,y,z),bodyType)
           break;
         case collectableType.GOLDEN_CARROT:
           // console.log('apple')
-          new GoldenCarrot(new Vector3(x,y,z),g)
+          new GoldenCarrot(new Vector3(x,y,z),bodyType)
           break;
         case collectableType.DIAMOND:
           // console.log('apple')
-          new Diamond(new Vector3(x,y,z),g)
+          new Diamond(new Vector3(x,y,z),bodyType)
           break;
         case collectableType.EMERALD:
           // console.log('apple')
-          new Emerald(new Vector3(x,y,z),g)
+          new Emerald(new Vector3(x,y,z),bodyType)
           break;
       }
       // new GoldApple(new Vector3(x,y,z),g)
@@ -111,7 +112,7 @@ export default class MapBuilder {
   }
 
   buildSpecialBlocks() {
-    console.log('build special blocks')
+    // console.log('build special blocks')
     const specialBlocksData: ImageData | undefined = this.getTextureData('special-bodies')
 
     if(!specialBlocksData) return
@@ -130,8 +131,19 @@ export default class MapBuilder {
     }
   }
 
-  buildFixedBlocks() {
-    const bodiesData: ImageData | undefined = this.getTextureData('bodies')
+  buildFixedBlocks(bodiesData: ImageData | undefined, level = 'PLAYER') {
+
+    let z = -0.5
+
+    switch(level) {
+      case 'BACKGROUND':
+        z = -2
+      break
+      case 'FRONTGROUND':
+        z = 0.5
+      break
+    }
+    
     if(!bodiesData) return
     const data = bodiesData.data
 
@@ -143,7 +155,7 @@ export default class MapBuilder {
 
       if(a === 0) continue
       
-      this.createBlock(i,r,g,b,a)
+      this.createBlock(i,r,g,b,a,z)
       
     }
   }
@@ -157,17 +169,17 @@ export default class MapBuilder {
     return {x,y,z}
   }
 
-  getMesh(textureDepth: number,brightness: number,opacity: number) {
+  getMesh(textureDepth: number,brightness: number,opacity: number, depth: number) {
 
     const material = this.game.debug.active ? new MeshStandardMaterial() : this.blocksMaterial
 
     return new Mesh(
-			this.getGeometry(textureDepth, brightness,opacity),
+			this.getGeometry(textureDepth, brightness,opacity,depth),
 			material
 		)
   }
 
-  getGeometry(textureDepth: number, brightness: number,opacity: number) {
+  getGeometry(textureDepth: number, brightness: number,opacity: number,depth: number) {
 
     // console.log('alpha:',opacity,textureDepth)
 
@@ -207,14 +219,14 @@ export default class MapBuilder {
     plane.setAttribute('aBright', brightAttribute)
     plane.setAttribute('aOpacity', opacityAttribute)
 
-    plane.translate(0,0,-0.5)
+    plane.translate(0,0,depth)
 
     return plane
   }
 
   createSpecialBlock(i: number,r: number,g: number,b: number,a: number) {
 
-    console.log('special block',i,r,g,b,a)
+    // console.log('special block',i,r,g,b,a)
     const specialBodiesSrc = this.resources.getSourceByName('special-bodies') as Required<Source>
 
     const { x,y,z } = this.getCoordinatesBy(i,specialBodiesSrc.sizes.width,specialBodiesSrc.sizes.height)
@@ -231,7 +243,7 @@ export default class MapBuilder {
 
   }
 
-  createBlock(i: number,r: number,g: number,b: number,a: number) {
+  createBlock(i: number,r: number,g: number,b: number,a: number, depth :number) {
 
     let entity: Entity = {}
     const bodiesSrc = this.resources.getSourceByName('bodies') as Required<Source>
@@ -246,7 +258,7 @@ export default class MapBuilder {
       entity = this.physics.addEntity(bodyDesc, colliderDesc)
     }
 
-    const mesh = this.getMesh(g,b,a)
+    const mesh = this.getMesh(g,b,a,depth)
 
     if(mesh) {
       mesh.position.set(x,y,z)

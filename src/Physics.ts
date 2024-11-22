@@ -28,7 +28,7 @@ export default class Physics extends Events {
 
 		this.time.on('tick', () => {
 			this.update()
-		})
+		},1)
 	}
 
 	addEntity(rigidBodyDesc: RAPIER.RigidBodyDesc, colliderDesc: RAPIER.ColliderDesc | null = null) {
@@ -56,15 +56,18 @@ export default class Physics extends Events {
 	}
 
 	removeEntity(entity: Entity) {
-		//
-		entity.body && this.instance.removeRigidBody(entity.body)
-		entity.collider && this.instance.removeCollider(entity.collider, true)
 
 		const index = this.entities.indexOf(entity)
 
 		if (index !== -1) {
 			this.entities.splice(index, 1)
 		}
+		//
+		entity.collider && this.instance.removeCollider(entity.collider, true)
+		entity.sensor && this.instance.removeCollider(entity.sensor, true)
+		entity.body && this.instance.removeRigidBody(entity.body)
+
+		
 	}
 
 	update() {

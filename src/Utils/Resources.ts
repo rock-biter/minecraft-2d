@@ -38,7 +38,7 @@ export default class Resources extends Events {
 			const img = new Image()
 			img.onload = () => {
 				res(img)
-				console.log('loaded img')
+				// console.log('loaded img')
 			}
 
 			img.onerror = (e) => {
@@ -60,7 +60,7 @@ export default class Resources extends Events {
 
 			switch(type) {
 				case 'arrayTexture':
-					console.log('texture array',source)
+					// console.log('texture array',source)
 					const s = source as Required<Source>
 					this.loadArrayTexture(s)
 					break
@@ -98,7 +98,7 @@ export default class Resources extends Events {
 
 	async loadArrayTexture(source: Required<Source>) {
 
-		console.log('load array texture')
+		// console.log('load array texture')
 		const { width, height } = source.sizes
 		const size = width * height
 		const depth = source.path.length
@@ -163,7 +163,7 @@ export default class Resources extends Events {
 
 		if (this.loaded === this.toLoad) {
 			this.trigger('load')
-			console.log('ready!!!')
+			// console.log('ready!!!')
 		}
 
 		this.trigger('progress')
