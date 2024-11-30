@@ -17,6 +17,7 @@ import Emerald from "./World/Collectables/Emerald";
 import Debug from "./Utils/Debug";
 import { PaneArgs } from "./Types/callbacks.types";
 import ENUMS from "./Utils/Enums";
+import Block from "./World/Blocks/Block";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -258,32 +259,34 @@ export default class MapBuilder {
 
   createBlock(i: number,r: number,g: number,b: number,a: number, depth :number) {
 
-    let entity: Entity = {}
+    // let entity: Entity = {}
     const bodiesSrc = this.resources.getSourceByName('bodies') as Required<Source>
     const { x,y,z } = this.getCoordinatesBy(i,bodiesSrc.sizes.width,bodiesSrc.sizes.height)
 
-    // Red channel for body type
-    const bodyDesc = getRigidBodyDesc(r)
+    new Block({ position: new Vector3(x,y,z),r,g,b,depth})
 
-    if(bodyDesc) {
-      bodyDesc.setTranslation(x, y, z)
-      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
-      entity = this.physics.addEntity(bodyDesc, colliderDesc)
-    }
+    // // Red channel for body type
+    // const bodyDesc = getRigidBodyDesc(r)
 
-    const mesh = this.getMesh(g,b,a,depth)
+    // if(bodyDesc) {
+    //   bodyDesc.setTranslation(x, y, z)
+    //   const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+    //   entity = this.physics.addEntity(bodyDesc, colliderDesc)
+    // }
 
-    this.debug.on('texturePackChange',(e) => {
-      const event = e as PaneArgs
-      mesh.material = this.getMaterial(event.value)
-    })
+    // const mesh = this.getMesh(g,b,a,depth)
 
-    if(mesh) {
-      mesh.position.set(x,y,z)
-      entity.mesh = mesh
+    // this.debug.on('texturePackChange',(e) => {
+    //   const event = e as PaneArgs
+    //   mesh.material = this.getMaterial(event.value)
+    // })
 
-		  this.scene.add(entity.mesh)
-    }
+    // if(mesh) {
+    //   mesh.position.set(x,y,z)
+    //   entity.mesh = mesh
+
+		//   this.scene.add(entity.mesh)
+    // }
 
 	}
 
