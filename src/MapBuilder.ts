@@ -14,6 +14,9 @@ import { getRigidBodyDesc } from "./Utils/BodyTypes";
 import GoldenCarrot from "./World/Collectables/GoldenCarrot";
 import Diamond from "./World/Collectables/Diamond";
 import Emerald from "./World/Collectables/Emerald";
+import Debug from "./Utils/Debug";
+import { PaneArgs } from "./Types/callbacks.types";
+import ENUMS from "./Utils/Enums";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -24,6 +27,7 @@ interface blockUniform {
 export default class MapBuilder {
   
   game: Game
+  debug: Debug
   resources: Resources
   context: CanvasRenderingContext2D | null
   canvas: HTMLCanvasElement
@@ -42,6 +46,7 @@ export default class MapBuilder {
   constructor() {
 
     this.game = new Game()
+    this.debug = this.game.debug
     this.resources = this.game.resources  
     this.physics = this.game.physics
 		this.scene = this.game.world.scene
@@ -172,12 +177,16 @@ export default class MapBuilder {
   getMesh(textureDepth: number,brightness: number,opacity: number, depth: number) {
 
     // const material = this.game.debug.active ? new MeshStandardMaterial() : this.blocksMaterial
-    const material = this.blocksMaterial
+    const material = this.getMaterial(this.debug.params.texturePack)
 
     return new Mesh(
 			this.getGeometry(textureDepth, brightness,opacity,depth),
 			material
 		)
+  }
+
+  getMaterial(type: string) {
+    return type === ENUMS.TEXTURE_PLACEHOLDER ? new MeshStandardMaterial() : this.blocksMaterial
   }
 
   getGeometry(textureDepth: number, brightness: number,opacity: number,depth: number) {
@@ -263,6 +272,11 @@ export default class MapBuilder {
     }
 
     const mesh = this.getMesh(g,b,a,depth)
+
+    this.debug.on('texturePackChange',(e) => {
+      const event = e as PaneArgs
+      mesh.material = this.getMaterial(event.value)
+    })
 
     if(mesh) {
       mesh.position.set(x,y,z)
