@@ -52,7 +52,7 @@ export default class World {
 			
 			this.player = new Player(new Vector3(-9.5, 12, 0))
 			
-			Enemy.spawn(new Vector3(-5,14.5,0))
+			// Enemy.spawn(new Vector3(-5,14.5,0))
 
 			// this.environment = new Environment() // => lights
 		})

@@ -1,4 +1,4 @@
-import {  BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BoxGeometry, BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -133,14 +133,14 @@ export default class MapBuilder {
 
   buildFixedBlocks(bodiesData: ImageData | undefined, level = 'PLAYER') {
 
-    let z = -0.5
+    let z = 0
 
     switch(level) {
       case 'BACKGROUND':
-        z = -2
+        z = -1
       break
       case 'FRONTGROUND':
-        z = 0.5
+        z = 1
       break
     }
     
@@ -171,7 +171,8 @@ export default class MapBuilder {
 
   getMesh(textureDepth: number,brightness: number,opacity: number, depth: number) {
 
-    const material = this.game.debug.active ? new MeshStandardMaterial() : this.blocksMaterial
+    // const material = this.game.debug.active ? new MeshStandardMaterial() : this.blocksMaterial
+    const material = this.blocksMaterial
 
     return new Mesh(
 			this.getGeometry(textureDepth, brightness,opacity,depth),
@@ -185,11 +186,13 @@ export default class MapBuilder {
 
     const bright = MathUtils.mapLinear(brightness,0,200,-1,1)
 
-    const plane = new PlaneGeometry(1, 1)
+    const box = new BoxGeometry(1, 1)
 
-    const uvCount = 4
+
+    const uvAttribute = box.getAttribute('uv')
+    // console.log(uvAttribute)
+    const uvCount = uvAttribute.count
     const uvSize = 3
-    const uvAttribute = plane.getAttribute('uv')
     // console.log(uvAttribute)
     const uvArray = new Float32Array(uvCount * uvSize)
     const newUvAttribute = new BufferAttribute(uvArray, 3)
@@ -206,7 +209,8 @@ export default class MapBuilder {
       const v = uvAttribute.getY(i)
 
       newUvAttribute.setXYZ(i, u, v, textureDepth)
-      brightAttribute.setX(i,bright)
+      // brightAttribute.setX(i,bright)
+      brightAttribute.setX(i,0)
       opacityAttribute.setX(i,opacity / 255)
     }
 
@@ -215,13 +219,13 @@ export default class MapBuilder {
     opacityAttribute.needsUpdate = true
 
     // plane.deleteAttribute('uv')
-    plane.setAttribute('aUv', newUvAttribute)
-    plane.setAttribute('aBright', brightAttribute)
-    plane.setAttribute('aOpacity', opacityAttribute)
+    box.setAttribute('aUv', newUvAttribute)
+    box.setAttribute('aBright', brightAttribute)
+    box.setAttribute('aOpacity', opacityAttribute)
 
-    plane.translate(0,0,depth)
+    box.translate(0,0,depth)
 
-    return plane
+    return box
   }
 
   createSpecialBlock(i: number,r: number,g: number,b: number,a: number) {
