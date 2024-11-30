@@ -39,6 +39,7 @@ export default class Ladder {
     this.entity = {}
 
     const mesh = this.getMesh(position,length)
+    mesh.renderOrder = 1
     this.entity.mesh = mesh
     this.entity.collider = this.getCollider(position,length)
     this.scene.add(mesh)

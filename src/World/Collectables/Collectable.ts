@@ -94,6 +94,7 @@ export default class Collectable extends Events {
     const colliderDesc = this.getColliderDesc()
     const bodyDesc = getRigidBodyDesc(type)
     const mesh = this.getMesh()
+    mesh.renderOrder = 2
 
     const { x,y,z } = this.position
 
