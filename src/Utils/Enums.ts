@@ -5,4 +5,16 @@ const ENUMS = {
   TEXTURE_PLACEHOLDER: 'teaxture-placeholder'
 }
 
+export const TEXTURES = {
+  GRASS: 'GRASS',
+  GRASS_TOP: 'GRASS_TOP',
+  COBBLESTONE: 'COBBLESTONE',
+  GRAVEL: 'GRAVEL',
+  SANDOSTONE: 'SANDOSTONE',
+  DIRT: 'DIRT',
+  STONE: 'STONE',
+  GRANITE: 'GRANITE',
+  SNOWY_GRASS: 'SNOWY_GRASS',
+}
+
 export default ENUMS

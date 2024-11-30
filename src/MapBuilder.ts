@@ -16,8 +16,10 @@ import Diamond from "./World/Collectables/Diamond";
 import Emerald from "./World/Collectables/Emerald";
 import Debug from "./Utils/Debug";
 import { PaneArgs } from "./Types/callbacks.types";
-import ENUMS from "./Utils/Enums";
+import ENUMS, { TEXTURES } from "./Utils/Enums";
 import Block from "./World/Blocks/Block";
+import { getTextureName } from "./Utils/BlocksTexture";
+import Grass from "./World/Blocks/Grass";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -257,13 +259,25 @@ export default class MapBuilder {
 
   }
 
-  createBlock(i: number,r: number,g: number,b: number,a: number, depth :number) {
+  createBlock(i: number,r: number,textureIndex: number,b: number,a: number, depth :number) {
 
     // let entity: Entity = {}
     const bodiesSrc = this.resources.getSourceByName('bodies') as Required<Source>
     const { x,y,z } = this.getCoordinatesBy(i,bodiesSrc.sizes.width,bodiesSrc.sizes.height)
 
-    new Block({ position: new Vector3(x,y,z),r,g,b,depth})
+    const textureName = getTextureName(textureIndex)
+
+    console.log('texture',textureName)
+
+    switch(textureName) {
+      case TEXTURES.GRASS:
+        new Grass({ position: new Vector3(x,y,z),r,textureIndex,b,depth})
+        break
+      default:
+        new Block({ position: new Vector3(x,y,z),r,textureIndex,b,depth})
+    }
+
+    
 
     // // Red channel for body type
     // const bodyDesc = getRigidBodyDesc(r)

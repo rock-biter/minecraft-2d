@@ -1,9 +1,12 @@
-import { IUniform, MeshBasicMaterial, MeshStandardMaterial, ShaderMaterial, Texture } from "three"
+import { Color, IUniform, MeshBasicMaterial, MeshStandardMaterial, ShaderMaterial, Texture, Vector3 } from "three"
 import Game from "../Game"
 import Resources from "./Resources"
 
 import fragment from '../shaders/fragment.glsl'
 import vertex from '../shaders/vertex.glsl'
+
+import grassFragment from '../shaders/grass/fragment.glsl'
+import grassVertex from '../shaders/grass/vertex.glsl'
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -22,9 +25,13 @@ export default class Materials {
 		uDiffuse: {
 			value: null,
 		},
+    uColor: {
+      value: new Color(0xffffff)
+    }
 	}
   blocksMaterial: ShaderMaterial  
   ladderMaterial: MeshBasicMaterial
+  grassMaterial: ShaderMaterial
 
   constructor() {
     this.game = new Game()
@@ -44,6 +51,13 @@ export default class Materials {
       map: this.resources.items['ladder'] as Texture,
       transparent: true
     })
+
+    this.grassMaterial = new ShaderMaterial({
+			uniforms: this.uniforms,
+			fragmentShader: grassFragment,
+			vertexShader: grassVertex,
+      transparent: true,
+		})
 
   }
 

@@ -1,4 +1,4 @@
-import { BoxGeometry, BufferAttribute, MathUtils, Mesh, MeshStandardMaterial, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
+import { BoxGeometry, BufferAttribute, BufferGeometry, MathUtils, Mesh, MeshStandardMaterial, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
 import Game from "../../Game";
 import Resources from "../../Utils/Resources";
 import Debug from "../../Utils/Debug";
@@ -12,7 +12,7 @@ import { PaneArgs } from "../../Types/callbacks.types";
 export interface BlockProps {
   position: Vector3,
   r: number,
-  g: number,
+  textureIndex: number,
   b: number,
   depth: number
 }
@@ -21,19 +21,21 @@ export default class Block {
 
   position: Vector3
   r: number
-  g: number
+  textureIndex: number
   b: number
   depth: number
 
   game: Game
 
-  constructor({ position = new Vector3(), r, g, b, depth }: BlockProps) {
+  entity!: Entity
+
+  constructor({ position = new Vector3(), r, textureIndex, b, depth }: BlockProps) {
 
     this.game = new Game()
 
     this.position = position
     this.r = r
-    this.g = g
+    this.textureIndex = textureIndex
     this.b = b
     this.depth = depth
 
@@ -61,6 +63,10 @@ export default class Block {
     return this.game.world.materials.blocksMaterial
   }
 
+  get geometry(): BufferGeometry | undefined {
+    return this.entity.mesh?.geometry
+  }
+
   create() {
     // console.log('new block')
     const entity = this.getPhysics()
@@ -77,6 +83,8 @@ export default class Block {
         mesh.material = this.getMaterial(event.value)
       })
     }
+
+    this.entity = entity
   }
 
   getPhysics() {
@@ -131,7 +139,7 @@ export default class Block {
       const u = uvAttribute.getX(i)
       const v = uvAttribute.getY(i)
 
-      newUvAttribute.setXYZ(i, u, v, this.g)
+      newUvAttribute.setXYZ(i, u, v, this.textureIndex)
       // brightAttribute.setX(i,bright)
       brightAttribute.setX(i,0)
       // opacityAttribute.setX(i,opacity / 255)
