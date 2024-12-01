@@ -5,4 +5,10 @@ import topLevelAwait from 'vite-plugin-top-level-await'
 
 export default defineConfig({
 	plugins: [glsl(), wasm(), topLevelAwait()],
+	build: {
+		/** this make things working in production!! */
+		rollupOptions: {
+			treeshake: false,
+		},
+	},
 })
