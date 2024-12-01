@@ -1,3 +1,4 @@
+import { TpChangeEvent } from "tweakpane"
 
 export type CollideArg = {
 	handle1: number,
@@ -7,4 +8,6 @@ export type CollideArg = {
 
 export type InputsArg = boolean
 
-export type CallbackArg = CollideArg | InputsArg | undefined
+export type PaneArgs = TpChangeEvent<string>
+
+export type CallbackArg = CollideArg | InputsArg | PaneArgs | undefined

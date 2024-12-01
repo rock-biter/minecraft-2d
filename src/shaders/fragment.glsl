@@ -25,5 +25,6 @@ void main() {
 
   // lighten a bit
   gl_FragColor = vec4( color.rgb, vOpacity);
+  
 
 }

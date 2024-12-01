@@ -78,8 +78,9 @@ export default class Life extends Events {
     this.material = this.getMaterial()
 
     this.mesh = new Mesh(this.geometry,this.material)
-    this.mesh.scale.setScalar(0.5)
-    this.mesh.position.set(0,-7,-420)
+    this.mesh.renderOrder = 10
+    this.mesh.scale.setScalar(0.15)
+    this.mesh.position.set(0,-1.75,-5)
     this.game.view.camera.add(this.mesh)
 
   }
@@ -90,6 +91,8 @@ export default class Life extends Events {
       fragmentShader: fragment,
       vertexShader: vertex,
       transparent: true,
+      depthTest: false,
+      depthWrite: false,
     })
   }
 

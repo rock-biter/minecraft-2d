@@ -21,7 +21,8 @@ export default class GoldenApple extends Collectable {
     this.on('collect',() => {
       // console.log('collect golden apple')
       if(this.game.world.player) {
-        this.game.world.player.life.points += 8
+        this.game.world.player.life.points += 4
+        this.game.world.player.addEffect({ name: 'regeneration', value: 8, damage: - 0.5 })
       }
     })
 

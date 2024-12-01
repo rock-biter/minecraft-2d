@@ -1,6 +1,9 @@
-import { OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+import { OrthographicCamera, PerspectiveCamera, Scene, ToneMapping, WebGLRenderer, VSMShadowMap } from 'three'
 import Game from './Game'
 import Viewport from './Viewport'
+import Debug from './Utils/Debug'
+import { PaneArgs } from './Types/callbacks.types'
+import ENUMS from './Utils/Enums'
 
 export default class Rendering {
 
@@ -9,9 +12,11 @@ export default class Rendering {
 	camera: PerspectiveCamera | OrthographicCamera
 	scene: Scene
 	instance: WebGLRenderer 
+	debug: Debug
 
 	constructor() {
 		this.game = new Game()
+		this.debug = this.game.debug
 		this.viewport = this.game.viewport
 		this.camera = this.game.view.camera
 		this.scene = this.game.world.scene
@@ -19,6 +24,10 @@ export default class Rendering {
 			canvas: this.game.domElement,
 			antialias: true,
 		})
+		this.instance.shadowMap.enabled = true
+		this.instance.shadowMap.type = VSMShadowMap;
+
+		// this.instance.toneMapping = THREE.LinearToneMapping
 
 		this.resize()
 
@@ -33,6 +42,20 @@ export default class Rendering {
 		this.game.viewport.on('resize', () => {
 			this.resize()
 		})
+
+		if(this.debug.active) {
+			this.debug.on('cameraChange',(e) => {
+				const event = e as PaneArgs
+				console.log('rendering:',event.value)
+				switch(event.value) {
+					case ENUMS.ORBIT_CONTROLS:
+						this.camera = this.game.view.debugCamera
+						break
+					default:
+						this.camera = this.game.view.camera
+				}
+			})
+		}
 	}
 
 	resize() {

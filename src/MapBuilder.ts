@@ -1,4 +1,4 @@
-import {  BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BoxGeometry, BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -14,6 +14,14 @@ import { getRigidBodyDesc } from "./Utils/BodyTypes";
 import GoldenCarrot from "./World/Collectables/GoldenCarrot";
 import Diamond from "./World/Collectables/Diamond";
 import Emerald from "./World/Collectables/Emerald";
+import Debug from "./Utils/Debug";
+import { PaneArgs } from "./Types/callbacks.types";
+import ENUMS, { TEXTURES } from "./Utils/Enums";
+import Block from "./World/Blocks/Block";
+import { getTextureName } from "./Utils/BlocksTexture";
+import Grass from "./World/Blocks/Grass";
+import QuestionBlock from "./World/Blocks/QuestionBlock";
+import Lava from "./World/Blocks/Lava";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -24,6 +32,7 @@ interface blockUniform {
 export default class MapBuilder {
   
   game: Game
+  debug: Debug
   resources: Resources
   context: CanvasRenderingContext2D | null
   canvas: HTMLCanvasElement
@@ -37,11 +46,12 @@ export default class MapBuilder {
 			value: null,
 		},
 	}
-  blocksMaterial: ShaderMaterial
+  blocksMaterial: ShaderMaterial | MeshStandardMaterial
 
   constructor() {
 
     this.game = new Game()
+    this.debug = this.game.debug
     this.resources = this.game.resources  
     this.physics = this.game.physics
 		this.scene = this.game.world.scene
@@ -133,14 +143,14 @@ export default class MapBuilder {
 
   buildFixedBlocks(bodiesData: ImageData | undefined, level = 'PLAYER') {
 
-    let z = -0.5
+    let z = 0
 
     switch(level) {
       case 'BACKGROUND':
-        z = -2
+        z = -1
       break
       case 'FRONTGROUND':
-        z = 0.5
+        z = 1
       break
     }
     
@@ -171,12 +181,17 @@ export default class MapBuilder {
 
   getMesh(textureDepth: number,brightness: number,opacity: number, depth: number) {
 
-    const material = this.game.debug.active ? new MeshStandardMaterial() : this.blocksMaterial
+    // const material = this.game.debug.active ? new MeshStandardMaterial() : this.blocksMaterial
+    const material = this.getMaterial(this.debug.params.texturePack)
 
     return new Mesh(
 			this.getGeometry(textureDepth, brightness,opacity,depth),
 			material
 		)
+  }
+
+  getMaterial(type: string) {
+    return type === ENUMS.TEXTURE_PLACEHOLDER ? new MeshStandardMaterial() : this.blocksMaterial
   }
 
   getGeometry(textureDepth: number, brightness: number,opacity: number,depth: number) {
@@ -185,11 +200,13 @@ export default class MapBuilder {
 
     const bright = MathUtils.mapLinear(brightness,0,200,-1,1)
 
-    const plane = new PlaneGeometry(1, 1)
+    const box = new BoxGeometry(1, 1)
 
-    const uvCount = 4
+
+    const uvAttribute = box.getAttribute('uv')
+    // console.log(uvAttribute)
+    const uvCount = uvAttribute.count
     const uvSize = 3
-    const uvAttribute = plane.getAttribute('uv')
     // console.log(uvAttribute)
     const uvArray = new Float32Array(uvCount * uvSize)
     const newUvAttribute = new BufferAttribute(uvArray, 3)
@@ -206,7 +223,8 @@ export default class MapBuilder {
       const v = uvAttribute.getY(i)
 
       newUvAttribute.setXYZ(i, u, v, textureDepth)
-      brightAttribute.setX(i,bright)
+      // brightAttribute.setX(i,bright)
+      brightAttribute.setX(i,0)
       opacityAttribute.setX(i,opacity / 255)
     }
 
@@ -215,57 +233,88 @@ export default class MapBuilder {
     opacityAttribute.needsUpdate = true
 
     // plane.deleteAttribute('uv')
-    plane.setAttribute('aUv', newUvAttribute)
-    plane.setAttribute('aBright', brightAttribute)
-    plane.setAttribute('aOpacity', opacityAttribute)
+    box.setAttribute('aUv', newUvAttribute)
+    box.setAttribute('aBright', brightAttribute)
+    box.setAttribute('aOpacity', opacityAttribute)
 
-    plane.translate(0,0,depth)
+    box.translate(0,0,depth)
 
-    return plane
+    return box
   }
 
-  createSpecialBlock(i: number,r: number,g: number,b: number,a: number) {
+  createSpecialBlock(i: number,blockType: number,g: number,b: number,a: number) {
 
     // console.log('special block',i,r,g,b,a)
     const specialBodiesSrc = this.resources.getSourceByName('special-bodies') as Required<Source>
 
     const { x,y,z } = this.getCoordinatesBy(i,specialBodiesSrc.sizes.width,specialBodiesSrc.sizes.height)
 
-    switch(r) {
+    const position = new Vector3(x,y,z)
+
+    switch(blockType) {
       case 1:
         // build a ladder
         const length = g
-        new Ladder(new Vector3(x,y,z),length)
+        new Ladder(position,length)
         return
+      case 2:
+        // build a ladder
+        const content = g
+        const quantity = b
+        console.log('question block')
+        // new Ladder(new Vector3(x,y,z),length)
+        new QuestionBlock({ position, r: 1, textureIndex: 9, b: quantity, depth: 0, content })
+        return
+      case 3:
+        const height = g
+        const width = b
+        new Lava({ position, height, width, depth: 0 })
       default:
         return null
     }
 
   }
 
-  createBlock(i: number,r: number,g: number,b: number,a: number, depth :number) {
+  createBlock(i: number,r: number,textureIndex: number,b: number,a: number, depth :number) {
 
-    let entity: Entity = {}
+    // let entity: Entity = {}
     const bodiesSrc = this.resources.getSourceByName('bodies') as Required<Source>
     const { x,y,z } = this.getCoordinatesBy(i,bodiesSrc.sizes.width,bodiesSrc.sizes.height)
 
-    // Red channel for body type
-    const bodyDesc = getRigidBodyDesc(r)
+    const textureName = getTextureName(textureIndex)
 
-    if(bodyDesc) {
-      bodyDesc.setTranslation(x, y, z)
-      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
-      entity = this.physics.addEntity(bodyDesc, colliderDesc)
+    switch(textureName) {
+      case TEXTURES.GRASS:
+        new Grass({ position: new Vector3(x,y,z),r,textureIndex,b,depth})
+        break
+      default:
+        new Block({ position: new Vector3(x,y,z),r,textureIndex,b,depth})
     }
 
-    const mesh = this.getMesh(g,b,a,depth)
+    
 
-    if(mesh) {
-      mesh.position.set(x,y,z)
-      entity.mesh = mesh
+    // // Red channel for body type
+    // const bodyDesc = getRigidBodyDesc(r)
 
-		  this.scene.add(entity.mesh)
-    }
+    // if(bodyDesc) {
+    //   bodyDesc.setTranslation(x, y, z)
+    //   const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+    //   entity = this.physics.addEntity(bodyDesc, colliderDesc)
+    // }
+
+    // const mesh = this.getMesh(g,b,a,depth)
+
+    // this.debug.on('texturePackChange',(e) => {
+    //   const event = e as PaneArgs
+    //   mesh.material = this.getMaterial(event.value)
+    // })
+
+    // if(mesh) {
+    //   mesh.position.set(x,y,z)
+    //   entity.mesh = mesh
+
+		//   this.scene.add(entity.mesh)
+    // }
 
 	}
 

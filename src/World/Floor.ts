@@ -5,7 +5,7 @@ import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from 'three'
 import Diamond from './Diamond'
 import Physics from '../Physics'
 import { Entity } from '../Types/entity.types'
-import ChestBlock from './ChestBlock'
+import ChestBlock from './Blocks/ChestBlock'
 
 export default class Floor extends Events {
 

@@ -20,6 +20,7 @@ export default class GoldenCarrot extends Collectable {
     this.on('collect',() => {
       if(this.game.world.player) {
         this.game.world.player.life.points += 2
+        this.game.world.player.addEffect({ name: 'regeneration', value: 4, damage: -0.5 })
       }
     })
 

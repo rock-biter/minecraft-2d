@@ -19,6 +19,7 @@ import Resources from '../Utils/Resources'
 import MapBuilder from '../MapBuilder'
 import Materials from '../Utils/Materials'
 import Enemy from './Enemy'
+import Fire from './Sprite/Fire'
 
 export default class World {
 
@@ -50,7 +51,10 @@ export default class World {
 
 			new MapBuilder().build()
 			
-			this.player = new Player(new Vector3(-9.5, 12, 0))
+			// this.player = new Player(new Vector3(5.5, 12, 0)) // x: -9.5
+			this.player = new Player(new Vector3(-9.5, 12, 0)) // x: -9.5
+
+			// new Fire({ position: new Vector3(-11.5, 7, 0)})
 			
 			Enemy.spawn(new Vector3(-5,14.5,0))
 
