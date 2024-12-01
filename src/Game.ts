@@ -10,7 +10,7 @@ import World from './World/World'
 import Physics from './Physics'
 
 import bodiesMap from './textures/map/map-15.png?url'
-import backgroundMap from './textures/map/background-05.png?url'
+import backgroundMap from './textures/map/background-06.png?url'
 import frontgroundMap from './textures/map/frontground-01.png?url'
 import specialBodiesMap from './textures/map/specials-05.png?url'
 import collectablesMap from './textures/map/collectables-07.png?url'
