@@ -33,6 +33,7 @@ export default class Materials {
   ladderMaterial!: MeshBasicMaterial
   grassMaterial!: ShaderMaterial | MeshStandardMaterial
   lavaStillMaterial!: ShaderMaterial | MeshStandardMaterial
+  fireMaterial!: ShaderMaterial | MeshBasicMaterial
 
   constructor() {
     this.game = new Game()
@@ -43,6 +44,7 @@ export default class Materials {
     this.initGrassMaterial()
     this.initLadderMaterial()
     this.initLavaMaterials()
+    this.initFireMaterial()
 
   }
 
@@ -193,6 +195,25 @@ export default class Materials {
       map,
       transparent: true,
       opacity: 1
+    })
+  }
+
+  initFireMaterial() {
+    const map = this.resources.items['fire'] as Texture
+
+    map.repeat.y = 1/32
+    let count = 0
+    setInterval(() => {
+      count++
+      count = count % 32
+      map.offset.y = count/32
+    },100)
+
+    this.fireMaterial = new MeshBasicMaterial({
+      map,
+      transparent: true,
+      // wireframe: true,
+      opacity: 1,
     })
   }
 

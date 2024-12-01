@@ -18,16 +18,17 @@ import Time from '../Utils/Time'
 import { Entity } from '../Types/entity.types'
 import { InputsArg } from '../Types/callbacks.types'
 import Life from '../Utils/Life'
+import Fire from './Sprite/Fire'
 
 const _V = new Vector3()
 
 export interface Effect {
 	enabled: boolean
 	value: number
-	damage: number
+	damage?: number
 	timer?: number | undefined
 }
-export type EffectNames = 'burn' | 'regeneration'
+export type EffectNames = 'burn' | 'regeneration' | 'slowness'
 
 export type Effects = { [key in EffectNames] : Effect }
 
@@ -53,7 +54,8 @@ export default class Player extends Events {
 
 	effects: Effects = {
 		burn: { enabled: false, value: 0, timer: undefined, damage: 1 },
-		regeneration: { enabled: false, value: 0, timer: undefined, damage: -1 }
+		regeneration: { enabled: false, value: 0, timer: undefined, damage: -1 },
+		slowness: { enabled: false, value: 0 }
 	}
 
 	constructor(position: Vector3) {
@@ -91,8 +93,11 @@ export default class Player extends Events {
 				this.velocity.x = 0
 			}
 
+			let jump = this.effects.slowness.enabled ? this.jump * 0.6 : this.jump
+
+
 			this.controller.computedGrounded() &&
-			isJump && this.velocity.add(_V.set(0, this.jump, 0))
+			isJump && this.velocity.add(_V.set(0, jump, 0))
 		})
 		// this.initInputs()
 
@@ -125,16 +130,28 @@ export default class Player extends Events {
 
 		clearInterval(effect.timer)
 		effect.timer = undefined
+
+		if(name === 'burn') {
+			const children = [...(this.entity!.mesh?.children || [])]
+			children.forEach(el => {
+				this.entity!.mesh?.remove(el)
+			})
+		}
 	}
 
-	addEffect({ name, value }: { name: EffectNames, value: number }) {
+	addEffect({ name, value, damage }: { name: EffectNames, value: number, damage?: number }) {
 
 		const effect = this.effects[name]
 		effect.enabled = true
 		effect.value = value
+		damage && (effect.damage = damage)
 		
 		if(!effect.timer) {
-			effect.damage && this.onDamage(effect.damage)
+			if(name === 'burn') {
+				const fire = new Fire({ position: new Vector3(0,0,0.25), height: 2 })
+				this.entity!.mesh!.add(fire.entity!.mesh!)
+			}
+			effect.damage && effect.damage > 0 && this.onDamage(effect.damage)
 			effect.timer = setInterval(() => {
 				// console.log(`effect ${name}`)
 				effect.damage && this.onDamage(effect.damage)
@@ -212,6 +229,7 @@ export default class Player extends Events {
 		const dt = this.time.delta * 0.001
 		// console.log(dt)
 		const prevPosition = this.entity.body.translation()
+
 		
 		if(this.grabLadder ) {
 			this.velocity.y = 0
@@ -221,15 +239,17 @@ export default class Player extends Events {
 		}
 
 		if (this.inputs.keys['left']) {
+			let speed = this.effects.slowness.enabled ? this.speed * 0.3 : this.speed
 			this.velocity.x = MathUtils.lerp(
 				this.velocity.x,
-				-this.speed,
+				-speed,
 				1 - dt * 10
 			)
 		}
 
 		if (this.inputs.keys['right']) {
-			this.velocity.x = MathUtils.lerp(this.velocity.x, this.speed, 1 - dt * 10)
+			let speed = this.effects.slowness.enabled ? this.speed * 0.3 : this.speed
+			this.velocity.x = MathUtils.lerp(this.velocity.x, speed, 1 - dt * 10)
 		}
 
 		if (this.isOnLadder && this.inputs.keys['jump']) {

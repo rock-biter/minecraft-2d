@@ -21,6 +21,7 @@ import emeraldSrc from './textures/emerald.png?url'
 import diamondSrc from './textures/diamond.png?url'
 import lifeHeartSrc from './textures/life-heart.png?url'
 import lavaStillSrc from './textures/blocks/lava_still.png?url'
+import fireSrc from './textures/blocks/fire_1.png?url'
 
 import { inputMap } from './Types/input.types'
 import { texturesPaths } from './Utils/BlocksTexture'
@@ -87,6 +88,15 @@ const sources: Source[] = [
 		sizes: {
 			width: 16,
 			height: 320
+		},
+	},
+	{
+		name: 'fire',
+		type: 'texture',
+		path: fireSrc,
+		sizes: {
+			width: 16,
+			height: 512
 		},
 	},
 	{

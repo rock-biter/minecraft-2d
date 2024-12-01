@@ -56,8 +56,11 @@ export default class Lava extends Block {
 
         if(started) {
           this.game.world.player.addEffect({ name: 'burn', value: -1 })
+          this.game.world.player.addEffect({ name: 'slowness', value: 0 })
         } else {
           this.game.world.player.addEffect({ name: 'burn', value: 4 })
+          this.game.world.player.removeEffect('slowness')
+
         }
 
         // this.game.world.player.isOnLadder = started
