@@ -50,7 +50,8 @@ export default class World {
 
 			new MapBuilder().build()
 			
-			this.player = new Player(new Vector3(5.5, 12, 0)) // x: -9.5
+			// this.player = new Player(new Vector3(5.5, 12, 0)) // x: -9.5
+			this.player = new Player(new Vector3(-9.5, 12, 0)) // x: -9.5
 			
 			// Enemy.spawn(new Vector3(-5,14.5,0))
 

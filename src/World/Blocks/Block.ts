@@ -15,6 +15,8 @@ export interface BlockProps {
   textureIndex: number,
   b: number,
   depth: number
+  height?: number
+  width?: number
 }
 
 export default class Block {
@@ -28,10 +30,15 @@ export default class Block {
   game: Game
 
   entity!: Entity
+  width: number
+  height: number
 
-  constructor({ position = new Vector3(), r, textureIndex, b, depth }: BlockProps) {
+  constructor({ position = new Vector3(), r, textureIndex, b, depth, width = 1, height = 1 }: BlockProps) {
 
     this.game = new Game()
+
+    this.width = width
+    this.height = height
 
     this.position = position
     this.r = r

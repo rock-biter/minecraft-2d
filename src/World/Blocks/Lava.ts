@@ -3,6 +3,7 @@ import Block, { BlockProps } from "./Block";
 import { Entity } from "../../Types/entity.types";
 import RAPIER from "@dimforge/rapier3d";
 import { BufferGeometryUtils } from "three/examples/jsm/Addons";
+import { CollideArg } from "../../Types/callbacks.types";
 
 export interface LavaBlockProps {
   position: Vector3
@@ -13,11 +14,8 @@ export interface LavaBlockProps {
 
 export default class Lava extends Block {
 
-  width: number
-  height: number
-
   constructor({ position = new Vector3(), width = 1, height = 1, depth }: LavaBlockProps) {
-    super({position, r: 0,textureIndex: 9,b: 0,depth})
+    super({position, r: 0,textureIndex: 9,b: 0,depth, width, height})
     
     this.height = height
     this.width = width
@@ -35,15 +33,40 @@ export default class Lava extends Block {
   }
 
   getPhysics(): Entity {
+    console.log('lava phisics')
     let entity: Entity = {}
 
     const {x,y,z} = this.position
 
-    const colliderDesc = RAPIER.ColliderDesc.cuboid(this.width/2,this.height/2,0.5)
-    .setTranslation(x - this.width/2 + 0.5, y - this.height/2 + 0.5, z)
+    const w = this.width || 1
+    const h = this.height || 1
+
+    const colliderDesc = RAPIER.ColliderDesc.cuboid(w/2,h/2 - 0.1,0.5)
+    .setTranslation(x + w /2 - 0.5 , y - h/2 + 0.5 , z)
     .setSensor(true)
 
     entity = this.physics.addSensor(colliderDesc)
+
+    this.physics.on('collide',(arg) => {
+      const {handle1, handle2, started} = arg as CollideArg
+			if(!this.entity || !this.entity?.collider || !this.game.world.player) return
+
+      if ([handle1, handle2].includes(this.entity?.collider?.handle)) {
+        console.log('collision with lava',started)
+
+        if(started) {
+          this.game.world.player.addEffect({ name: 'burn', value: -1 })
+        } else {
+          this.game.world.player.addEffect({ name: 'burn', value: 4 })
+        }
+
+        // this.game.world.player.isOnLadder = started
+        // if(!started) {
+        //   this.game.world.player.grabLadder = false
+        // }
+
+      }
+    })
   
     return entity
   }

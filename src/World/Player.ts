@@ -21,6 +21,16 @@ import Life from '../Utils/Life'
 
 const _V = new Vector3()
 
+export interface Effect {
+	enabled: boolean
+	value: number
+	damage: number
+	timer?: number | undefined
+}
+export type EffectNames = 'burn' | 'regeneration'
+
+export type Effects = { [key in EffectNames] : Effect }
+
 export default class Player extends Events {
 
 	game: Game
@@ -40,6 +50,11 @@ export default class Player extends Events {
 	initialPosition: Vector3
 
 	entity: Entity | undefined
+
+	effects: Effects = {
+		burn: { enabled: false, value: 0, timer: undefined, damage: 1 },
+		regeneration: { enabled: false, value: 0, timer: undefined, damage: -1 }
+	}
 
 	constructor(position: Vector3) {
 		super()
@@ -94,7 +109,43 @@ export default class Player extends Events {
 		if(this.life.points <= 0) {
 			this.death()
 			this.life.points = this.life.MAX_LIFE
+
+			for (const name in this.effects) {
+				this.removeEffect(name as EffectNames)
+			}
 		}
+
+		
+	}
+
+	removeEffect(name: EffectNames) {
+		const effect = this.effects[name]
+		effect.enabled = false
+		effect.value = 0
+
+		clearInterval(effect.timer)
+		effect.timer = undefined
+	}
+
+	addEffect({ name, value }: { name: EffectNames, value: number }) {
+
+		const effect = this.effects[name]
+		effect.enabled = true
+		effect.value = value
+		
+		if(!effect.timer) {
+			effect.damage && this.onDamage(effect.damage)
+			effect.timer = setInterval(() => {
+				// console.log(`effect ${name}`)
+				effect.damage && this.onDamage(effect.damage)
+				effect.value--
+	
+				if(effect.value === 0) {
+					this.removeEffect(name)
+				}
+			},750)
+		}
+
 	}
 
 	getMesh() {

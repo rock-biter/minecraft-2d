@@ -192,7 +192,7 @@ export default class Materials {
     this.lavaStillMaterial = new MeshStandardMaterial({
       map,
       transparent: true,
-      opacity: 0.95
+      opacity: 1
     })
   }
 
