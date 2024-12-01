@@ -114,9 +114,12 @@ export default class ChestBlock extends Block {
       if ([handle1, handle2].includes(this.sensor.handle)) { 
         // console.log('check colpita')
 
-        // TODO qui esce il contenuto: mela d'oro / mela d'oro incantata / minerali / ...
         if(this.contentNumber) {
           this.spawnContent()
+        }
+
+        if(this.contentNumber === 0) {
+          this.physics.off('collide',callback)
         }
 
         if(!this.entity.body) return
@@ -130,7 +133,7 @@ export default class ChestBlock extends Block {
           this.entity.body?.setTranslation(p,true)
           console.log('update')
 
-        } }).to(this.elevation,{ value: 0.25, duration: 0.1  }).to(this.elevation,{ value: 0, duration: 0.1  })
+        } }).to(this.elevation,{ value: 0.4, duration: 0.1  }).to(this.elevation,{ value: 0, duration: 0.1  })
       }
     }
 

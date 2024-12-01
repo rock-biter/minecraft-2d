@@ -148,7 +148,7 @@ export default class Player extends Events {
 		
 		if(!effect.timer) {
 			if(name === 'burn') {
-				const fire = new Fire({ position: new Vector3(0,0,0.25), height: 2 })
+				const fire = new Fire({ position: new Vector3(0,0,0.3), height: 2 })
 				this.entity!.mesh!.add(fire.entity!.mesh!)
 			}
 			effect.damage && effect.damage > 0 && this.onDamage(effect.damage)

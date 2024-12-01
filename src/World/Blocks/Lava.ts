@@ -1,9 +1,10 @@
-import { BoxGeometry, MeshStandardMaterial, ShaderMaterial, Vector3 } from "three";
+import { BoxGeometry, MeshBasicMaterial, MeshStandardMaterial, ShaderMaterial, Vector3 } from "three";
 import Block, { BlockProps } from "./Block";
 import { Entity } from "../../Types/entity.types";
 import RAPIER from "@dimforge/rapier3d";
 import { BufferGeometryUtils } from "three/examples/jsm/Addons";
-import { CollideArg } from "../../Types/callbacks.types";
+import { CollideArg, PaneArgs } from "../../Types/callbacks.types";
+import ENUMS, { TEXTURES } from "../../Utils/Enums";
 
 export interface LavaBlockProps {
   position: Vector3
@@ -25,6 +26,13 @@ export default class Lava extends Block {
     const geom = this.getGeometry()
     this.setGeometryAttributes(geom)
     this.entity.mesh!.geometry = geom
+
+    if(this.debug.active) {
+      this.debug.on('texturePackChange',(e) => {
+        const event = e as PaneArgs
+        this.entity.mesh!.material = event.value === ENUMS.TEXTURE_MINECRAFT_TRAILER ? this.material : new MeshBasicMaterial({ color: 0xff9900, transparent: true, opacity: 0.3})
+      })
+    }
 
   }
 

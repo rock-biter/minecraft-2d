@@ -56,7 +56,7 @@ export default class World {
 
 			// new Fire({ position: new Vector3(-11.5, 7, 0)})
 			
-			// Enemy.spawn(new Vector3(-5,14.5,0))
+			Enemy.spawn(new Vector3(-5,14.5,0))
 
 			// this.environment = new Environment() // => lights
 		})
