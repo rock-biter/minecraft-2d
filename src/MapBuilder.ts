@@ -21,6 +21,7 @@ import Block from "./World/Blocks/Block";
 import { getTextureName } from "./Utils/BlocksTexture";
 import Grass from "./World/Blocks/Grass";
 import QuestionBlock from "./World/Blocks/QuestionBlock";
+import Lava from "./World/Blocks/Lava";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -45,7 +46,7 @@ export default class MapBuilder {
 			value: null,
 		},
 	}
-  blocksMaterial: ShaderMaterial
+  blocksMaterial: ShaderMaterial | MeshStandardMaterial
 
   constructor() {
 
@@ -241,7 +242,7 @@ export default class MapBuilder {
     return box
   }
 
-  createSpecialBlock(i: number,r: number,g: number,b: number,a: number) {
+  createSpecialBlock(i: number,blockType: number,g: number,b: number,a: number) {
 
     // console.log('special block',i,r,g,b,a)
     const specialBodiesSrc = this.resources.getSourceByName('special-bodies') as Required<Source>
@@ -250,7 +251,7 @@ export default class MapBuilder {
 
     const position = new Vector3(x,y,z)
 
-    switch(r) {
+    switch(blockType) {
       case 1:
         // build a ladder
         const length = g
@@ -259,10 +260,15 @@ export default class MapBuilder {
       case 2:
         // build a ladder
         const content = g
+        const quantity = b
         console.log('question block')
         // new Ladder(new Vector3(x,y,z),length)
-        new QuestionBlock({ position, r: 1, textureIndex: 9, b: 0, depth: 0, content })
+        new QuestionBlock({ position, r: 1, textureIndex: 9, b: quantity, depth: 0, content })
         return
+      case 3:
+        const height = g
+        const width = b
+        new Lava({ position, height, width, depth: 0 })
       default:
         return null
     }

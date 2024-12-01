@@ -32,6 +32,7 @@ export default class Materials {
   blocksMaterial!: ShaderMaterial | MeshStandardMaterial
   ladderMaterial!: MeshBasicMaterial
   grassMaterial!: ShaderMaterial | MeshStandardMaterial
+  lavaStillMaterial!: ShaderMaterial | MeshStandardMaterial
 
   constructor() {
     this.game = new Game()
@@ -41,6 +42,7 @@ export default class Materials {
     this.initBlockMaterial()
     this.initGrassMaterial()
     this.initLadderMaterial()
+    this.initLavaMaterials()
 
   }
 
@@ -173,6 +175,24 @@ export default class Materials {
     this.ladderMaterial = new MeshBasicMaterial({
       map: this.resources.items['ladder'] as Texture,
       transparent: true
+    })
+  }
+
+  initLavaMaterials() {
+
+    const map = this.resources.items['lava_still'] as Texture
+    map.repeat.y = 1/20
+    let count = 0
+    setInterval(() => {
+      count++
+      count = count % 320
+      map.offset.y = count/320
+    },100)
+
+    this.lavaStillMaterial = new MeshStandardMaterial({
+      map,
+      transparent: true,
+      opacity: 0.95
     })
   }
 

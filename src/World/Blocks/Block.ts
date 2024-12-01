@@ -108,21 +108,28 @@ export default class Block {
   }
 
   getMesh() {
+
+    const geom = this.getGeometry()
+    this.setGeometryAttributes(geom)
+
     return new Mesh(
-			this.getGeometry(),
+			geom,
 			this.getMaterial()
 		)
   }
 
-  getGeometry() {
+  getGeometry(): BufferGeometry {
 // console.log('alpha:',opacity,textureDepth)
 
     // const bright = MathUtils.mapLinear(this.b,0,200,-1,1)
 
-    const box = new BoxGeometry(1, 1)
+    const box = new BoxGeometry(1, 1,1)
 
+    return box
+  }
 
-    const uvAttribute = box.getAttribute('uv')
+  setGeometryAttributes(geometry: BufferGeometry) {
+    const uvAttribute = geometry.getAttribute('uv')
     // console.log(uvAttribute)
     const uvCount = uvAttribute.count
     const uvSize = 3
@@ -153,13 +160,11 @@ export default class Block {
     opacityAttribute.needsUpdate = true
 
     // plane.deleteAttribute('uv')
-    box.setAttribute('aUv', newUvAttribute)
-    box.setAttribute('aBright', brightAttribute)
-    box.setAttribute('aOpacity', opacityAttribute)
+    geometry.setAttribute('aUv', newUvAttribute)
+    geometry.setAttribute('aBright', brightAttribute)
+    geometry.setAttribute('aOpacity', opacityAttribute)
 
-    box.translate(0,0,this.depth)
-
-    return box
+    geometry.translate(0,0,this.depth)
   }
 
   getMaterial(type?: string) {

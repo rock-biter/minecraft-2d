@@ -29,9 +29,10 @@ export default class ChestBlock extends Block {
 
   constructor({ position = new Vector3(), r, textureIndex, b, depth, content}: ChestBlockProps) {
 
-    super({ position, r, textureIndex, b, depth})
+    super({ position, r, textureIndex, b: 0, depth})
 
     this.contentType = content
+    this.contentNumber = b
 
     this.entity.mesh!.geometry.translate(0,-0.1,0)
 

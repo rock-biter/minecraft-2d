@@ -12,7 +12,7 @@ import Physics from './Physics'
 import bodiesMap from './textures/map/map-15.png?url'
 import backgroundMap from './textures/map/background-06.png?url'
 import frontgroundMap from './textures/map/frontground-01.png?url'
-import specialBodiesMap from './textures/map/specials-07.png?url'
+import specialBodiesMap from './textures/map/specials-08.png?url'
 import collectablesMap from './textures/map/collectables-07.png?url'
 import ladderSrc from './textures/blocks/ladder.png?url'
 import goldenAppleSrc from './textures/golden-apple.png?url'
@@ -20,6 +20,7 @@ import goldenCarrotSrc from './textures/golden-carrot.png?url'
 import emeraldSrc from './textures/emerald.png?url'
 import diamondSrc from './textures/diamond.png?url'
 import lifeHeartSrc from './textures/life-heart.png?url'
+import lavaStillSrc from './textures/blocks/lava_still.png?url'
 
 import { inputMap } from './Types/input.types'
 import { texturesPaths } from './Utils/BlocksTexture'
@@ -77,6 +78,15 @@ const sources: Source[] = [
 		sizes: {
 			width: 16,
 			height: 16
+		},
+	},
+	{
+		name: 'lava_still',
+		type: 'texture',
+		path: lavaStillSrc,
+		sizes: {
+			width: 16,
+			height: 320
 		},
 	},
 	{
