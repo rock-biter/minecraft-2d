@@ -20,6 +20,7 @@ import ENUMS, { TEXTURES } from "./Utils/Enums";
 import Block from "./World/Blocks/Block";
 import { getTextureName } from "./Utils/BlocksTexture";
 import Grass from "./World/Blocks/Grass";
+import QuestionBlock from "./World/Blocks/QuestionBlock";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -247,11 +248,20 @@ export default class MapBuilder {
 
     const { x,y,z } = this.getCoordinatesBy(i,specialBodiesSrc.sizes.width,specialBodiesSrc.sizes.height)
 
+    const position = new Vector3(x,y,z)
+
     switch(r) {
       case 1:
         // build a ladder
         const length = g
-        new Ladder(new Vector3(x,y,z),length)
+        new Ladder(position,length)
+        return
+      case 2:
+        // build a ladder
+        const content = g
+        console.log('question block')
+        // new Ladder(new Vector3(x,y,z),length)
+        new QuestionBlock({ position, r: 1, textureIndex: 9, b: 0, depth: 0, content })
         return
       default:
         return null
@@ -266,8 +276,6 @@ export default class MapBuilder {
     const { x,y,z } = this.getCoordinatesBy(i,bodiesSrc.sizes.width,bodiesSrc.sizes.height)
 
     const textureName = getTextureName(textureIndex)
-
-    console.log('texture',textureName)
 
     switch(textureName) {
       case TEXTURES.GRASS:

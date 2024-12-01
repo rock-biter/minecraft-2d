@@ -8,8 +8,6 @@ export default class Grass extends Block {
 
     super({position, r,textureIndex,b,depth})
 
-    console.log('this is grass')
-
     // edit top and bottom face texture
     this.setTopBottomFace()
     if (this.entity.mesh) {
@@ -28,20 +26,15 @@ export default class Grass extends Block {
     const normal = this.geometry?.getAttribute('normal') as BufferAttribute
     const uv = this.geometry?.getAttribute('aUv') as BufferAttribute
 
-    console.log(normal)
-
     for (let i = 0; i < normal.count; i++) {
       const y = normal.getY(i);
 
       if(y === 1) {
         uv.setZ(i,getTextureIndex(TEXTURES.GRASS_TOP))
-        console.log('top')
       }
 
       if(y === -1) {
         uv.setZ(i,getTextureIndex(TEXTURES.DIRT))
-        console.log('bottom')
-
       }
 
     }
