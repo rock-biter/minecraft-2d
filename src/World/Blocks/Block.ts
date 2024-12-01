@@ -59,7 +59,7 @@ export default class Block {
     return this.game.world.scene
   }
 
-  get blocksMaterial(): ShaderMaterial {
+  get material(): ShaderMaterial | MeshStandardMaterial {
     return this.game.world.materials.blocksMaterial
   }
 
@@ -73,6 +73,8 @@ export default class Block {
     const mesh = this.getMesh()
 
     mesh.position.copy(this.position)
+    mesh.castShadow = true
+    mesh.receiveShadow = true
     entity.mesh = mesh
 
     this.scene.add(entity.mesh)
@@ -162,6 +164,6 @@ export default class Block {
 
   getMaterial(type?: string) {
     type = type || this.debug.params.texturePack
-    return type === ENUMS.TEXTURE_PLACEHOLDER ? new MeshStandardMaterial() : this.blocksMaterial
+    return type === ENUMS.TEXTURE_PLACEHOLDER ? new MeshStandardMaterial() : this.material
   }
 }

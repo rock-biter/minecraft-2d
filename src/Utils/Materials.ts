@@ -29,36 +29,151 @@ export default class Materials {
       value: new Color(0xffffff)
     }
 	}
-  blocksMaterial: ShaderMaterial  
-  ladderMaterial: MeshBasicMaterial
-  grassMaterial: ShaderMaterial
+  blocksMaterial!: ShaderMaterial | MeshStandardMaterial
+  ladderMaterial!: MeshBasicMaterial
+  grassMaterial!: ShaderMaterial | MeshStandardMaterial
 
   constructor() {
     this.game = new Game()
     this.resources = this.game.resources
-
-    this.blocksMaterial = new ShaderMaterial({
-			uniforms: this.uniforms,
-			fragmentShader: fragment,
-			vertexShader: vertex,
-      transparent: true,
-		})
-
     this.uniforms.uDiffuse.value = this.resources.items['blocks'] as Texture
 
+    this.initBlockMaterial()
+    this.initGrassMaterial()
+    this.initLadderMaterial()
 
+  }
+
+  initBlockMaterial() {
+    // this.blocksMaterial = new ShaderMaterial({
+		// 	uniforms: this.uniforms,
+		// 	fragmentShader: fragment,
+		// 	vertexShader: vertex,
+    //   // transparent: true,
+		// })
+
+    this.blocksMaterial = new MeshStandardMaterial()
+    // this.blocksMaterial.defines = {
+    //   USE_UV: true
+    // }
+
+    this.blocksMaterial.onBeforeCompile = (shader) => {
+
+      shader.uniforms.uDiffuse = this.uniforms.uDiffuse
+      
+      let token = '#include <common>'
+
+      shader.vertexShader = shader.vertexShader.replace(token,
+        /* glsl */`
+        ${token}
+        attribute vec3 aUv;
+        uniform sampler2DArray uDiffuse;
+        varying vec3 vUv;
+        `
+      )
+
+      shader.fragmentShader = shader.fragmentShader.replace(token,
+        /* glsl */`
+        ${token}
+        uniform sampler2DArray uDiffuse;
+        varying vec3 vUv;
+        `
+      )
+
+      token = '#include <uv_vertex>'
+
+      shader.vertexShader = shader.vertexShader.replace(token,
+        /* glsl */`
+        ${token}
+        vUv.xyz = aUv.xyz;
+        vUv.y = 1. - vUv.y;
+        `
+      )
+
+      token = '#include <map_fragment>'
+
+      shader.fragmentShader = shader.fragmentShader.replace(token,
+        /* glsl */`
+        // ${token}
+        
+        diffuseColor.rgb = texture( uDiffuse, vUv ).rgb;
+        `
+      )
+
+
+    }
+  }
+
+  initGrassMaterial() {
+    // this.grassMaterial = new ShaderMaterial({
+		// 	uniforms: this.uniforms,
+		// 	fragmentShader: grassFragment,
+		// 	vertexShader: grassVertex,
+    //   transparent: true,
+		// })
+
+    this.grassMaterial = new MeshStandardMaterial()
+
+    this.grassMaterial.onBeforeCompile = (shader) => {
+
+      shader.uniforms.uDiffuse = this.uniforms.uDiffuse
+      shader.uniforms.uColor = this.uniforms.uColor
+      
+      let token = '#include <common>'
+
+      shader.vertexShader = shader.vertexShader.replace(token,
+        /* glsl */`
+        ${token}
+        attribute vec3 aUv;
+        uniform sampler2DArray uDiffuse;
+        varying vec3 vUv;
+        `
+      )
+
+      shader.fragmentShader = shader.fragmentShader.replace(token,
+        /* glsl */`
+        ${token}
+        uniform sampler2DArray uDiffuse;
+        varying vec3 vUv;
+        `
+      )
+
+      token = '#include <uv_vertex>'
+
+      shader.vertexShader = shader.vertexShader.replace(token,
+        /* glsl */`
+        ${token}
+        vUv.xyz = aUv.xyz;
+        vUv.y = 1. - vUv.y;
+        `
+      )
+
+      token = '#include <map_fragment>'
+
+      shader.fragmentShader = shader.fragmentShader.replace(token,
+        /* glsl */`
+        // ${token}
+        
+        diffuseColor.rgb = texture( uDiffuse, vUv ).rgb;
+
+        if(vUv.z == 8.) {
+          // top grass
+          vec4 g_color = texture( uDiffuse, vec3(0.,0.,1.) );
+          diffuseColor.rgb -= vec3(0.42);
+          diffuseColor.rgb += g_color.rgb;
+        }
+        `
+      )
+
+
+    }
+  }
+
+  initLadderMaterial() {
     this.ladderMaterial = new MeshBasicMaterial({
       map: this.resources.items['ladder'] as Texture,
       transparent: true
     })
-
-    this.grassMaterial = new ShaderMaterial({
-			uniforms: this.uniforms,
-			fragmentShader: grassFragment,
-			vertexShader: grassVertex,
-      transparent: true,
-		})
-
   }
 
 }

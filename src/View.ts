@@ -105,8 +105,9 @@ export default class View extends Events {
 			// )
 			_V.copy(this.world.player.entity.mesh.position)
 			_V.z = this.camera.position.z
+			_V.y += 2
 
-			this.camera.position.lerp(_V,this.time.delta * 0.002)
+			this.camera.position.lerp(_V,this.time.delta * 0.003)
 			const {x,y,z} = this.world.player.entity.mesh.position
 
 			this.camera.lookAt(x,y,z)

@@ -4,9 +4,10 @@ import Physics from "../Physics";
 import Resources from "../Utils/Resources";
 import { Entity } from "../Types/entity.types";
 import RAPIER from "@dimforge/rapier3d";
-import { CollideArg } from "../Types/callbacks.types";
+import { CollideArg, PaneArgs } from "../Types/callbacks.types";
 import { texturesIndexes } from "../Utils/BlocksTexture";
 import { BufferGeometryUtils } from "three/examples/jsm/Addons";
+import ENUMS, { TEXTURES } from "../Utils/Enums";
 
 export default class Ladder {
 
@@ -18,7 +19,7 @@ export default class Ladder {
   length: number
   textureName = 'LADDER'
   entity!: Entity
-  blocksMaterial: ShaderMaterial
+  blocksMaterial: ShaderMaterial | MeshStandardMaterial
 
   constructor(position = new Vector3(), length: number) {
     this.game = new Game()
@@ -39,26 +40,44 @@ export default class Ladder {
     this.entity = {}
 
     const mesh = this.getMesh(position,length)
+    mesh.receiveShadow = true
     mesh.renderOrder = 1
     this.entity.mesh = mesh
     this.entity.collider = this.getCollider(position,length)
     this.scene.add(mesh)
 
+    if(this.game.debug.active) {
+      this.game.debug.on('texturePackChange',(e) => {
+        const event = e as PaneArgs
+        mesh.material = this.getMaterial(event.value)
+      })
+    }
+
   }
 
   getMesh(position: Vector3, length: number) {
-
-    const material = this.game.debug.active ? new MeshStandardMaterial({ color: 0x666666}) : this.game.world.materials.ladderMaterial
 
     const geometry = this.getGeometry(length)
     geometry.translate(0,0,-0.4)
     const mesh = new Mesh(
 			geometry,
-			material
+			this.getMaterial()
 		)
 
     mesh.position.copy(position)
     return mesh
+  }
+
+  getMaterial(type ?: string) {
+
+    type = type || this.game.debug.params.texturePack
+    switch(type) {
+      case ENUMS.TEXTURE_MINECRAFT_TRAILER:
+        return this.game.world.materials.ladderMaterial
+      default: 
+        return new MeshStandardMaterial({ color: 0x666666})
+    }
+
   }
 
   getGeometry(length: number) {

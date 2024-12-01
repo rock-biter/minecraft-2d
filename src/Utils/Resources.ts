@@ -1,4 +1,4 @@
-import { DataArrayTexture, LinearFilter, NearestFilter, Texture, TextureLoader } from 'three'
+import { DataArrayTexture, LinearFilter, NearestFilter, SRGBColorSpace, Texture, TextureLoader } from 'three'
 import Events from './Events'
 import { GLTFLoader } from 'three/examples/jsm/Addons.js'
 import { File, Items, Loaders, Source } from '../Types/resources.types'
@@ -149,6 +149,8 @@ export default class Resources extends Events {
 		texture.minFilter = LinearFilter
 		texture.magFilter = NearestFilter
 		texture.needsUpdate = true
+		texture.colorSpace = SRGBColorSpace
+		// texture
 
 		// console.log('finish')
 		

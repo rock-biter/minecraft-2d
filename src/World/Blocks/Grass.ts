@@ -15,10 +15,13 @@ export default class Grass extends Block {
     if (this.entity.mesh) {
       this.entity.mesh.material = this.game.world.materials.grassMaterial
       const mat = this.entity.mesh.material as ShaderMaterial
-      mat.uniforms.uColor.value.set(0x78AC30)
-
+      // mat.uniforms.uColor.value.set(0x78AC30)
     }
 
+  }
+
+  get material(): ShaderMaterial | MeshStandardMaterial {
+    return this.game.world.materials.grassMaterial
   }
 
   setTopBottomFace() {

@@ -1,4 +1,4 @@
-import { OrthographicCamera, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+import { OrthographicCamera, PerspectiveCamera, Scene, ToneMapping, WebGLRenderer, VSMShadowMap } from 'three'
 import Game from './Game'
 import Viewport from './Viewport'
 import Debug from './Utils/Debug'
@@ -24,6 +24,10 @@ export default class Rendering {
 			canvas: this.game.domElement,
 			antialias: true,
 		})
+		this.instance.shadowMap.enabled = true
+		this.instance.shadowMap.type = VSMShadowMap;
+
+		// this.instance.toneMapping = THREE.LinearToneMapping
 
 		this.resize()
 
