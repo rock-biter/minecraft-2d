@@ -29,6 +29,7 @@ export default class Rendering {
 
 		// this.instance.toneMapping = THREE.LinearToneMapping
 
+
 		this.resize()
 
 		this.game.time.on(
@@ -67,5 +68,8 @@ export default class Rendering {
 		// ...
 		// console.log('render')
 		this.instance.render(this.scene, this.camera)
+
+		// this.debug.active && this.debug.stats && this.debug.stats.end()
+		this.debug.active && this.debug.stats && this.debug.stats.update()
 	}
 }
