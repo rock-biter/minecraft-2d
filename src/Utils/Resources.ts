@@ -77,6 +77,7 @@ export default class Resources extends Events {
 					this.loaders.textureLoader?.load(source.path as string,(texture) => {
 						texture.minFilter = LinearFilter
 						texture.magFilter = NearestFilter		
+						texture.colorSpace = SRGBColorSpace
 						this.sourceLoaded(source,texture)
 					})
 			}

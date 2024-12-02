@@ -44,7 +44,6 @@ export default class Sprite {
     const mesh = new Mesh(this.getGeometry(),this.material)
     mesh.position.copy(this.position)
     this.scene.add(mesh)
-    mesh.renderOrder = 5
     return mesh
   }
 

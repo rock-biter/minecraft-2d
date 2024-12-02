@@ -187,9 +187,9 @@ export default class Materials {
     let count = 0
     setInterval(() => {
       count++
-      count = count % 320
-      map.offset.y = count/320
-    },100)
+      count = count % (19 * 16)
+      map.offset.y = count/(20 * 16)
+    },250)
 
     this.lavaStillMaterial = new MeshStandardMaterial({
       map,
