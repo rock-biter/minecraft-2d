@@ -215,6 +215,7 @@ export default class Player extends Events {
 
 		mesh.traverse(m => {
 			if(m instanceof Mesh) {
+				m.material.map = this.resources.items['player-texture']
 				m.castShadow = true
 				m.receiveShadow = true
 			}
