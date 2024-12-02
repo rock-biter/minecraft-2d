@@ -70,10 +70,14 @@ export default class MapBuilder {
   build() {
     const bodiesData: ImageData | undefined = this.getTextureData('bodies')
     const backgroundData: ImageData | undefined = this.getTextureData('background')
+    const background2Data: ImageData | undefined = this.getTextureData('background-2')
     const frontgroundData: ImageData | undefined = this.getTextureData('frontground')
+    const frontground2Data: ImageData | undefined = this.getTextureData('frontground-2')
     this.buildFixedBlocks(bodiesData)
     this.buildFixedBlocks(backgroundData, 'BACKGROUND')
+    this.buildFixedBlocks(background2Data, 'BACKGROUND-2')
     this.buildFixedBlocks(frontgroundData, 'FRONTGROUND')
+    this.buildFixedBlocks(frontground2Data, 'FRONTGROUND-2')
     this.buildSpecialBlocks()
     this.createCollectables()
 
@@ -149,8 +153,14 @@ export default class MapBuilder {
       case 'BACKGROUND':
         z = -1
       break
+      case 'BACKGROUND-2':
+        z = -2
+      break
       case 'FRONTGROUND':
         z = 1
+      break
+      case 'FRONTGROUND-2':
+        z = 2
       break
     }
     

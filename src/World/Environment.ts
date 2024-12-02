@@ -47,7 +47,7 @@ export default class Environment {
 		this.directionalLight.shadow.radius = 15
 		this.directionalLight.shadow.normalBias = 0.02
 		this.directionalLight.shadow.blurSamples = 20
-		this.directionalLight.shadow.camera.far = 30
+		this.directionalLight.shadow.camera.far = 50
 		this.directionalLight.shadow.camera.left = -20
 		this.directionalLight.shadow.camera.top = 20
 		this.directionalLight.shadow.camera.bottom = -20
@@ -88,6 +88,7 @@ export default class Environment {
 
 	update() {
 		this.directionalLight.position.x = this.game.world.player!.entity!.mesh!.position.x - _V.x
+		this.directionalLight.position.y = this.game.world.player!.entity!.mesh!.position.y - _V.y
 		this.directionalLight.target.position.copy(this.directionalLight.position.clone().add(_V))
 	}
 }
