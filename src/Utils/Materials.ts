@@ -30,7 +30,7 @@ export default class Materials {
     }
 	}
   blocksMaterial!: ShaderMaterial | MeshStandardMaterial
-  ladderMaterial!: MeshBasicMaterial
+  ladderMaterial!: MeshBasicMaterial | MeshStandardMaterial
   grassMaterial!: ShaderMaterial | MeshStandardMaterial
   lavaStillMaterial!: ShaderMaterial | MeshStandardMaterial
   fireMaterial!: ShaderMaterial | MeshBasicMaterial
@@ -174,7 +174,7 @@ export default class Materials {
   }
 
   initLadderMaterial() {
-    this.ladderMaterial = new MeshBasicMaterial({
+    this.ladderMaterial = new MeshStandardMaterial({
       map: this.resources.items['ladder'] as Texture,
       transparent: true
     })
