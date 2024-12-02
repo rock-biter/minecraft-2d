@@ -256,7 +256,7 @@ export default class Player extends Events {
 			.lockTranslations()
 			.enabledTranslations(true, true, false)
 			.setTranslation(x,y,z)
-		const colliderDesc = RAPIER.ColliderDesc.capsule(0.5, 0.38).setActiveEvents(
+		const colliderDesc = RAPIER.ColliderDesc.capsule(0.63, 0.25).setActiveEvents(
 			RAPIER.ActiveEvents['COLLISION_EVENTS']
 		).setActiveCollisionTypes(RAPIER.ActiveCollisionTypes['ALL'])
 
