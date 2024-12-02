@@ -33,8 +33,8 @@ const inputsKeys = [
 			{ name: 'right', keys: ['ArrowRight', 'KeyD'] },
 			{ name: 'down', keys: ['ArrowDown', 'KeyS'] },
 			{ name: 'left', keys: ['ArrowLeft', 'KeyA'] },
-			{ name: 'jump', keys: ['ArrowUp', 'KeyW'] },
-			{ name: 'attack', keys: ['MouseLeft', 'Space'] },
+			{ name: 'jump', keys: ['ArrowUp', 'KeyW','Space'] },
+			{ name: 'attack', keys: ['MouseLeft'] },
 		]
 
 const sources: Source[] = [
@@ -221,6 +221,7 @@ export default class Game {
 		this.inputs = new Inputs(inputsKeys as inputMap)
 		this.viewport = new Viewport() // this is the Size class of course why pass dom element?
 		this.time = new Time()
+		this.debug.addStats()
 		this.resources = new Resources(sources) // pass all the resources to load
 		this.physics = new Physics() // this init the physics engine
 		this.world = new World() // this create the world game and contains scene
