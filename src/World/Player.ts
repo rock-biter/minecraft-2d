@@ -1,6 +1,10 @@
 import {
+	AnimationAction,
+	AnimationClip,
+	AnimationMixer,
 	BoxGeometry,
 	CapsuleGeometry,
+	Euler,
 	MathUtils,
 	Mesh,
 	MeshStandardMaterial,
@@ -63,6 +67,9 @@ export default class Player extends Events {
 		regeneration: { enabled: false, value: 0, timer: undefined, damage: -1 },
 		slowness: { enabled: false, value: 0 }
 	}
+
+	mixer?: AnimationMixer
+	animations?: AnimationClip[]
 
 	constructor(position: Vector3) {
 		super()
@@ -195,19 +202,51 @@ export default class Player extends Events {
 
 		}
 
+		// console.log(gltf.animations)
+		this.animations = gltf.animations
+
 		// mesh.scene.scale.setScalar(20)
 		const mesh = gltf.scene.children[0] as Object3D
-		mesh.position.y = -1
+		mesh.scale.setScalar(0.92)
+		mesh.position.y = -0.95
 		mesh.rotation.y = Math.PI
 		const obj = new Object3D()
 		this.skin = mesh
+
+		mesh.traverse(m => {
+			if(m instanceof Mesh) {
+				m.castShadow = true
+				m.receiveShadow = true
+			}
+		})
+
 		obj.add(mesh)
 
 		console.log(mesh)
 		// mesh.position.y -= 1
 		this.scene.add(obj)
 
+		this.createMixer()
+
 		return obj
+	}
+
+	createMixer() {
+
+		this.mixer = new AnimationMixer(this.skin as Object3D)
+
+		const idleAction = new AnimationAction(this.mixer,this.animations![0])
+		const walkAction = new AnimationAction(this.mixer,this.animations![1])
+
+		walkAction.play()
+		idleAction.play()
+
+		console.log(this.animations)
+
+		this.time.on('tick',() => {
+			this.mixer!.update(this.time.delta *0.001)
+		},4)
+
 	}
 
 	createBody() {
@@ -255,6 +294,12 @@ export default class Player extends Events {
 	turnSkin(angle: number) {
 
 		if(!this.skin) return
+
+		// const current = this.skin.rotation.clone()
+		// const target = this.skin.rotation.clone()
+		// target.y = angle
+
+		// const diff = target.
 
 		// angle = this.rotateToNearestStepRadians(this.skin.rotation.y,angle)
 
@@ -391,6 +436,13 @@ export default class Player extends Events {
 		this.velocity.z = 0
 		if(this.controller.computedGrounded() && this.velocity.y < 0) {
 			this.velocity.y = 0
+		}
+
+		if(this.mixer) {
+			const walkAction = this.mixer.existingAction(this.animations![1])
+
+			walkAction && (walkAction.weight = (Math.max(Math.abs(this.velocity.x),this.velocity.y) / this.speed))
+
 		}
 	}
 
