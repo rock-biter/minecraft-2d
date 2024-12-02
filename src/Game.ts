@@ -25,7 +25,7 @@ import lifeHeartSrc from './textures/life-heart.png?url'
 import lavaStillSrc from './textures/blocks/lava_still.png?url'
 import fireSrc from './textures/blocks/fire_1.png?url'
 
-import playerModelSrc from '/models/steve/source/model.gltf?url'
+import playerModelSrc from './assets/models/steve/source/model.gltf?url'
 
 import { inputMap } from './Types/input.types'
 import { texturesPaths } from './Utils/BlocksTexture'
