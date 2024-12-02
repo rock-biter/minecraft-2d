@@ -1,6 +1,10 @@
 import {
+	AnimationAction,
+	AnimationClip,
+	AnimationMixer,
 	BoxGeometry,
 	CapsuleGeometry,
+	Euler,
 	MathUtils,
 	Mesh,
 	MeshStandardMaterial,
@@ -19,6 +23,10 @@ import { Entity } from '../Types/entity.types'
 import { InputsArg } from '../Types/callbacks.types'
 import Life from '../Utils/Life'
 import Fire from './Sprite/Fire'
+import Resources from '../Utils/Resources'
+import Debug from '../Utils/Debug'
+import { GLTF } from 'three/examples/jsm/Addons'
+import gsap from 'gsap'
 
 const _V = new Vector3()
 
@@ -42,6 +50,8 @@ export default class Player extends Events {
 	controller: RAPIER.KinematicCharacterController = Controller.create(0.05)
 	life = new Life()
 
+	skin?: Mesh | Object3D
+
 	velocity = new Vector3()
 	speed = 5
 	jump = 20
@@ -58,6 +68,9 @@ export default class Player extends Events {
 		slowness: { enabled: false, value: 0 }
 	}
 
+	mixer?: AnimationMixer
+	animations?: AnimationClip[]
+
 	constructor(position: Vector3) {
 		super()
 
@@ -73,6 +86,14 @@ export default class Player extends Events {
 		this.controller.setApplyImpulsesToDynamicBodies(true)
 
 		this.init()
+	}
+
+	get resources(): Resources {
+		return this.game.resources
+	}
+
+	get debug(): Debug {
+		return this.game.debug
 	}
 
 	init() {
@@ -134,7 +155,8 @@ export default class Player extends Events {
 		if(name === 'burn') {
 			const children = [...(this.entity!.mesh?.children || [])]
 			children.forEach(el => {
-				this.entity!.mesh?.remove(el)
+				if(el.name === 'fire')
+					this.entity!.mesh?.remove(el)
 			})
 		}
 	}
@@ -166,13 +188,65 @@ export default class Player extends Events {
 	}
 
 	getMesh() {
-		const geometry = new CapsuleGeometry(0.38, 1)
-		const material = new MeshStandardMaterial({ color: 'orange' })
+		
 
-		const mesh = new Mesh(geometry, material)
-		this.scene.add(mesh)
+		let gltf = this.resources.items['player-model'] as GLTF
+		if(!gltf /*|| this.debug.active*/) {
 
-		return mesh
+			const geometry = new CapsuleGeometry(0.38, 1)
+			const material = new MeshStandardMaterial({ color: 'orange' })
+
+			const mesh = new Mesh(geometry, material)
+			this.scene.add(mesh)
+			return mesh
+
+		}
+
+		// console.log(gltf.animations)
+		this.animations = gltf.animations
+
+		// mesh.scene.scale.setScalar(20)
+		const mesh = gltf.scene.children[0] as Object3D
+		mesh.scale.setScalar(0.92)
+		mesh.position.y = -0.95
+		mesh.rotation.y = Math.PI
+		const obj = new Object3D()
+		this.skin = mesh
+
+		mesh.traverse(m => {
+			if(m instanceof Mesh) {
+				m.castShadow = true
+				m.receiveShadow = true
+			}
+		})
+
+		obj.add(mesh)
+
+		console.log(mesh)
+		// mesh.position.y -= 1
+		this.scene.add(obj)
+
+		this.createMixer()
+
+		return obj
+	}
+
+	createMixer() {
+
+		this.mixer = new AnimationMixer(this.skin as Object3D)
+
+		const idleAction = new AnimationAction(this.mixer,this.animations![0])
+		const walkAction = new AnimationAction(this.mixer,this.animations![1])
+
+		walkAction.play()
+		idleAction.play()
+
+		console.log(this.animations)
+
+		this.time.on('tick',() => {
+			this.mixer!.update(this.time.delta *0.001)
+		},4)
+
 	}
 
 	createBody() {
@@ -187,7 +261,7 @@ export default class Player extends Events {
 
 		this.entity = this.physics.addEntity(bodyDesc, colliderDesc)
 		this.entity.collider
-		this.entity.mesh = this.getMesh()
+		this.entity.mesh = this.getMesh() as Mesh
 
 		// this.update()
 	}
@@ -217,6 +291,60 @@ export default class Player extends Events {
 		return false
 	}
 
+	turnSkin(angle: number) {
+
+		if(!this.skin) return
+
+		// const current = this.skin.rotation.clone()
+		// const target = this.skin.rotation.clone()
+		// target.y = angle
+
+		// const diff = target.
+
+		// angle = this.rotateToNearestStepRadians(this.skin.rotation.y,angle)
+
+		// const currentTips = currentAngle % (Math.PI * 0.5)
+		// const nextTips = angle % (Math.PI * 0.5)
+		// const oppTips = angle > currentAngle ? nextTips - 2 : nextTips + 2
+
+		// const min = Math.min(nextTips,oppTips)
+		// const max = Math.max(nextTips,oppTips)
+		
+		// if(currentTips - min < 1) {
+		// 	angle = min * Math.PI
+		// } else {
+		// 	angle = max * Math.PI
+		// }
+
+
+		gsap.to(this.skin.rotation,{ y: angle })
+
+	}
+
+	rotateToNearestStepRadians(startAngle: number, targetAngle: number) {
+		const TWO_PI = 2 * Math.PI;
+		const STEP = Math.PI / 2; // 90 gradi in radianti
+
+		// Normalizza gli angoli tra 0 e 2π
+		startAngle = ((startAngle % TWO_PI) + TWO_PI) % TWO_PI;
+		targetAngle = ((targetAngle % TWO_PI) + TWO_PI) % TWO_PI;
+
+		// Calcola la differenza in senso orario e antiorario
+		let clockwiseDiff = (targetAngle - startAngle + TWO_PI) % TWO_PI;
+		let counterClockwiseDiff = (startAngle - targetAngle + TWO_PI) % TWO_PI;
+
+		// Determina la direzione più breve
+		let shortestDiff = clockwiseDiff <= counterClockwiseDiff 
+			? clockwiseDiff 
+			: -counterClockwiseDiff;
+
+		// Calcola lo step più vicino di π/2
+		let stepCount = Math.round(shortestDiff / STEP);
+		let finalAngle = (startAngle + stepCount * STEP + TWO_PI) % TWO_PI;
+
+		return finalAngle;
+	}
+
 	death() {
 		this.entity?.body?.setTranslation(this.initialPosition as RAPIER.Vector3,true)
 	}
@@ -233,12 +361,17 @@ export default class Player extends Events {
 		
 		if(this.grabLadder ) {
 			this.velocity.y = 0
+			// this.skin && gsap.to(this.skin.rotation,{ y: 0 })
+			this.turnSkin(Math.PI * 0)
 		}	else {
 			const force = _V.copy(this.physics.instance.gravity).multiplyScalar(dt)
 			this.velocity.add(force)
 		}
 
 		if (this.inputs.keys['left']) {
+
+			// this.skin && gsap.to(this.skin.rotation,{ y: Math.PI * 0.5 })
+			this.turnSkin(Math.PI * 0.5)
 			let speed = this.effects.slowness.enabled ? this.speed * 0.3 : this.speed
 			this.velocity.x = MathUtils.lerp(
 				this.velocity.x,
@@ -248,6 +381,8 @@ export default class Player extends Events {
 		}
 
 		if (this.inputs.keys['right']) {
+			// this.skin && gsap.to(this.skin.rotation,{ y: Math.PI * 3 / 2 })
+			this.turnSkin(Math.PI * 3 / 2)
 			let speed = this.effects.slowness.enabled ? this.speed * 0.3 : this.speed
 			this.velocity.x = MathUtils.lerp(this.velocity.x, speed, 1 - dt * 10)
 		}
@@ -257,7 +392,11 @@ export default class Player extends Events {
 		}
 
 		if (this.isOnLadder && this.inputs.keys['down']) {
+
 			this.velocity.y = MathUtils.lerp(this.velocity.y, -this.speed, 1 - dt * 10)
+		} else if(this.inputs.keys['down']) {
+			// this.skin && gsap.to(this.skin.rotation,{ y: Math.PI })
+			this.turnSkin(Math.PI )
 		}
 
 		const desiredMov = _V.copy(this.velocity).multiplyScalar(dt).clone()
@@ -297,6 +436,13 @@ export default class Player extends Events {
 		this.velocity.z = 0
 		if(this.controller.computedGrounded() && this.velocity.y < 0) {
 			this.velocity.y = 0
+		}
+
+		if(this.mixer) {
+			const walkAction = this.mixer.existingAction(this.animations![1])
+
+			walkAction && (walkAction.weight = (Math.max(Math.abs(this.velocity.x),this.velocity.y) / this.speed))
+
 		}
 	}
 

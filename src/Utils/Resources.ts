@@ -12,7 +12,7 @@ export default class Resources extends Events {
 	items: Items
 	toLoad: number
 	loaded: number
-	loaders: Loaders = {}
+	loaders!: Loaders
 
 	constructor(sources: Source[]) {
 		super()
@@ -27,9 +27,11 @@ export default class Resources extends Events {
 	}
 
 	setLoaders() {
-		this.loaders = {}
-		this.loaders.gltfLoader = new GLTFLoader()
-		this.loaders.textureLoader = new TextureLoader()
+		const loaders = {
+			gltfLoader: new GLTFLoader(),
+			textureLoader: new TextureLoader()
+		}
+		this.loaders = loaders
 		// altri loaders
 	}
 
@@ -74,11 +76,16 @@ export default class Resources extends Events {
 					})
 					break
 				case 'texture':
-					this.loaders.textureLoader?.load(source.path as string,(texture) => {
+					this.loaders.textureLoader.load(source.path as string,(texture) => {
 						texture.minFilter = LinearFilter
 						texture.magFilter = NearestFilter		
 						texture.colorSpace = SRGBColorSpace
 						this.sourceLoaded(source,texture)
+					})
+					break
+				case 'gltf':
+					this.loaders.gltfLoader.load(source.path as string,(gltf) => {
+						this.sourceLoaded(source,gltf)
 					})
 			}
 
