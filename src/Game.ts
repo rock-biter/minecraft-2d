@@ -25,6 +25,8 @@ import lifeHeartSrc from './textures/life-heart.png?url'
 import lavaStillSrc from './textures/blocks/lava_still.png?url'
 import fireSrc from './textures/blocks/fire_1.png?url'
 
+import playerModelSrc from '/models/steve/source/model.gltf?url'
+
 import { inputMap } from './Types/input.types'
 import { texturesPaths } from './Utils/BlocksTexture'
 import { Source } from './Types/resources.types'
@@ -38,6 +40,11 @@ const inputsKeys = [
 		]
 
 const sources: Source[] = [
+	{
+		name: 'player-model',
+		type: 'gltf',
+		path: playerModelSrc,
+	},
 	{
 		name: 'bodies',
 		type: 'map',

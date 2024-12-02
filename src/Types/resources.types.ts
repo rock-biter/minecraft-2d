@@ -1,5 +1,5 @@
 import { DataArrayTexture, Texture, TextureLoader } from "three"
-import { GLTFLoader } from "three/examples/jsm/Addons"
+import { GLTF, GLTFLoader } from "three/examples/jsm/Addons"
 
 export type Path = string | Array<string>
 
@@ -10,13 +10,13 @@ export interface Source {
 	sizes?: { width: number, height: number }
 }
 
-export type File =  Texture | HTMLImageElement | DataArrayTexture
+export type File =  Texture | HTMLImageElement | DataArrayTexture | GLTF
 
 export interface Items {
 	[key: string]: File
 }
 
 export interface Loaders {
-	gltfLoader?: GLTFLoader
-	textureLoader?: TextureLoader
+	gltfLoader: GLTFLoader
+	textureLoader: TextureLoader
 }

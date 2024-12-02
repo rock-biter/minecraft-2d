@@ -12,7 +12,8 @@ export default class Fire extends Sprite {
 
     console.log('fire!!')
 
-    this.entity!.mesh!.renderOrder = 7
+    this.entity.mesh!.renderOrder = 7
+    this.entity.mesh!.name = 'fire'
 
     if(this.debug.active) {
       this.debug.on('texturePackChange',(e) => {
