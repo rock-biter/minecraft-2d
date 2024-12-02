@@ -12,6 +12,8 @@ export default class Fire extends Sprite {
 
     console.log('fire!!')
 
+    this.entity!.mesh!.renderOrder = 7
+
     if(this.debug.active) {
       this.debug.on('texturePackChange',(e) => {
         const event = e as PaneArgs

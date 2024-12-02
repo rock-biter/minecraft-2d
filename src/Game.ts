@@ -9,11 +9,13 @@ import Viewport from './Viewport'
 import World from './World/World'
 import Physics from './Physics'
 
-import bodiesMap from './textures/map/map-16.png?url'
-import backgroundMap from './textures/map/background-06.png?url'
-import frontgroundMap from './textures/map/frontground-01.png?url'
-import specialBodiesMap from './textures/map/specials-09.png?url'
-import collectablesMap from './textures/map/collectables-07.png?url'
+import bodiesMap from './textures/map/map-19.png?url'
+import backgroundMap from './textures/map/background-08.png?url'
+import background2Map from './textures/map/background-2-01.png?url'
+import frontgroundMap from './textures/map/frontground-04.png?url'
+import frontground2Map from './textures/map/frontground-2-02.png?url'
+import specialBodiesMap from './textures/map/specials-10.png?url'
+import collectablesMap from './textures/map/collectables-08.png?url'
 import ladderSrc from './textures/blocks/ladder.png?url'
 import goldenAppleSrc from './textures/golden-apple.png?url'
 import goldenCarrotSrc from './textures/golden-carrot.png?url'
@@ -41,8 +43,8 @@ const sources: Source[] = [
 		type: 'map',
 		path: bodiesMap,
 		sizes: {
-			width: 42,
-			height: 12
+			width: 41,
+			height: 35
 		},
 	},
 	{
@@ -50,8 +52,17 @@ const sources: Source[] = [
 		type: 'map',
 		path: backgroundMap,
 		sizes: {
-			width: 42,
-			height: 12
+			width: 41,
+			height: 35
+		},
+	},
+	{
+		name: 'background-2',
+		type: 'map',
+		path: background2Map,
+		sizes: {
+			width: 41,
+			height: 35
 		},
 	},
 	{
@@ -59,8 +70,17 @@ const sources: Source[] = [
 		type: 'map',
 		path: frontgroundMap,
 		sizes: {
-			width: 42,
-			height: 12
+			width: 41,
+			height: 35
+		},
+	},
+	{
+		name: 'frontground-2',
+		type: 'map',
+		path: frontground2Map,
+		sizes: {
+			width: 41,
+			height: 35
 		},
 	},
 	{
@@ -140,8 +160,8 @@ const sources: Source[] = [
 		type: 'map',
 		path: collectablesMap,
 		sizes: {
-			width: 42,
-			height: 12
+			width: 41,
+			height: 35
 		},
 	},
 	{
