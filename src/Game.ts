@@ -24,6 +24,7 @@ import diamondSrc from './textures/diamond.png?url'
 import lifeHeartSrc from './textures/life-heart.png?url'
 import lavaStillSrc from './textures/blocks/lava_still.png?url'
 import fireSrc from './textures/blocks/fire_1.png?url'
+import marioTexture from './assets/models/steve/textures/mario-texture.png?url'
 
 import playerModelSrc from './assets/models/steve/source/model.gltf?url'
 
@@ -89,6 +90,11 @@ const sources: Source[] = [
 			width: 41,
 			height: 35
 		},
+	},
+	{
+		name: 'player-texture',
+		type: 'texture',
+		path: marioTexture
 	},
 	{
 		name: 'heart',
