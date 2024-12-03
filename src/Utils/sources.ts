@@ -5,6 +5,7 @@ import frontgroundMap from '../textures/map/frontground-05.png?url'
 import frontground2Map from '../textures/map/frontground-2-03.png?url'
 import specialBodiesMap from '../textures/map/specials-10.png?url'
 import collectablesMap from '../textures/map/collectables-08.png?url'
+import enemiesMap from '../textures/map/enemies-01.png?url'
 import ladderSrc from '../textures/blocks/ladder.png?url'
 // import lifeHeartSrc from '../textures/life-heart.png?url'
 import lifeHeartSrc from '../textures/heart/full.png?url'
@@ -15,6 +16,10 @@ import fireSrc from '../textures/blocks/fire_1.png?url'
 import poppySrc from '../textures/blocks/poppy.png?url'
 import dandelionSrc from '../textures/blocks/dandelion.png?url'
 import redTulipSrc from '../textures/blocks/red_tulip.png?url'
+import pinkTulipSrc from '../textures/blocks/pink_tulip.png?url'
+import orangeTulipSrc from '../textures/blocks/orange_tulip.png?url'
+import whiteTulipSrc from '../textures/blocks/white_tulip.png?url'
+import oxeyeDaisySrc from '../textures/blocks/oxeye_daisy.png?url'
 import alliumSrc from '../textures/blocks/allium.png?url'
 import cornflowerSrc from '../textures/blocks/cornflower.png?url'
 
@@ -54,6 +59,42 @@ export const plants = [
 		name: 'red_tulip',
 		type: 'texture',
 		path: redTulipSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'white_tulip',
+		type: 'texture',
+		path: whiteTulipSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'pink_tulip',
+		type: 'texture',
+		path: pinkTulipSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'orange_tulip',
+		type: 'texture',
+		path: orangeTulipSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'oxeye_daisy',
+		type: 'texture',
+		path: oxeyeDaisySrc,
 		sizes: {
 			width: 16,
 			height: 16
@@ -119,6 +160,45 @@ export const items = [
 	},
 ]
 
+export const mapSize =  {
+			width: 41,
+			height: 35
+		}
+
+// dungeon
+export const mapLayers = [
+	{
+		name: 'background-2',
+		type: 'map',
+		path: background2Map,
+		sizes: mapSize
+	},
+	{
+		name: 'background',
+		type: 'map',
+		path: backgroundMap,
+		sizes: mapSize
+	},
+	{
+		name: 'bodies',
+		type: 'map',
+		path: bodiesMap,
+		sizes: mapSize
+	},
+	{
+		name: 'frontground',
+		type: 'map',
+		path: frontgroundMap,
+		sizes: mapSize
+	},
+	{
+		name: 'frontground-2',
+		type: 'map',
+		path: frontground2Map,
+		sizes: mapSize
+	},
+]
+
 const sources: Source[] = [
 	{
 		name: 'player-model',
@@ -126,49 +206,10 @@ const sources: Source[] = [
 		path: playerModelSrc,
 	},
 	{
-		name: 'bodies',
+		name: 'enemies',
 		type: 'map',
-		path: bodiesMap,
-		sizes: {
-			width: 41,
-			height: 35
-		},
-	},
-	{
-		name: 'background',
-		type: 'map',
-		path: backgroundMap,
-		sizes: {
-			width: 41,
-			height: 35
-		},
-	},
-	{
-		name: 'background-2',
-		type: 'map',
-		path: background2Map,
-		sizes: {
-			width: 41,
-			height: 35
-		},
-	},
-	{
-		name: 'frontground',
-		type: 'map',
-		path: frontgroundMap,
-		sizes: {
-			width: 41,
-			height: 35
-		},
-	},
-	{
-		name: 'frontground-2',
-		type: 'map',
-		path: frontground2Map,
-		sizes: {
-			width: 41,
-			height: 35
-		},
+		path: enemiesMap,
+		sizes: mapSize
 	},
 	{
 		name: 'player-texture',
@@ -215,19 +256,13 @@ const sources: Source[] = [
 		name: 'collectables',
 		type: 'map',
 		path: collectablesMap,
-		sizes: {
-			width: 41,
-			height: 35
-		},
+		sizes: mapSize
 	},
 	{
 		name: 'special-bodies',
 		type: 'map',
 		path: specialBodiesMap,
-		sizes: {
-			width: 42,
-			height: 12
-		},
+		sizes: mapSize
 	},
 	{
 		name: 'blocks',
@@ -238,6 +273,7 @@ const sources: Source[] = [
 		},
 		path: texturesPaths,
 	},
+	...mapLayers,
 	...items,
 	...plants
 ]

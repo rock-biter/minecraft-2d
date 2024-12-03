@@ -1,10 +1,10 @@
 import { BoxGeometry, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import Game from "../Game";
-import Events from "../Utils/Events";
+import Events, { callback } from "../Utils/Events";
 import { Entity } from "../Types/entity.types";
 import RAPIER from "@dimforge/rapier3d";
 import Controller from "../Utils/Controller";
-import { CollideArg } from "../Types/callbacks.types";
+import { CallbackArg, CollideArg } from "../Types/callbacks.types";
 import gsap from "gsap";
 import GoldenApple from "./Collectables/GoldenApple";
 import Diamond from "./Collectables/Diamond";
@@ -19,15 +19,16 @@ export default class Enemy extends Events {
   position: Vector3
   static controller: RAPIER.KinematicCharacterController
   velocity = new Vector3(-1,0,0)
-  bounds = 5
+  bounds : number
   damage = 0.5
   damageRate = 500
   damageTimer: number | undefined = undefined
 
-  constructor(position: Vector3) {
+  constructor(position: Vector3, bounds = 5) {
     super()
 
     this.game = new Game()
+    this.bounds = bounds
     this.position = position
 
     if(!Enemy.controller) {
@@ -71,13 +72,20 @@ export default class Enemy extends Events {
     this.entity.mesh = this.getMesh()
     this.entity.mesh.geometry.translate(0,0.1,0)
 
-
-    this.time.on('tick',() => {
+    const updateCall = () => {
       this.update()
-    },4)
+    }
 
-    this.physics.on('collide',(arg) => {
+    const collideCall = (arg: CallbackArg) => {
       this.onCollide(arg as CollideArg)
+    }
+
+    this.time.on('tick',updateCall,4)
+    this.physics.on('collide',collideCall,4)
+
+    this.on('beforeDestroy',() => {
+      this.time.off('tick',updateCall)
+      this.physics.off('collide',collideCall)
     })
 
   }
@@ -158,41 +166,42 @@ export default class Enemy extends Events {
 
   onCollide({handle1, handle2, started}: CollideArg) {
     
-			if(!this.entity || !this.entity?.collider || !this.entity.sensor) return
+    if(!this.entity || !this.entity?.collider || !this.entity.sensor) return
 
-      if(!started) {
-        if(this.damageTimer) {
-          clearInterval(this.damageTimer)
-          console.log('termina attack')
-          this.damageTimer = undefined
-        }
-        return
+    if(!started) {
+      if(this.damageTimer) {
+        clearInterval(this.damageTimer)
+        console.log('termina attack')
+        this.damageTimer = undefined
       }
+      return
+    }
 
-			if ([handle1, handle2].includes(this.entity?.collider?.handle)) {
-				//hit the body
-        // console.log('damage to player!!')
-        // this.game.world.player?.trigger('damage')
+    if ([handle1, handle2].includes(this.entity?.collider?.handle)) {
+      //hit the body
+      // console.log('damage to player!!')
+      // this.game.world.player?.trigger('damage')
+      this.attack()
+      this.damageTimer = setInterval(() =>{
         this.attack()
-        this.damageTimer = setInterval(() =>{
-          this.attack()
-          console.log('attack')
-        }, this.damageRate)
-			}
+        console.log('attack')
+      }, this.damageRate)
+    }
 
-      if ([handle1, handle2].includes(this.entity?.sensor?.handle)) {
-				//hit the body
-        const v = this.game.world.player?.velocity
-        if(!v || v.y >= 0) return
-        // console.log('damage to enemy!!')
-        this.drop()
-        this.destroy()
-        
+    if ([handle1, handle2].includes(this.entity?.sensor?.handle)) {
+      //hit the body
+      const v = this.game.world.player?.velocity
+      if(!v || v.y >= 0) return
+      // console.log('damage to enemy!!')
+      this.drop()
+      this.destroy()
 
-        // console.log(v)
-        
-        v.y = 18
-			}
+      // console.log(v)
+      
+      v.y = 18
+
+      return true
+    }
   }
 
   drop() {
@@ -205,6 +214,7 @@ export default class Enemy extends Events {
 
   destroy() {
 
+    this.trigger('beforeDestroy',true)
     this.physics.removeEntity(this.entity)
 
     if(!this.entity.mesh) return 

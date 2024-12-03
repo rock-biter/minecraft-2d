@@ -22,6 +22,8 @@ import { getTextureName } from "./Utils/BlocksTexture";
 import Grass from "./World/Blocks/Grass";
 import QuestionBlock from "./World/Blocks/QuestionBlock";
 import Lava from "./World/Blocks/Lava";
+import { mapSize } from "./Utils/sources";
+import Enemy from "./World/Enemy";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -80,7 +82,30 @@ export default class MapBuilder {
     this.buildFixedBlocks(frontground2Data, 'FRONTGROUND-2')
     this.buildSpecialBlocks()
     this.createCollectables()
+    this.createEnemies()
 
+  }
+
+  createEnemies() {
+    const enemiesData: ImageData | undefined = this.getTextureData('enemies')
+
+    if(!enemiesData) return
+    const data = enemiesData.data
+
+    for (let i = 0; i < data.length / 4; i++) {
+      const enemyType = data[i * 4 + 0]
+      const dropItem = data[i * 4 + 1]
+      const bounds = data[i * 4 + 2]
+      const a = data[i * 4 + 3]
+
+      if(a === 0) continue 
+
+      const { x,y,z } = this.getCoordinatesBy(i,mapSize.width,mapSize.height)
+
+      console.log('enemy',enemyType,dropItem)
+
+      new Enemy(new Vector3(x,y+1,z), bounds - 0.05)
+    }
   }
 
   createCollectables() {
@@ -98,8 +123,7 @@ export default class MapBuilder {
 
       if(a === 0) continue
 
-      const collectableSrc = this.resources.getSourceByName('collectables') as Required<Source>
-      const { x,y,z } = this.getCoordinatesBy(i,collectableSrc.sizes.width,collectableSrc.sizes.height)
+      const { x,y,z } = this.getCoordinatesBy(i,mapSize.width,mapSize.height)
       // console.log('collectables',collectable)
       switch(collectable) {
         case collectableType.GOLDEN_APPLE:
@@ -254,10 +278,7 @@ export default class MapBuilder {
 
   createSpecialBlock(i: number,blockType: number,g: number,b: number,a: number) {
 
-    // console.log('special block',i,r,g,b,a)
-    const specialBodiesSrc = this.resources.getSourceByName('special-bodies') as Required<Source>
-
-    const { x,y,z } = this.getCoordinatesBy(i,specialBodiesSrc.sizes.width,specialBodiesSrc.sizes.height)
+    const { x,y,z } = this.getCoordinatesBy(i,mapSize.width,mapSize.height)
 
     const position = new Vector3(x,y,z)
 
@@ -287,9 +308,7 @@ export default class MapBuilder {
 
   createBlock(i: number,r: number,textureIndex: number,b: number,a: number, depth :number) {
 
-    // let entity: Entity = {}
-    const bodiesSrc = this.resources.getSourceByName('bodies') as Required<Source>
-    const { x,y,z } = this.getCoordinatesBy(i,bodiesSrc.sizes.width,bodiesSrc.sizes.height)
+    const { x,y,z } = this.getCoordinatesBy(i,mapSize.width,mapSize.height)
 
     const textureName = getTextureName(textureIndex)
 
@@ -300,31 +319,6 @@ export default class MapBuilder {
       default:
         new Block({ position: new Vector3(x,y,z),r,textureIndex,b,depth})
     }
-
-    
-
-    // // Red channel for body type
-    // const bodyDesc = getRigidBodyDesc(r)
-
-    // if(bodyDesc) {
-    //   bodyDesc.setTranslation(x, y, z)
-    //   const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
-    //   entity = this.physics.addEntity(bodyDesc, colliderDesc)
-    // }
-
-    // const mesh = this.getMesh(g,b,a,depth)
-
-    // this.debug.on('texturePackChange',(e) => {
-    //   const event = e as PaneArgs
-    //   mesh.material = this.getMaterial(event.value)
-    // })
-
-    // if(mesh) {
-    //   mesh.position.set(x,y,z)
-    //   entity.mesh = mesh
-
-		//   this.scene.add(entity.mesh)
-    // }
 
 	}
 

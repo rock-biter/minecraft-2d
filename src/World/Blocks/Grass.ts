@@ -18,7 +18,7 @@ export default class Grass extends Block {
       // mat.uniforms.uColor.value.set(0x78AC30)
 
 
-      if(Math.random() > 0.22) return 
+      if(Math.random() > 0.1) return 
 
       const x = (Math.random() - 0.5) * 0.5
       const z = (Math.random() - 0.5) * 0.5
