@@ -1,7 +1,9 @@
-import { BufferAttribute, MeshStandardMaterial, ShaderMaterial, Vector3 } from "three";
+import { BufferAttribute, MeshStandardMaterial, ShaderMaterial, Texture, Vector3 } from "three";
 import Block, { BlockProps } from "./Block";
 import { getTextureIndex } from "../../Utils/BlocksTexture";
 import { TEXTURES } from "../../Utils/Enums";
+import Sprite from "../Sprite/Sprite";
+import { plants as plantsResources } from "../../Utils/sources";
 
 export default class Grass extends Block {
   constructor({ position = new Vector3(), r, textureIndex, b, depth }: BlockProps) {
@@ -12,8 +14,19 @@ export default class Grass extends Block {
     this.setTopBottomFace()
     if (this.entity.mesh) {
       this.entity.mesh.material = this.game.world.materials.grassMaterial
-      const mat = this.entity.mesh.material as ShaderMaterial
+      const mat = this.entity.mesh.material as MeshStandardMaterial
       // mat.uniforms.uColor.value.set(0x78AC30)
+
+
+      if(Math.random() > 0.22) return 
+
+      const x = (Math.random() - 0.5) * 0.5
+      const z = (Math.random() - 0.5) * 0.5
+      const plants = new Sprite({ position: this.entity.mesh.position.clone().add(new Vector3(x,1,z)) })
+      const spriteMat = plants.entity.mesh!.material as MeshStandardMaterial
+
+      const mapName = plantsResources.map(el => el.name)[Math.floor(Math.random() * plantsResources.length)]
+      spriteMat.map = this.resources.items[mapName] as Texture
     }
 
   }

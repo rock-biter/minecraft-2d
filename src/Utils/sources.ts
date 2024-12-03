@@ -11,6 +11,14 @@ import lifeHeartSrc from '../textures/heart/full.png?url'
 import lavaStillSrc from '../textures/blocks/lava_still.png?url'
 import fireSrc from '../textures/blocks/fire_1.png?url'
 
+// plants
+import poppySrc from '../textures/blocks/poppy.png?url'
+import dandelionSrc from '../textures/blocks/dandelion.png?url'
+import redTulipSrc from '../textures/blocks/red_tulip.png?url'
+import alliumSrc from '../textures/blocks/allium.png?url'
+import cornflowerSrc from '../textures/blocks/cornflower.png?url'
+
+// items
 import goldenAppleSrc from '../textures/item/golden_apple.png?url'
 import goldenCarrotSrc from '../textures/item/golden_carrot.png?url'
 import emeraldSrc from '../textures/item/emerald.png?url'
@@ -22,6 +30,56 @@ import playerModelSrc from '../assets/models/steve/source/model.gltf?url'
 
 import { Source } from "../Types/resources.types";
 import { texturesPaths } from './BlocksTexture'
+
+export const plants = [
+	{
+		name: 'poppy',
+		type: 'texture',
+		path: poppySrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'dandelion',
+		type: 'texture',
+		path: dandelionSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'red_tulip',
+		type: 'texture',
+		path: redTulipSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'allium',
+		type: 'texture',
+		path: alliumSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'cornflower',
+		type: 'texture',
+		path: cornflowerSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+]
+
+export const items = []
 
 const sources: Source[] = [
 	{
@@ -178,6 +236,9 @@ const sources: Source[] = [
 		},
 		path: texturesPaths,
 	},
+	...plants
 ]
+
+
 
 export default sources

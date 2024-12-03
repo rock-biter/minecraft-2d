@@ -41,6 +41,7 @@ export default class Block {
     this.height = height
 
     this.position = position
+    this.position.z = depth
     this.r = r
     this.textureIndex = textureIndex
     this.b = b
@@ -171,7 +172,7 @@ export default class Block {
     geometry.setAttribute('aBright', brightAttribute)
     geometry.setAttribute('aOpacity', opacityAttribute)
 
-    geometry.translate(0,0,this.depth)
+    // geometry.translate(0,0,this.depth)
   }
 
   getMaterial(type?: string) {
