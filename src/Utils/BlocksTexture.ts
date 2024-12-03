@@ -6,16 +6,20 @@ import gravelSrc from '../textures/blocks/gravel.png?url'
 import sandSrc from '../textures/blocks/sand.png?url'
 import dirtSrc from '../textures/blocks/dirt.png?url'
 import stoneSrc from '../textures/blocks/stone.png?url'
-import graniteSrc from '../textures/granite.png?url'
+import graniteSrc from '../textures/blocks/granite.png?url'
 import snowyGrassSrc from '../textures/snowy-grass.png?url'
-import ladderSrc from '../textures/ladder.png?url'
+// import ladderSrc from '../textures/ladder.png?url'
 import questionMarkSrc from '../textures/question-mark.png?url'
 import obsidianSrc from '../textures/blocks/obsidian.png?url'
 import oakLogSrc from '../textures/blocks/oak_log.png?url'
 import oakLogTopSrc from '../textures/blocks/oak_log_top.png?url'
 import oakPlanksSrc from '../textures/blocks/oak_planks.png?url'
 import oakLeavesSrc from '../textures/blocks/oak_leaves.png?url'
-import transparentSrc from '../textures/transparent.png?url'
+import coalOreSrc from '../textures/blocks/coal_ore.png?url'
+import ironOreSrc from '../textures/blocks/iron_ore.png?url'
+import goldOreSrc from '../textures/blocks/gold_ore.png?url'
+import diamondOreSrc from '../textures/blocks/diamond_ore.png?url'
+// import transparentSrc from '../textures/transparent.png?url'
 import { TEXTURES } from './Enums'
 
 interface TextureIndexes {
@@ -88,6 +92,23 @@ export const blocksTextures: Texture[] = [
     name: TEXTURES.OAK_PLANKS,
     path: oakPlanksSrc,
   },
+  {
+    name: TEXTURES.COAL_ORE,
+    path: coalOreSrc,
+  },
+  {
+    name: TEXTURES.IRON_ORE,
+    path: ironOreSrc,
+  },
+  {
+    name: TEXTURES.GOLD_ORE,
+    path: goldOreSrc,
+  },
+  {
+    name: TEXTURES.DIAMOND_ORE,
+    path: diamondOreSrc,
+  },
+
   // {
   //   name: 'TRANSPARENT-LADDER',
   //   path: transparentSrc,

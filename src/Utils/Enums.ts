@@ -21,6 +21,10 @@ export const TEXTURES = {
   OAK_LOG: 'OAK_LOG',
   OAK_LOG_TOP: 'OAK_LOG_TOP',
   OAK_LEAVES: 'OAK_LEAVES',
+  COAL_ORE: 'COAL_ORE',
+  IRON_ORE: 'IRON_ORE',
+  GOLD_ORE: 'GOLD_ORE',
+  DIAMOND_ORE: 'DIAMOND_ORE',
 }
 
 export default ENUMS

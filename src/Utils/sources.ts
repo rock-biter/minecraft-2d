@@ -1,8 +1,8 @@
-import bodiesMap from '../textures/map/map-19.png?url'
-import backgroundMap from '../textures/map/background-08.png?url'
-import background2Map from '../textures/map/background-2-01.png?url'
-import frontgroundMap from '../textures/map/frontground-04.png?url'
-import frontground2Map from '../textures/map/frontground-2-02.png?url'
+import bodiesMap from '../textures/map/map-20.png?url'
+import backgroundMap from '../textures/map/background-09.png?url'
+import background2Map from '../textures/map/background-2-02.png?url'
+import frontgroundMap from '../textures/map/frontground-05.png?url'
+import frontground2Map from '../textures/map/frontground-2-03.png?url'
 import specialBodiesMap from '../textures/map/specials-10.png?url'
 import collectablesMap from '../textures/map/collectables-08.png?url'
 import ladderSrc from '../textures/blocks/ladder.png?url'
@@ -79,7 +79,45 @@ export const plants = [
 	},
 ]
 
-export const items = []
+// items sources
+export const items = [
+	{
+		name: 'emerald',
+		type: 'texture',
+		path: emeraldSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'diamond',
+		type: 'texture',
+		path: diamondSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'golden-apple',
+		type: 'texture',
+		path: goldenAppleSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+	{
+		name: 'golden-carrot',
+		type: 'texture',
+		path: goldenCarrotSrc,
+		sizes: {
+			width: 16,
+			height: 16
+		},
+	},
+]
 
 const sources: Source[] = [
 	{
@@ -174,42 +212,6 @@ const sources: Source[] = [
 		},
 	},
 	{
-		name: 'emerald',
-		type: 'texture',
-		path: emeraldSrc,
-		sizes: {
-			width: 16,
-			height: 16
-		},
-	},
-	{
-		name: 'diamond',
-		type: 'texture',
-		path: diamondSrc,
-		sizes: {
-			width: 16,
-			height: 16
-		},
-	},
-	{
-		name: 'golden-apple',
-		type: 'texture',
-		path: goldenAppleSrc,
-		sizes: {
-			width: 16,
-			height: 16
-		},
-	},
-	{
-		name: 'golden-carrot',
-		type: 'texture',
-		path: goldenCarrotSrc,
-		sizes: {
-			width: 16,
-			height: 16
-		},
-	},
-	{
 		name: 'collectables',
 		type: 'map',
 		path: collectablesMap,
@@ -236,6 +238,7 @@ const sources: Source[] = [
 		},
 		path: texturesPaths,
 	},
+	...items,
 	...plants
 ]
 
