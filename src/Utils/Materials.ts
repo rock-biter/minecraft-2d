@@ -34,6 +34,7 @@ export default class Materials {
   grassMaterial!: ShaderMaterial | MeshStandardMaterial
   lavaStillMaterial!: ShaderMaterial | MeshStandardMaterial
   fireMaterial!: ShaderMaterial | MeshBasicMaterial
+  waterMaterial!: ShaderMaterial | MeshStandardMaterial
 
   constructor() {
     this.game = new Game()
@@ -45,7 +46,14 @@ export default class Materials {
     this.initLadderMaterial()
     this.initLavaMaterials()
     this.initFireMaterial()
+    this.initWaterMaterial()
 
+  }
+
+  initWaterMaterial() {
+    this.waterMaterial = new MeshStandardMaterial({ color: 0x3355ff, transparent: true,
+      opacity: 0.7,
+    })
   }
 
   initBlockMaterial() {

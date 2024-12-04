@@ -25,6 +25,7 @@ import Lava from "./World/Blocks/Lava";
 import { mapSize } from "./Utils/sources";
 import Enemy from "./World/Mobs/Enemy";
 import Zombie from "./World/Mobs/Zombie";
+import Water from "./World/Blocks/Water";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -84,6 +85,19 @@ export default class MapBuilder {
     this.buildSpecialBlocks()
     this.createCollectables()
     this.createEnemies()
+
+    new Water({ position: new Vector3(-20.5,20,0), textureIndex: 9, depth: 0, r: 0, b: 0})
+    new Water({ position: new Vector3(-20.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
+    new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
+    new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: 0, r: 0, b: 0})
+    new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: -1, r: 0, b: 0})
+    new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: -2, r: 0, b: 0})
+    new Water({ position: new Vector3(-19.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
+    new Water({ position: new Vector3(-19.5,19,0), textureIndex: 9, depth: 1, r: 0, b: 0})
+    new Water({ position: new Vector3(-20.5,19,0), textureIndex: 9, depth: 1, r: 0, b: 0})
+    new Water({ position: new Vector3(-21.5,19,0), textureIndex: 9, depth: 1, r: 0, b: 0})
+    new Water({ position: new Vector3(-21.5,19,0), textureIndex: 9, depth: 0, r: 0, b: 0})
+    new Water({ position: new Vector3(-18.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
 
   }
 
