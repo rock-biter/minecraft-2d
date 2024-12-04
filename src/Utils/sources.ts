@@ -33,6 +33,9 @@ import diamondSrc from '../textures/item/diamond.png?url'
 import marioTexture from '../assets/models/steve/textures/mario-texture.png?url'
 import playerModelSrc from '../assets/models/steve/source/model.gltf?url'
 
+// mob
+import zombieSrc from '../assets/models/mob/zombie/scene.gltf?url'
+
 import { Source } from "../Types/resources.types";
 import { texturesPaths } from './BlocksTexture'
 
@@ -204,6 +207,11 @@ const sources: Source[] = [
 		name: 'player-model',
 		type: 'gltf',
 		path: playerModelSrc,
+	},
+	{
+		name: 'zombie',
+		type: 'gltf',
+		path: zombieSrc,
 	},
 	{
 		name: 'enemies',

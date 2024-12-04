@@ -1,14 +1,15 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial, Vector3 } from "three";
-import Game from "../Game";
-import Events, { callback } from "../Utils/Events";
-import { Entity } from "../Types/entity.types";
+import { AnimationClip, AnimationMixer, BoxGeometry, Mesh, MeshStandardMaterial, Object3D, Vector3 } from "three";
+import Game from "../../Game";
+import Events, { callback } from "../../Utils/Events";
+import { Entity } from "../../Types/entity.types";
 import RAPIER from "@dimforge/rapier3d";
-import Controller from "../Utils/Controller";
-import { CallbackArg, CollideArg } from "../Types/callbacks.types";
+import Controller from "../../Utils/Controller";
+import { CallbackArg, CollideArg } from "../../Types/callbacks.types";
 import gsap from "gsap";
-import GoldenApple from "./Collectables/GoldenApple";
-import Diamond from "./Collectables/Diamond";
-import { bodyType } from "../Utils/BodyTypes";
+import GoldenApple from "../Collectables/GoldenApple";
+import Diamond from "../Collectables/Diamond";
+import { bodyType } from "../../Utils/BodyTypes";
+import Resources from "../../Utils/Resources";
 
 const _V = new Vector3()
 
@@ -24,11 +25,16 @@ export default class Enemy extends Events {
   damageRate = 500
   damageTimer: number | undefined = undefined
 
+  skin?: Mesh | Object3D
+  mixer?: AnimationMixer
+	animations?: AnimationClip[]
+
   constructor(position: Vector3, bounds = 5) {
     super()
 
     this.game = new Game()
     this.bounds = bounds
+    if(this.bounds === 0) this.velocity.x = 0
     this.position = position
 
     if(!Enemy.controller) {
@@ -54,6 +60,18 @@ export default class Enemy extends Events {
     return this.game.time
   }
 
+  get resources(): Resources {
+    return this.game.resources
+  }
+
+  get material(): MeshStandardMaterial {
+    return new MeshStandardMaterial({
+      color: 0x0000ff,
+      transparent: true,
+      opacity: 0.5
+    })
+  }
+
   create() {
 
     const {x, y, z} = this.position
@@ -69,8 +87,7 @@ export default class Enemy extends Events {
     const sensorCollDesc = RAPIER.ColliderDesc.cuboid(0.35,0.3,0.35)
     .setTranslation(0,0.6, 0).setSensor(true)
     this.entity.sensor = w.createCollider(sensorCollDesc,this.entity.body)
-    this.entity.mesh = this.getMesh()
-    this.entity.mesh.geometry.translate(0,0.1,0)
+    this.entity.mesh = this.getMesh() as Mesh
 
     const updateCall = () => {
       this.update()
@@ -94,17 +111,14 @@ export default class Enemy extends Events {
     return new Enemy(position)
   }
 
-  getMesh() {
+  getMesh(): Mesh | Object3D {
 
-    const material = new MeshStandardMaterial({
-      color: 0x0000ff,
-      transparent: true,
-      opacity: 0.5
-    })
+    const geometry = new BoxGeometry(1,2,1)
+    geometry.translate(0,0.1,0)
 
     const mesh = new Mesh(
-      new BoxGeometry(1,2,1),
-      material
+      geometry,
+      this.material
     )
 
     this.scene.add(mesh)
@@ -115,7 +129,6 @@ export default class Enemy extends Events {
   update() {
     // return
     // console.log('move enemy')
-    
 
     if(!this.entity.collider || !this.entity.body) return 
 
@@ -134,6 +147,8 @@ export default class Enemy extends Events {
       currentPosition.x > this.position.x + this.bounds
     ) {
       this.velocity.x *= -1
+      this.trigger('changeDirection')
+
     }
 
     
@@ -203,6 +218,7 @@ export default class Enemy extends Events {
       return true
     }
   }
+
 
   drop() {
     // TODO random items from a collection of droppables 

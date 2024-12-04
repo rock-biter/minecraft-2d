@@ -23,7 +23,8 @@ import Grass from "./World/Blocks/Grass";
 import QuestionBlock from "./World/Blocks/QuestionBlock";
 import Lava from "./World/Blocks/Lava";
 import { mapSize } from "./Utils/sources";
-import Enemy from "./World/Enemy";
+import Enemy from "./World/Mobs/Enemy";
+import Zombie from "./World/Mobs/Zombie";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -102,9 +103,9 @@ export default class MapBuilder {
 
       const { x,y,z } = this.getCoordinatesBy(i,mapSize.width,mapSize.height)
 
-      console.log('enemy',enemyType,dropItem)
+      // console.log('enemy',enemyType,dropItem)
 
-      new Enemy(new Vector3(x,y+1,z), bounds - 0.05)
+      new Zombie({ position: new Vector3(x,y+1,z), buonds: Math.max(bounds - 0.05,0) } )
     }
   }
 

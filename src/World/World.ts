@@ -18,7 +18,7 @@ import Time from '../Utils/Time'
 import Resources from '../Utils/Resources'
 import MapBuilder from '../MapBuilder'
 import Materials from '../Utils/Materials'
-import Enemy from './Enemy'
+import Enemy from './Mobs/Enemy'
 import Fire from './Sprite/Fire'
 
 export default class World {
