@@ -1,4 +1,4 @@
-import { MeshStandardMaterial, ShaderMaterial, Vector3 } from "three";
+import { Box3, Frustum, Mesh, MeshStandardMaterial, ShaderMaterial, Vector3 } from "three";
 import Block, { BlockProps } from "./Block";
 
 export default class Water extends Block {
@@ -14,7 +14,19 @@ export default class Water extends Block {
 
     this.game.time.on('tick',() => {
 
-      Water.blocks.map(block => block.entity.mesh).sort((a,b) => {
+      const blocks = []
+
+      Water.blocks.filter((water) => {
+        const boundingBox = new Box3().setFromObject(water.entity.mesh!)
+        const frustum = new Frustum()
+        frustum.setFromProjectionMatrix(cam.projectionMatrix)
+        frustum.planes.forEach(function(plane) { plane.applyMatrix4(cam.matrixWorld) })
+        if(frustum.intersectsBox(boundingBox)) { 
+          return true
+        } else {
+          return false
+        }
+      }).map(block => block.entity.mesh).sort((a,b) => {
         const dA = cam.position.distanceTo(a!.position)
         const dB = cam.position.distanceTo(b!.position)
 
