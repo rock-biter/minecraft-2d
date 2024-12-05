@@ -1,4 +1,4 @@
-import {  BoxGeometry, BufferAttribute, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BoxGeometry, BufferAttribute, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -18,7 +18,7 @@ import Debug from "./Utils/Debug";
 import { PaneArgs } from "./Types/callbacks.types";
 import ENUMS, { TEXTURES } from "./Utils/Enums";
 import Block from "./World/Blocks/Block";
-import { getTextureName } from "./Utils/BlocksTexture";
+import { getTextureIndex, getTextureName } from "./Utils/BlocksTexture";
 import Grass from "./World/Blocks/Grass";
 import QuestionBlock from "./World/Blocks/QuestionBlock";
 import Lava from "./World/Blocks/Lava";
@@ -26,6 +26,7 @@ import { mapSize } from "./Utils/sources";
 import Enemy from "./World/Mobs/Enemy";
 import Zombie from "./World/Mobs/Zombie";
 import Water from "./World/Blocks/Water";
+import Log from "./World/Blocks/Log";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -98,6 +99,36 @@ export default class MapBuilder {
     new Water({ position: new Vector3(-21.5,19,0), textureIndex: 9, depth: 1, r: 0, b: 0})
     new Water({ position: new Vector3(-21.5,19,0), textureIndex: 9, depth: 0, r: 0, b: 0})
     new Water({ position: new Vector3(-18.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
+
+    new Log({ position: new Vector3(-12.5,23,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})
+    new Log({ position: new Vector3(-12.5,24,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})
+    new Log({ position: new Vector3(-12.5,25,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})
+    new Log({ position: new Vector3(-12.5,26,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})
+    new Log({ position: new Vector3(-13.5,26,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0, rotation: new Euler(Math.PI * 0.5,0,0)})
+    new Log({ position: new Vector3(-13.5,26,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -1, b: 0, rotation: new Euler(Math.PI * 0.5,0,0)})
+    new Log({ position: new Vector3(-11.5,25,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0, rotation: new Euler(0,0,Math.PI * 0.5)})
+    // leaves
+    new Block({ position: new Vector3(-12.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 0, depth:-1 })
+    new Block({ position: new Vector3(-11.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 0, depth:-1 })
+    new Block({ position: new Vector3(-10.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 0, depth:-1 })
+    new Block({ position: new Vector3(-12.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: 0})
+    new Block({ position: new Vector3(-12.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: 0})
+    new Block({ position: new Vector3(-11.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: 0})
+    new Block({ position: new Vector3(-11.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: 0})
+    new Block({ position: new Vector3(-13.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
+    new Block({ position: new Vector3(-14.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
+    new Block({ position: new Vector3(-13.5,25,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -3})
+    new Block({ position: new Vector3(-13.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -3})
+    new Block({ position: new Vector3(-13.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -3})
+    new Block({ position: new Vector3(-13.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
+    new Block({ position: new Vector3(-12.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
+    new Block({ position: new Vector3(-11.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
+    new Block({ position: new Vector3(-10.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
+    new Block({ position: new Vector3(-10.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
+    new Block({ position: new Vector3(-12.5,25,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
+    new Block({ position: new Vector3(-12.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
+    new Block({ position: new Vector3(-11.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
+    new Block({ position: new Vector3(-11.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
 
   }
 
