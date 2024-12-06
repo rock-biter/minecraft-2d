@@ -81,6 +81,7 @@ export default class Materials {
         attribute vec3 aUv;
         uniform sampler2DArray uDiffuse;
         varying vec3 vUv;
+        varying vec3 vWPos;
         `
       )
 
@@ -89,6 +90,7 @@ export default class Materials {
         ${token}
         uniform sampler2DArray uDiffuse;
         varying vec3 vUv;
+        varying vec3 vWPos;
         `
       )
 
@@ -99,6 +101,7 @@ export default class Materials {
         ${token}
         vUv.xyz = aUv.xyz;
         vUv.y = 1. - vUv.y;
+        vWPos = vec4(modelMatrix * vec4( position, 1.0 )).xyz;
         `
       )
 
@@ -109,6 +112,16 @@ export default class Materials {
         // ${token}
         
         diffuseColor.rgb = texture( uDiffuse, vUv ).rgb;
+        `
+      )
+
+      token = `vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;`
+
+      shader.fragmentShader = shader.fragmentShader.replace(token,
+        /* glsl */`
+        // ${token}
+        
+        vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse * (smoothstep(20.,24.,vWPos.y) * 0.7 + 0.3);
         `
       )
 
@@ -200,14 +213,23 @@ export default class Materials {
       map.offset.y = count/(20 * 16)
     },250)
 
-    this.lavaStillMaterial = new MeshBasicMaterial({
+    this.lavaStillMaterial = new MeshStandardMaterial({
       map,
       // transparent: true,
       // opacity: 1,
-      // emissiveIntensity: 0.3,
-      // emissive: new Color(0xffffff),
-      // emissiveMap: map
+      emissiveIntensity: 0.5,
+      emissive: new Color(0xffffff),
+      emissiveMap: map
     })
+
+    // this.lavaStillMaterial = new MeshBasicMaterial({
+    //   map,
+    //   // transparent: true,
+    //   // opacity: 1,
+    //   // emissiveIntensity: 0.3,
+    //   // emissive: new Color(0xffffff),
+    //   // emissiveMap: map
+    // })
   }
 
   initFireMaterial() {

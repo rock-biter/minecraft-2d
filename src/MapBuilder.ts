@@ -1,4 +1,4 @@
-import {  BoxGeometry, BufferAttribute, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,  PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BoxGeometry, BufferAttribute, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,   PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -78,11 +78,19 @@ export default class MapBuilder {
     const background2Data: ImageData | undefined = this.getTextureData('background-2')
     const frontgroundData: ImageData | undefined = this.getTextureData('frontground')
     const frontground2Data: ImageData | undefined = this.getTextureData('frontground-2')
-    this.buildFixedBlocks(bodiesData)
-    this.buildFixedBlocks(backgroundData, 'BACKGROUND')
-    this.buildFixedBlocks(background2Data, 'BACKGROUND-2')
-    this.buildFixedBlocks(frontgroundData, 'FRONTGROUND')
-    this.buildFixedBlocks(frontground2Data, 'FRONTGROUND-2')
+    this.buildFixedBlocks(bodiesData,0)
+    this.buildFixedBlocks(backgroundData, -1)
+    this.buildFixedBlocks(background2Data, -4)
+    this.buildFixedBlocks(background2Data, -5)
+    this.buildFixedBlocks(background2Data, -6)
+    this.buildFixedBlocks(background2Data, -2)
+    this.buildFixedBlocks(background2Data, -3)
+    this.buildFixedBlocks(frontgroundData, 1)
+    this.buildFixedBlocks(frontground2Data, 2)
+    this.buildFixedBlocks(frontground2Data, 4)
+    this.buildFixedBlocks(frontground2Data, 3)
+    this.buildFixedBlocks(frontground2Data, 5)
+    this.buildFixedBlocks(frontground2Data, 6)
     this.buildSpecialBlocks()
     this.createCollectables()
     this.createEnemies()
@@ -141,6 +149,29 @@ export default class MapBuilder {
     new Block({ position: new Vector3(-12.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
     new Block({ position: new Vector3(-11.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
     new Block({ position: new Vector3(-11.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
+
+    // const shadowPlane = new PlaneGeometry(200,200)
+    // const shadowMesh = new Mesh(shadowPlane, new MeshStandardMaterial({ color: 0xffffff}))
+    // shadowMesh.position.z = 3
+    // shadowMesh.position.y = 19
+    // shadowMesh.castShadow = true
+    // shadowMesh.material.colorWrite = false
+    // shadowMesh.rotation.x = -Math.PI * 0.5
+    // this.scene.add(shadowMesh)
+    // shadowMesh.onBeforeShadow = () => {
+    //   // this.scene.add(shadowMesh)
+    //   shadowMesh.visible = true
+    //   // shadowMesh.position.x += 0.01
+    //   console.log('before shadow')
+    //   // shadowMesh.rotation.y = 0
+    // }
+    // shadowMesh.onAfterShadow = () => {
+    //   // this.scene.remove(shadowMesh)
+    //   shadowMesh.visible = true
+    // }
+    // shadowMesh.onBeforeRender = () => {
+    //   this.scene.add(shadowMesh)
+    // }
 
   }
 
@@ -227,24 +258,9 @@ export default class MapBuilder {
     }
   }
 
-  buildFixedBlocks(bodiesData: ImageData | undefined, level = 'PLAYER') {
+  buildFixedBlocks(bodiesData: ImageData | undefined, level = 0) {
 
-    let z = 0
-
-    switch(level) {
-      case 'BACKGROUND':
-        z = -1
-      break
-      case 'BACKGROUND-2':
-        z = -2
-      break
-      case 'FRONTGROUND':
-        z = 1
-      break
-      case 'FRONTGROUND-2':
-        z = 2
-      break
-    }
+    const z = level
     
     if(!bodiesData) return
     const data = bodiesData.data

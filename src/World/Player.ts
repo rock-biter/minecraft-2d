@@ -9,6 +9,7 @@ import {
 	Mesh,
 	MeshStandardMaterial,
 	Object3D,
+	PointLight,
 	Scene,
 	Vector3,
 } from 'three'
@@ -204,6 +205,7 @@ export default class Player extends Events {
 
 			const mesh = new Mesh(geometry, material)
 			this.scene.add(mesh)
+
 			return mesh
 
 		}
@@ -227,7 +229,18 @@ export default class Player extends Events {
 			}
 		})
 
-		obj.add(mesh)
+		const pointLight = new PointLight(0xffffff,0.5,20,0.2)
+		pointLight.castShadow = true
+		pointLight.shadow.radius = 20
+		pointLight.shadow.blurSamples = 20
+		pointLight.shadow.normalBias = 0.05
+		pointLight.shadow.bias = -0.01
+
+		mesh.add(pointLight)
+		pointLight.position.y = 1
+		pointLight.position.z = 2
+
+		obj.add(mesh,pointLight)
 
 		console.log(mesh)
 		// mesh.position.y -= 1
