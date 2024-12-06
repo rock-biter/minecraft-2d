@@ -54,7 +54,8 @@ export default class Player extends Events {
 
 	velocity = new Vector3()
 	speed = 5
-	jump = 20
+	jump = 18
+	waterIntersections: number[] = []
 	isOnLadder = false
 	grabLadder = false
 	grounded = false
@@ -114,7 +115,12 @@ export default class Player extends Events {
 				this.velocity.x = 0
 			}
 
-			let jump = this.effects.slowness.enabled ? this.jump * 0.6 : this.jump
+			let jump =  this.jump 
+			
+			if(this.effects.slowness.enabled)
+				jump = this.jump * 0.6
+			if(this.waterIntersections.length) 
+				jump = this.jump * 0.5
 
 
 			this.controller.computedGrounded() &&
@@ -267,30 +273,30 @@ export default class Player extends Events {
 		// this.update()
 	}
 
-	checkGround() {
+	// checkGround() {
 
-		if(!this.entity || !this.entity.body) return
+	// 	if(!this.entity || !this.entity.body) return
 
-		_V.copy(this.entity.body.translation())
-		_V.y -= 0.9
-		const ray = new RAPIER.Ray(_V, {
-			x: 0,
-			y: -1,
-			z: 0,
-		})
-		const maxToi = 0.3
-		let solid = false
+	// 	_V.copy(this.entity.body.translation())
+	// 	_V.y -= 0.9
+	// 	const ray = new RAPIER.Ray(_V, {
+	// 		x: 0,
+	// 		y: -1,
+	// 		z: 0,
+	// 	})
+	// 	const maxToi = 0.3
+	// 	let solid = false
 
-		const hit = this.physics.instance.castRay(ray, maxToi, solid)
+	// 	const hit = this.physics.instance.castRay(ray, maxToi, solid)
 
-		if (hit != null) {
-			// const hitPoint = ray.pointAt(hit.timeOfImpact)
-			// console.log('hit collider:', hit.collider)
-			return true
-		}
+	// 	if (hit != null) {
+	// 		// const hitPoint = ray.pointAt(hit.timeOfImpact)
+	// 		// console.log('hit collider:', hit.collider)
+	// 		return true
+	// 	}
 
-		return false
-	}
+	// 	return false
+	// }
 
 	turnSkin(angle: number) {
 
@@ -322,29 +328,30 @@ export default class Player extends Events {
 
 	}
 
-	rotateToNearestStepRadians(startAngle: number, targetAngle: number) {
-		const TWO_PI = 2 * Math.PI;
-		const STEP = Math.PI / 2; // 90 gradi in radianti
+	// not working!
+	// rotateToNearestStepRadians(startAngle: number, targetAngle: number) {
+	// 	const TWO_PI = 2 * Math.PI;
+	// 	const STEP = Math.PI / 2; // 90 gradi in radianti
 
-		// Normalizza gli angoli tra 0 e 2π
-		startAngle = ((startAngle % TWO_PI) + TWO_PI) % TWO_PI;
-		targetAngle = ((targetAngle % TWO_PI) + TWO_PI) % TWO_PI;
+	// 	// Normalizza gli angoli tra 0 e 2π
+	// 	startAngle = ((startAngle % TWO_PI) + TWO_PI) % TWO_PI;
+	// 	targetAngle = ((targetAngle % TWO_PI) + TWO_PI) % TWO_PI;
 
-		// Calcola la differenza in senso orario e antiorario
-		let clockwiseDiff = (targetAngle - startAngle + TWO_PI) % TWO_PI;
-		let counterClockwiseDiff = (startAngle - targetAngle + TWO_PI) % TWO_PI;
+	// 	// Calcola la differenza in senso orario e antiorario
+	// 	let clockwiseDiff = (targetAngle - startAngle + TWO_PI) % TWO_PI;
+	// 	let counterClockwiseDiff = (startAngle - targetAngle + TWO_PI) % TWO_PI;
 
-		// Determina la direzione più breve
-		let shortestDiff = clockwiseDiff <= counterClockwiseDiff 
-			? clockwiseDiff 
-			: -counterClockwiseDiff;
+	// 	// Determina la direzione più breve
+	// 	let shortestDiff = clockwiseDiff <= counterClockwiseDiff 
+	// 		? clockwiseDiff 
+	// 		: -counterClockwiseDiff;
 
-		// Calcola lo step più vicino di π/2
-		let stepCount = Math.round(shortestDiff / STEP);
-		let finalAngle = (startAngle + stepCount * STEP + TWO_PI) % TWO_PI;
+	// 	// Calcola lo step più vicino di π/2
+	// 	let stepCount = Math.round(shortestDiff / STEP);
+	// 	let finalAngle = (startAngle + stepCount * STEP + TWO_PI) % TWO_PI;
 
-		return finalAngle;
-	}
+	// 	return finalAngle;
+	// }
 
 	death() {
 		this.entity?.body?.setTranslation(this.initialPosition as RAPIER.Vector3,true)
@@ -364,7 +371,10 @@ export default class Player extends Events {
 			this.velocity.y = 0
 			// this.skin && gsap.to(this.skin.rotation,{ y: 0 })
 			this.turnSkin(Math.PI * 0)
-		}	else {
+		}	else if(this.waterIntersections.length) {
+			this.velocity.y -= dt * 4
+			this.velocity.y = MathUtils.clamp(this.velocity.y,-this.speed * 0.3,this.speed * 0.3)
+		} else {
 			const force = _V.copy(this.physics.instance.gravity).multiplyScalar(dt)
 			this.velocity.add(force)
 		}
@@ -388,13 +398,21 @@ export default class Player extends Events {
 			this.velocity.x = MathUtils.lerp(this.velocity.x, speed, 1 - dt * 10)
 		}
 
-		if (this.isOnLadder && this.inputs.keys['jump']) {
+		if (this.waterIntersections.length && this.inputs.keys['jump'] && !this.controller.computedGrounded()) {
 			this.velocity.y = MathUtils.lerp(this.velocity.y, this.speed, 1 - dt * 10)
+		}
+
+		if (this.waterIntersections.length && this.inputs.keys['down'] && !this.controller.computedGrounded()) {
+			this.velocity.y = MathUtils.lerp(this.velocity.y, -this.speed, 1 - dt * 10)
+		}
+
+		if (this.isOnLadder && this.inputs.keys['jump']) {
+			this.velocity.y = MathUtils.lerp(this.velocity.y, this.speed * 1.5, 1 - dt * 10)
 		}
 
 		if (this.isOnLadder && this.inputs.keys['down']) {
 
-			this.velocity.y = MathUtils.lerp(this.velocity.y, -this.speed, 1 - dt * 10)
+			this.velocity.y = MathUtils.lerp(this.velocity.y, -this.speed * 1.5, 1 - dt * 10)
 		} else if(this.inputs.keys['down']) {
 			// this.skin && gsap.to(this.skin.rotation,{ y: Math.PI })
 			this.turnSkin(Math.PI )

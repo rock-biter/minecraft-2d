@@ -67,6 +67,12 @@ export default class Water extends Block {
 
         if(started) {
           this.game.world.player.removeEffect('burn')
+          this.game.world.player.waterIntersections.push(this.entity!.sensor!.handle)
+        } else {
+          const i = this.game.world.player.waterIntersections.indexOf(this.entity!.sensor!.handle)
+          if(i !== -1) {
+            this.game.world.player.waterIntersections.splice(i,1)
+          }
         }
 
        }
