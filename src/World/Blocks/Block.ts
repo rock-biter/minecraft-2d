@@ -1,4 +1,4 @@
-import { BoxGeometry, BufferAttribute, BufferGeometry, MathUtils, Mesh, MeshStandardMaterial, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
+import { BoxGeometry, BufferAttribute, BufferGeometry, MathUtils, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
 import Game from "../../Game";
 import Resources from "../../Utils/Resources";
 import Debug from "../../Utils/Debug";
@@ -67,7 +67,7 @@ export default class Block {
     return this.game.world.scene
   }
 
-  get material(): ShaderMaterial | MeshStandardMaterial {
+  get material(): ShaderMaterial | MeshStandardMaterial | MeshBasicMaterial {
     return this.game.world.materials.blocksMaterial
   }
 

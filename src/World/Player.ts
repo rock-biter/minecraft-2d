@@ -54,7 +54,7 @@ export default class Player extends Events {
 
 	velocity = new Vector3()
 	speed = 5
-	jump = 18
+	jump = 19
 	waterIntersections: number[] = []
 	isOnLadder = false
 	grabLadder = false

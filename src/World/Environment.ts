@@ -30,12 +30,12 @@ export default class Environment {
 	}
 
 	setAmbientLight() {
-		this.ambientLight = new AmbientLight(0xffffff, 1)
+		this.ambientLight = new AmbientLight(0xffffff, 0.8)
 		this.scene.add(this.ambientLight)
 	}
 
 	setDirectionLight() {
-		this.directionalLight = new DirectionalLight(0xffffff, 4)
+		this.directionalLight = new DirectionalLight(0xffffff, 3.5)
 		const {x = 0,y = 0,z = 0} = this.game.world.player?.entity?.mesh?.position || {}
 		this.directionalLight.position.set(x,y,z)
 		_V.set(10, -14, -8)

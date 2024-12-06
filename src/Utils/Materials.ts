@@ -1,4 +1,4 @@
-import { Color, IUniform, MeshBasicMaterial, MeshStandardMaterial, ShaderMaterial, Texture, Vector3 } from "three"
+import { Color, IUniform, MeshBasicMaterial, MeshStandardMaterial, ShaderMaterial, SRGBColorSpace, Texture, Vector3 } from "three"
 import Game from "../Game"
 import Resources from "./Resources"
 
@@ -32,7 +32,7 @@ export default class Materials {
   blocksMaterial!: ShaderMaterial | MeshStandardMaterial
   ladderMaterial!: MeshBasicMaterial | MeshStandardMaterial
   grassMaterial!: ShaderMaterial | MeshStandardMaterial
-  lavaStillMaterial!: ShaderMaterial | MeshStandardMaterial
+  lavaStillMaterial!: ShaderMaterial | MeshStandardMaterial | MeshBasicMaterial
   fireMaterial!: ShaderMaterial | MeshBasicMaterial
   waterMaterial!: ShaderMaterial | MeshStandardMaterial
 
@@ -193,16 +193,20 @@ export default class Materials {
     const map = this.resources.items['lava_still'] as Texture
     map.repeat.y = 1/20
     let count = 0
+    // TODO do this on shader!!
     setInterval(() => {
       count++
       count = count % (19 * 16)
       map.offset.y = count/(20 * 16)
     },250)
 
-    this.lavaStillMaterial = new MeshStandardMaterial({
+    this.lavaStillMaterial = new MeshBasicMaterial({
       map,
-      transparent: true,
-      opacity: 1
+      // transparent: true,
+      // opacity: 1,
+      // emissiveIntensity: 0.3,
+      // emissive: new Color(0xffffff),
+      // emissiveMap: map
     })
   }
 

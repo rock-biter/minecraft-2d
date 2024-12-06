@@ -36,7 +36,7 @@ export default class Lava extends Block {
 
   }
 
-  get material(): ShaderMaterial | MeshStandardMaterial {
+  get material(): ShaderMaterial | MeshStandardMaterial | MeshBasicMaterial {
     return this.game.world.materials.lavaStillMaterial
   }
 

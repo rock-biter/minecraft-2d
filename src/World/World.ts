@@ -51,8 +51,8 @@ export default class World {
 
 			new MapBuilder().build()
 			
-			// this.player = new Player(new Vector3(5.5, 12, 0)) // x: -9.5
-			this.player = new Player(new Vector3(-14.5, 32, 0)) // x: -9.5
+			this.player = new Player(new Vector3(5.5, 14, 0)) // x: -9.5
+			// this.player = new Player(new Vector3(-14.5, 32, 0)) // x: -9.5
 
 			// new Fire({ position: new Vector3(-11.5, 7, 0)})
 			
