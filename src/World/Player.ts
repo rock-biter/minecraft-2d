@@ -151,6 +151,12 @@ export default class Player extends Events {
 		
 	}
 
+	removeAllEffect() {
+		for (const key in this.effects) {
+			this.removeEffect(key as EffectNames)
+		}
+	}
+
 	removeEffect(name: EffectNames) {
 		const effect = this.effects[name]
 		effect.enabled = false
@@ -368,6 +374,11 @@ export default class Player extends Events {
 
 	death() {
 		this.entity?.body?.setTranslation(this.initialPosition as RAPIER.Vector3,true)
+		setTimeout(() => {
+			// TODO FIX when player death on lava
+			this.removeAllEffect()
+			this.life.points = this.life.MAX_LIFE
+		},0)
 	}
 
 	updateVelocity() {
