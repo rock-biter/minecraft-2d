@@ -16,15 +16,6 @@ export default class Lava extends Block {
 
   constructor({ position = new Vector3(), width = 1, height = 1 }: LavaBlockProps) {
     super({position, r: 0,textureIndex: 9,b: 0, width, height})
-    
-    // this.height = height
-    // this.width = width
-
-    // console.log('lava',width,height)
-
-    const geom = this.getGeometry()
-    this.setGeometryAttributes(geom)
-    this.entity.mesh!.geometry = geom
 
     if(this.debug.active) {
       this.debug.on('texturePackChange',(e) => {
@@ -62,10 +53,10 @@ export default class Lava extends Block {
         console.log('collision with lava',started)
 
         if(started) {
-          this.game.world.player.addEffect({ name: 'burn', value: -1, damage: 2 })
+          this.game.world.player.addEffect({ name: 'burn', value: -1, damage: 0.5 })
           this.game.world.player.addEffect({ name: 'slowness', value: 0 })
         } else {
-          this.game.world.player.addEffect({ name: 'burn', value: 4, damage: 2 })
+          this.game.world.player.addEffect({ name: 'burn', value: 4, damage: 0.5 })
           this.game.world.player.removeEffect('slowness')
 
         }
