@@ -87,17 +87,19 @@ export default class MapBuilder {
     this.createCollectables()
     this.createEnemies()
 
-    new Water({ position: new Vector3(-20.5,20,0), textureIndex: 9, depth: 0, r: 0, b: 0})
+    // new Lava({ position: new Vector3(-17.5,22,0), depth: 0 })
+
     new Water({ position: new Vector3(-20.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
     new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
-    new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: 0, r: 0, b: 0})
+    new Water({ position: new Vector3(-20.5,20,0), textureIndex: 9, depth: 0, r: 0, b: 0})
+    new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: 0, r: 0, b: 0, width: 2})
+    new Water({ position: new Vector3(-21.5,19,0), textureIndex: 9, depth: 0, r: 0, b: 0})
     new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: -1, r: 0, b: 0})
     new Water({ position: new Vector3(-21.5,20,0), textureIndex: 9, depth: -2, r: 0, b: 0})
     new Water({ position: new Vector3(-19.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
     new Water({ position: new Vector3(-19.5,19,0), textureIndex: 9, depth: 1, r: 0, b: 0})
     new Water({ position: new Vector3(-20.5,19,0), textureIndex: 9, depth: 1, r: 0, b: 0})
     new Water({ position: new Vector3(-21.5,19,0), textureIndex: 9, depth: 1, r: 0, b: 0})
-    new Water({ position: new Vector3(-21.5,19,0), textureIndex: 9, depth: 0, r: 0, b: 0})
     new Water({ position: new Vector3(-18.5,20,0), textureIndex: 9, depth: 1, r: 0, b: 0})
 
     new Log({ position: new Vector3(-12.5,23,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})

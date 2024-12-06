@@ -1,5 +1,9 @@
-import { Box3, Frustum, Mesh, MeshStandardMaterial, ShaderMaterial, Vector3 } from "three";
+import { Box3, BoxGeometry, Frustum, Mesh, MeshStandardMaterial, ShaderMaterial, Vector3 } from "three";
 import Block, { BlockProps } from "./Block";
+import { Entity } from "../../Types/entity.types";
+import { BufferGeometryUtils } from "three/examples/jsm/Addons";
+import RAPIER, { ColliderDesc } from "@dimforge/rapier3d";
+import { CollideArg } from "../../Types/callbacks.types";
 
 export default class Water extends Block {
 
@@ -9,6 +13,9 @@ export default class Water extends Block {
     super({position, r: 0,textureIndex: 100,b: 0,depth, width, height})
 
     Water.blocks.push(this)
+    if(depth === 0) {
+      this.createSensor()
+    }
 
     const cam = this.game.view.camera
 
@@ -41,4 +48,38 @@ export default class Water extends Block {
   get material(): ShaderMaterial | MeshStandardMaterial {
     return this.game.world.materials.waterMaterial
   }
+
+  createSensor() {
+
+    const {x,y,z} = this.position
+
+    const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5,0.5,0.5).setTranslation(x,y,z).setSensor(true)
+
+    this.entity.sensor = this.physics.instance.createCollider(colliderDesc)
+
+    this.physics.on('collide',(arg) => {
+
+      const {handle1, handle2, started} = arg as CollideArg
+			if(!this.entity || !this.entity!.sensor || !this.game.world.player) return
+
+       if ([handle1, handle2].includes(this.entity!.sensor!.handle)) {
+        console.log('collision with water',started) 
+
+        if(started) {
+          this.game.world.player.removeEffect('burn')
+        }
+
+       }
+
+    })
+
+  }
+
+  // getPhysics(): Entity {
+  //   let entity: Entity = {}
+
+  //   const {x,y,z} = this.position
+  //   const w = this.width || 1
+  //   const h = this.height || 1
+  // }
 }
