@@ -229,7 +229,7 @@ export default class Player extends Events {
 			}
 		})
 
-		const pointLight = new PointLight(0xffffff,0.5,20,0.2)
+		const pointLight = new PointLight(0xffffff,0.3,10,0.2)
 		pointLight.castShadow = true
 		pointLight.shadow.radius = 20
 		pointLight.shadow.blurSamples = 20

@@ -39,7 +39,7 @@ export default class Environment {
 	}
 
 	setAmbientLight() {
-		this.ambientLight = new AmbientLight(0xffffff, 0.7)
+		this.ambientLight = new AmbientLight(0xffffff, 0.8)
 		this.scene.add(this.ambientLight)
 	}
 

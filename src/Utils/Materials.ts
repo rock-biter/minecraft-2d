@@ -121,7 +121,7 @@ export default class Materials {
         /* glsl */`
         // ${token}
         
-        vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse * (smoothstep(20.,24.,vWPos.y) * 0.7 + 0.3);
+        vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse * (smoothstep(20.,24.,vWPos.y) * 0.72 + 0.28);
         `
       )
 
