@@ -10,13 +10,12 @@ export interface LavaBlockProps {
   position: Vector3
   width?: number
   height?: number
-  depth: number
 }
 
 export default class Lava extends Block {
 
-  constructor({ position = new Vector3(), width = 1, height = 1, depth }: LavaBlockProps) {
-    super({position, r: 0,textureIndex: 9,b: 0,depth, width, height})
+  constructor({ position = new Vector3(), width = 1, height = 1 }: LavaBlockProps) {
+    super({position, r: 0,textureIndex: 9,b: 0, width, height})
     
     // this.height = height
     // this.width = width

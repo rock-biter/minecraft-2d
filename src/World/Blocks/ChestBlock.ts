@@ -27,9 +27,9 @@ export default class ChestBlock extends Block {
     value: 0
   }
 
-  constructor({ position = new Vector3(), r, textureIndex, b, depth, content}: ChestBlockProps) {
+  constructor({ position = new Vector3(), r, textureIndex, b = 0, content}: ChestBlockProps) {
 
-    super({ position, r, textureIndex, b: 0, depth})
+    super({ position, r, textureIndex, b: 0})
 
     this.contentType = content
     this.contentNumber = b

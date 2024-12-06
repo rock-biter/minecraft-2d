@@ -5,15 +5,21 @@ import { BufferGeometryUtils } from "three/examples/jsm/Addons";
 import RAPIER, { ColliderDesc } from "@dimforge/rapier3d";
 import { CollideArg } from "../../Types/callbacks.types";
 
+export interface WaterBlockProps {
+  position: Vector3
+  width?: number
+  height?: number
+}
+
 export default class Water extends Block {
 
   static blocks: Water[] = []
 
-  constructor({ position = new Vector3(), width = 1, height = 1, depth }: BlockProps) {
-    super({position, r: 0,textureIndex: 100,b: 0,depth, width, height})
+  constructor({ position = new Vector3(), width = 1, height = 1 }: WaterBlockProps) {
+    super({position, r: 0,textureIndex: -1,b: 0, width, height})
 
     Water.blocks.push(this)
-    if(depth === 0) {
+    if(position.z === 0) {
       this.createSensor()
     }
 

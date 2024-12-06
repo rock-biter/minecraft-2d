@@ -15,9 +15,9 @@ export default class QuestionBlock extends ChestBlock {
   spawnedSpeed = 0
   spawnedBody = 1 // fixed
 
-  constructor({ position = new Vector3(), r = 1, textureIndex, b, depth, content}: ChestBlockProps) {
+  constructor({ position = new Vector3(), r = 1, textureIndex, b, content}: ChestBlockProps) {
 
-    super({ position, r, textureIndex, b, depth, content })
+    super({ position, r, textureIndex, b, content })
 
   }
 

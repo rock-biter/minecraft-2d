@@ -4,8 +4,8 @@ import { GLTF } from "three/examples/jsm/Addons";
 import gsap from "gsap";
 
 export default class Zombie extends Enemy {
-  constructor({ position = new Vector3(), buonds = 3}) {
-    super(position, buonds)
+  constructor({ position = new Vector3(), bounds = 3}) {
+    super(position, bounds)
 
 		// this.addSkin()
   }

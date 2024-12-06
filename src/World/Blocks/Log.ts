@@ -12,7 +12,7 @@ export interface LogBlockProps {
   textureTopIndex: number
   textureSideIndex: number
   b: number
-  depth: number
+  depth?: number
 }
 
 export default class Log extends Block {
