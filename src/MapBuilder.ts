@@ -126,7 +126,7 @@ export default class MapBuilder {
       
     }
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 100; i++) {
       new Grass({ position: new Vector3(i,0,0) })
       new Grass({ position: new Vector3(-1-i,0,0) })
     }

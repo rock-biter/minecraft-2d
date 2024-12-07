@@ -470,16 +470,29 @@ export default class Player extends Events {
 		const newPosition = _V
 			.copy(this.controller.computedMovement())
 			.add(this.entity.body.translation())
-		newPosition.z = 0
+		// newPosition.z = 0
 
-		this.entity.body.setNextKinematicTranslation(newPosition)
+		
 
-		this.velocity.copy(newPosition.sub(prevPosition).divideScalar(dt))
+		this.velocity.copy(newPosition.clone().sub(prevPosition).divideScalar(dt))
 		this.velocity.x *= 1 - dt * 10
 		this.velocity.z = 0
 		if(this.controller.computedGrounded() && this.velocity.y < 0) {
 			this.velocity.y = 0
 		}
+
+		if(newPosition.x > 60) {
+			newPosition.x -= 100
+			this.game.view.camera.position.x -= 100
+		} else if(newPosition.x < -60) {
+			newPosition.x += 100
+			this.game.view.camera.position.x += 100
+		}
+
+		this.entity.body.setNextKinematicTranslation(newPosition)
+
+		// this.entity.body.setNextKinematicTranslation(newPosition)
+
 
 		if(this.mixer) {
 			const walkAction = this.mixer.existingAction(this.animations![1])
