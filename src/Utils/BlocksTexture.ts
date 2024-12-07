@@ -1,7 +1,7 @@
 import cobblestoneSrc from '../textures/blocks/cobblestone.png?url'
 // import grassSrc from '../textures/grass.png?url'
 import grassSrc from '../textures/blocks/grass_block_side.png?url'
-import grassTopSrc from '../textures/blocks/grass_block_top.png?url'
+import grassTopSrc from '../textures/blocks/grass_block_top_colored.png?url'
 import gravelSrc from '../textures/blocks/gravel.png?url'
 import sandSrc from '../textures/blocks/sand.png?url'
 import dirtSrc from '../textures/blocks/dirt.png?url'

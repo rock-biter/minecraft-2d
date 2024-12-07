@@ -8,13 +8,13 @@ import { plants as plantsResources } from "../../Utils/sources";
 export default class Grass extends Block {
   constructor({ position = new Vector3(), r, textureIndex, b, depth }: BlockProps) {
 
-    super({position, r,textureIndex,b,depth})
+    super({position, r,textureIndex: [getTextureIndex(TEXTURES.GRASS_TOP),getTextureIndex(TEXTURES.GRASS),getTextureIndex(TEXTURES.DIRT)],b,depth})
 
     // edit top and bottom face texture
-    this.setTopBottomFace()
+    // this.setTopBottomFace()
     if (this.entity.mesh) {
-      this.entity.mesh.material = this.game.world.materials.grassMaterial
-      const mat = this.entity.mesh.material as MeshStandardMaterial
+      // this.entity.mesh.material = this.game.world.materials.grassMaterial
+      // const mat = this.entity.mesh.material as MeshStandardMaterial
       // mat.uniforms.uColor.value.set(0x78AC30)
 
 
@@ -31,9 +31,9 @@ export default class Grass extends Block {
 
   }
 
-  get material(): ShaderMaterial | MeshStandardMaterial {
-    return this.game.world.materials.grassMaterial
-  }
+  // get material(): ShaderMaterial | MeshStandardMaterial {
+  //   return this.game.world.materials.grassMaterial
+  // }
 
   setTopBottomFace() {
     const normal = this.geometry?.getAttribute('normal') as BufferAttribute
