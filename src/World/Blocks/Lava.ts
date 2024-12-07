@@ -91,6 +91,7 @@ export default class Lava extends Block {
     }
 
     const geometry = BufferGeometryUtils.mergeGeometries(geometries)
+    this._geometry = geometry
 
     return geometry
   }

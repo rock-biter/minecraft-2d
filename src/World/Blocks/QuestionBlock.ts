@@ -6,8 +6,16 @@ import Physics from "../../Physics"
 import { CallbackArg, CollideArg } from "../../Types/callbacks.types"
 import gsap from "gsap"
 import ChestBlock, { ChestBlockProps } from "./ChestBlock"
+import { getTextureIndex } from "../../Utils/BlocksTexture"
 
 const _V = new Vector3()
+
+export interface QuestionBlockProps {
+  position: Vector3
+  content: number
+  r?: number
+  b?: number
+}
 
 export default class QuestionBlock extends ChestBlock {
 
@@ -15,9 +23,11 @@ export default class QuestionBlock extends ChestBlock {
   spawnedSpeed = 0
   spawnedBody = 1 // fixed
 
-  constructor({ position = new Vector3(), r = 1, textureIndex, b, content}: ChestBlockProps) {
+  merge = false
 
-    super({ position, r, textureIndex, b, content })
+  constructor({ position = new Vector3(), content, r = 1, b = 1}: QuestionBlockProps) {
+
+    super({ position, r, textureIndex: getTextureIndex('QUESTION_MARK'), content, b })
 
   }
 

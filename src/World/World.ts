@@ -20,6 +20,7 @@ import MapBuilder from '../MapBuilder'
 import Materials from '../Utils/Materials'
 import Enemy from './Mobs/Enemy'
 import Fire from './Sprite/Fire'
+import House from './Structures/House'
 
 export default class World {
 
@@ -49,10 +50,14 @@ export default class World {
 			this.materials = new Materials()
 			// this.floor = new Floor(50)
 
+			
+
 			new MapBuilder().build()
 			
 			// this.player = new Player(new Vector3(9.5, 16, 0)) // x: -9.5
-			this.player = new Player(new Vector3(-14.5, 32, 0)) // x: -9.5
+			this.player = new Player(new Vector3(0, 2, 0)) // x: -9.5
+
+			
 
 			// new Fire({ position: new Vector3(-11.5, 7, 0)})
 			

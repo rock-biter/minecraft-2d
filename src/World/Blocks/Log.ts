@@ -21,37 +21,17 @@ export default class Log extends Block {
 
   constructor({ position = new Vector3(), rotation = new Euler(0), r, textureTopIndex, textureSideIndex, b, depth }: LogBlockProps) {
 
-    super({position, r,textureIndex: textureSideIndex,b,depth})
+    super({position, r,textureIndex: [textureTopIndex,textureSideIndex,textureTopIndex],b,depth})
 
     this.rotation = rotation
-    this.entity.mesh!.rotation.copy(this.rotation)
-
-    // edit top and bottom face texture
-    this.setTopBottomFace(textureTopIndex)
+    this.geometry?.rotateX(rotation.x)
+    this.geometry?.rotateY(rotation.y)
+    this.geometry?.rotateZ(rotation.z)
 
   }
 
   get material(): ShaderMaterial | MeshStandardMaterial {
-    return this.game.world.materials.grassMaterial
+    return this.game.world.materials.blocksMaterial
   }
 
-  setTopBottomFace(textureIndex: number) {
-    const normal = this.geometry?.getAttribute('normal') as BufferAttribute
-    const uv = this.geometry?.getAttribute('aUv') as BufferAttribute
-
-    for (let i = 0; i < normal.count; i++) {
-      const y = normal.getY(i);
-
-      if(y === 1) {
-        uv.setZ(i,textureIndex)
-      }
-
-      if(y === -1) {
-        uv.setZ(i,textureIndex)
-      }
-
-    }
-
-    uv.needsUpdate = true
-  }
 }

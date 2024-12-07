@@ -13,12 +13,12 @@ export interface WaterBlockProps {
 
 export default class Water extends Block {
 
-  static blocks: Water[] = []
+  static WATER: Water[] = []
 
   constructor({ position = new Vector3(), width = 1, height = 1 }: WaterBlockProps) {
-    super({position, r: 0,textureIndex: -1,b: 0, width, height})
+    super({position, r: 0,textureIndex: -1,b: 0, width, height, merge: false})
 
-    Water.blocks.push(this)
+    Water.WATER.push(this)
     if(position.z === 0) {
       this.createSensor()
     }
@@ -27,9 +27,7 @@ export default class Water extends Block {
 
     this.game.time.on('tick',() => {
 
-      const blocks = []
-
-      Water.blocks.filter((water) => {
+      Water.WATER.filter((water) => {
         const boundingBox = new Box3().setFromObject(water.entity.mesh!)
         const frustum = new Frustum()
         frustum.setFromProjectionMatrix(cam.projectionMatrix)
@@ -45,7 +43,7 @@ export default class Water extends Block {
 
         return  dB - dA
       }).forEach((block,i) => {
-        block!.renderOrder = Water.blocks.length + 10 - i
+        block!.renderOrder = Water.WATER.length + 10 - i
       })
 
     },)
@@ -69,7 +67,7 @@ export default class Water extends Block {
 			if(!this.entity || !this.entity!.sensor || !this.game.world.player) return
 
        if ([handle1, handle2].includes(this.entity!.sensor!.handle)) {
-        console.log('collision with water',started) 
+        // console.log('collision with water',started) 
 
         if(started) {
           this.game.world.player.removeEffect('burn')

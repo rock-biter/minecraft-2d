@@ -11,15 +11,18 @@ import { PaneArgs } from "../../Types/callbacks.types";
 
 export interface BlockProps {
   position: Vector3,
-  r: number,
+  r?: number,
   textureIndex: number | number[],
   b?: number,
   depth?: number
   height?: number
   width?: number
+  merge?: boolean
 }
 
 export default class Block {
+
+  static BLOCKS: Block[] = []
 
   position: Vector3
   r: number
@@ -33,8 +36,12 @@ export default class Block {
   width: number
   height: number
 
-  constructor({ position = new Vector3(), r, textureIndex, b = 0, depth, width = 1, height = 1 }: BlockProps) {
+  _geometry?: BufferGeometry
+  merge = true
 
+  constructor({ position = new Vector3(), r, textureIndex, b = 0, depth, width = 1, height = 1, merge = true }: BlockProps) {
+
+    this.merge = merge
     this.game = new Game()
 
     this.width = width
@@ -42,12 +49,16 @@ export default class Block {
 
     this.position = position
     // this.position.z = 
-    this.r = r
+    this.r = r ?? this.position.z === 0 ? 1 : 0
     this.textureIndex = textureIndex
     this.b = b
     this.depth = depth ?? this.position.z
 
     this.create()
+
+    if(this.merge) {
+      Block.BLOCKS.push(this)
+    }
 
   }
 
@@ -72,29 +83,37 @@ export default class Block {
   }
 
   get geometry(): BufferGeometry | undefined {
-    return this.entity.mesh?.geometry
+    return this._geometry || this.entity.mesh?.geometry
   }
 
   create() {
     // console.log('new block')
-    const entity = this.getPhysics()
-    const mesh = this.getMesh()
+    this.entity = this.getPhysics()
 
-    mesh.position.copy(this.position)
-    mesh.castShadow = true
-    mesh.receiveShadow = true
-    entity.mesh = mesh
+    console.log('merge',this.merge)
 
-    this.scene.add(entity.mesh)
-
-    if(this.debug.active) {
-      this.debug.on('texturePackChange',(e) => {
-        const event = e as PaneArgs
-        mesh.material = this.getMaterial(event.value)
-      })
+    if(this.merge) {
+      this.getGeometry()
+    } else {
+      console.log('merge false')
+      const mesh = this.getMesh()
+  
+      mesh.position.copy(this.position)
+      mesh.castShadow = true
+      mesh.receiveShadow = true
+      this.entity.mesh = mesh
+  
+      this.scene.add(this.entity.mesh)
     }
 
-    this.entity = entity
+    // if(this.debug.active) {
+    //   this.debug.on('texturePackChange',(e) => {
+    //     const event = e as PaneArgs
+    //     mesh.material = this.getMaterial(event.value)
+    //   })
+    // }
+
+    // this.entity = entity
   }
 
   getPhysics() {
@@ -118,7 +137,6 @@ export default class Block {
   getMesh() {
 
     const geom = this.getGeometry()
-    this.setGeometryAttributes(geom)
 
     return new Mesh(
 			geom,
@@ -132,6 +150,8 @@ export default class Block {
     // const bright = MathUtils.mapLinear(this.b,0,200,-1,1)
 
     const box = new BoxGeometry(1, 1,1)
+    this.setGeometryAttributes(box)
+    this._geometry = box
 
     return box
   }

@@ -1,4 +1,4 @@
-import {  BoxGeometry, BufferAttribute, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,   PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BoxGeometry, BufferAttribute, BufferGeometry, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,   PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -28,6 +28,9 @@ import Zombie from "./World/Mobs/Zombie";
 import Water from "./World/Blocks/Water";
 import Log from "./World/Blocks/Log";
 import Oak from "./World/Trees/Oak";
+import { BufferGeometryUtils } from "three/examples/jsm/Addons";
+import Birch from "./World/Trees/Birch";
+import House from "./World/Structures/House";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -73,84 +76,120 @@ export default class MapBuilder {
 
   }
 
+  createMapMesh() {
+
+    const { blocksMaterial, lavaStillMaterial, waterMaterial } = this.game.world.materials
+
+    const materials = [
+      blocksMaterial,
+      lavaStillMaterial,
+      waterMaterial
+    ]
+
+    materials.forEach(mat => {
+
+      const geometries = Block.BLOCKS.reduce((acc,block) => {
+
+        if(block.merge && block.material.name === mat.name) {
+          const {x,y,z} = block.position
+          block.geometry!.translate(x,y,z)
+          acc.push(block.geometry!)
+        }
+
+        return acc
+      },[] as BufferGeometry[])
+
+      if(geometries.length) {
+        const mesh = new Mesh(BufferGeometryUtils.mergeGeometries(geometries),mat)
+        mesh.castShadow = true
+        mesh.receiveShadow = true
+        this.scene.add(mesh)
+      }
+
+
+
+    })
+
+    
+  }
+
   build() {
     const bodiesData: ImageData | undefined = this.getTextureData('bodies')
     const backgroundData: ImageData | undefined = this.getTextureData('background')
     const background2Data: ImageData | undefined = this.getTextureData('background-2')
     const frontgroundData: ImageData | undefined = this.getTextureData('frontground')
     const frontground2Data: ImageData | undefined = this.getTextureData('frontground-2')
-    this.buildFixedBlocks(bodiesData,0)
-    this.buildFixedBlocks(backgroundData, -1)
-    for (let i = 0; i < 1; i++) {
-      this.buildFixedBlocks(background2Data, -2 - i)
-    }
-    this.buildFixedBlocks(frontgroundData, 1)
-    for (let i = 0; i < 1; i++) {
-      this.buildFixedBlocks(frontground2Data, 2 + i)
+    // this.buildFixedBlocks(bodiesData,0)
+
+    for (let i = 0; i < 7; i++) {
+      new Block({ position: new Vector3(5,-4 - i,0), textureIndex: getTextureIndex('STONE')})
+      
     }
 
-    this.buildSpecialBlocks()
-    this.createCollectables()
-    this.createEnemies()
+    for (let i = 0; i < 15; i++) {
+      new Grass({ position: new Vector3(i,0,0) })
+      new Grass({ position: new Vector3(-1-i,0,0) })
+    }
 
-    // new Lava({ position: new Vector3(-17.5,22,0), depth: 0 })
-    new Water({ position: new Vector3(-20.5,21,-2)})
-    new Water({ position: new Vector3(-20.5,21,-1)})
+    new Block({ position: new Vector3(2,4,0), textureIndex: getTextureIndex('STONE')})
+    new Block({ position: new Vector3(4,4,0), textureIndex: getTextureIndex('STONE')})
+    new Block({ position: new Vector3(6,4,0), textureIndex: getTextureIndex('STONE')})
 
-    new Water({ position: new Vector3(-20.5,21,1)})
-    new Water({ position: new Vector3(-21.5,21,1)})
-    new Water({ position: new Vector3(-20.5,21,0)})
-    new Water({ position: new Vector3(-20.5,22,0)})
-    new Water({ position: new Vector3(-20.5,23,0)})
-    new Water({ position: new Vector3(-20.5,24,0)})
-    new Water({ position: new Vector3(-20.5,25,0)})
-    new Water({ position: new Vector3(-20.5,26,0)})
-    new Water({ position: new Vector3(-20.5,27,0)})
-    new Water({ position: new Vector3(-21.5,21,0)})
-    new Water({ position: new Vector3(-19.5,21,0)})
-    new Water({ position: new Vector3(-18.5,21,0)})
-    new Water({ position: new Vector3(-21.5,19,0)})
-    new Water({ position: new Vector3(-18.5,21,1)})
-    new Water({ position: new Vector3(-19.5,21,1)})
-    new Water({ position: new Vector3(-17.5,21,1)})
-    new Water({ position: new Vector3(-18.5,20,1)})
-    new Water({ position: new Vector3(-19.5,20,1)})
-    new Water({ position: new Vector3(-20.5,20,1)})
-    new Water({ position: new Vector3(-21.5,20,1)})
+    new QuestionBlock({ position: new Vector3(-2,4,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(3,4,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(5,4,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(4,8,0), content: 1 })
 
-    new Oak({ position: new Vector3(-12.3,23,-3)})
-    new Oak({ position: new Vector3(-7.3,24,-8)})
-    new Oak({ position: new Vector3(7,23,-6)})
 
-    // new Log({ position: new Vector3(-12.5,23,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})
-    // new Log({ position: new Vector3(-12.5,24,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})
-    // new Log({ position: new Vector3(-12.5,25,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})
-    // new Log({ position: new Vector3(-12.5,26,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0})
-    // new Log({ position: new Vector3(-13.5,26,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0, rotation: new Euler(Math.PI * 0.5,0,0)})
-    // new Log({ position: new Vector3(-13.5,26,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -1, b: 0, rotation: new Euler(Math.PI * 0.5,0,0)})
-    // new Log({ position: new Vector3(-11.5,25,0), r: 0, textureSideIndex: getTextureIndex(TEXTURES.OAK_LOG), textureTopIndex: getTextureIndex(TEXTURES.OAK_LOG_TOP),depth: -2, b: 0, rotation: new Euler(0,0,Math.PI * 0.5)})
-    // // leaves
-    // new Block({ position: new Vector3(-12.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 0, depth:-1 })
-    // new Block({ position: new Vector3(-11.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 0, depth:-1 })
-    // new Block({ position: new Vector3(-10.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 0, depth:-1 })
-    // new Block({ position: new Vector3(-12.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: 0})
-    // new Block({ position: new Vector3(-12.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: 0})
-    // new Block({ position: new Vector3(-11.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: 0})
-    // new Block({ position: new Vector3(-11.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: 0})
-    // new Block({ position: new Vector3(-13.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
-    // new Block({ position: new Vector3(-14.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
-    // new Block({ position: new Vector3(-13.5,25,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -3})
-    // new Block({ position: new Vector3(-13.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -3})
-    // new Block({ position: new Vector3(-13.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -3})
-    // new Block({ position: new Vector3(-13.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
-    // new Block({ position: new Vector3(-12.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
-    // new Block({ position: new Vector3(-11.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
-    // new Block({ position: new Vector3(-10.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
-    // new Block({ position: new Vector3(-10.5,26,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -2})
-    // new Block({ position: new Vector3(-12.5,25,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
-    // new Block({ position: new Vector3(-12.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
-    // new Block({ position: new Vector3(-11.5,28,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
-    // new Block({ position: new Vector3(-11.5,27,0), textureIndex: getTextureIndex(TEXTURES.OAK_LEAVES),r: 1, depth: -1})
+
+
+    // this.buildFixedBlocks(backgroundData, -1)
+    // for (let i = 0; i < 2; i++) {
+    //   this.buildFixedBlocks(background2Data, -2 - i)
+    // }
+    // this.buildFixedBlocks(frontgroundData, 1)
+    // for (let i = 0; i < 2; i++) {
+    //   this.buildFixedBlocks(frontground2Data, 2 + i)
+    // }
+
+    // console.log(Block.BLOCKS)
+
+    // this.buildSpecialBlocks()
+    // this.createCollectables()
+    // this.createEnemies()
+
+    // new House()
+
+    // new Lava({ position: new Vector3(-17.5,22,0) })
+    // new Water({ position: new Vector3(-20.5,21,-2)})
+    // new Water({ position: new Vector3(-20.5,21,-1)})
+
+    // new Water({ position: new Vector3(-20.5,21,1)})
+    // new Water({ position: new Vector3(-21.5,21,1)})
+    // new Water({ position: new Vector3(-20.5,21,0)})
+    // new Water({ position: new Vector3(-20.5,22,0)})
+    // new Water({ position: new Vector3(-20.5,23,0)})
+    // new Water({ position: new Vector3(-20.5,24,0)})
+    // new Water({ position: new Vector3(-20.5,25,0)})
+    // new Water({ position: new Vector3(-20.5,26,0)})
+    // new Water({ position: new Vector3(-20.5,27,0)})
+    // new Water({ position: new Vector3(-21.5,21,0)})
+    // new Water({ position: new Vector3(-19.5,21,0)})
+    // new Water({ position: new Vector3(-18.5,21,0)})
+    // new Water({ position: new Vector3(-21.5,19,0)})
+    // new Water({ position: new Vector3(-18.5,21,1)})
+    // new Water({ position: new Vector3(-19.5,21,1)})
+    // new Water({ position: new Vector3(-17.5,21,1)})
+    // new Water({ position: new Vector3(-18.5,20,1)})
+    // new Water({ position: new Vector3(-19.5,20,1)})
+    // new Water({ position: new Vector3(-20.5,20,1)})
+    // new Water({ position: new Vector3(-21.5,20,1)})
+
+    // new Oak({ position: new Vector3(-12.3,23,-3)})
+    // new Oak({ position: new Vector3(-7.3,24,-8)})
+    // new Oak({ position: new Vector3(7,23,-6)})
+
+    // new Birch({ position: new Vector3(-12.3,23,-3)})
 
     // const shadowPlane = new PlaneGeometry(200,200)
     // const shadowMesh = new Mesh(shadowPlane, new MeshStandardMaterial({ color: 0xffffff}))
@@ -174,6 +213,8 @@ export default class MapBuilder {
     // shadowMesh.onBeforeRender = () => {
     //   this.scene.add(shadowMesh)
     // }
+
+    this.createMapMesh()
 
   }
 
@@ -307,7 +348,7 @@ export default class MapBuilder {
         const quantity = b
         console.log('question block')
         // new Ladder(new Vector3(x,y,z),length)
-        new QuestionBlock({ position, r: 1, textureIndex: 9, b: quantity, content })
+        new QuestionBlock({ position, r: 1, b: quantity, content })
         return
       case 3:
         const height = g

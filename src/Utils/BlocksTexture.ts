@@ -15,6 +15,21 @@ import oakLogSrc from '../textures/blocks/oak_log.png?url'
 import oakLogTopSrc from '../textures/blocks/oak_log_top.png?url'
 import oakPlanksSrc from '../textures/blocks/oak_planks.png?url'
 import oakLeavesSrc from '../textures/blocks/oak_leaves.png?url'
+
+import birchLogSrc from '../textures/blocks/birch_log.png?url'
+import birchLogTopSrc from '../textures/blocks/birch_log_top.png?url'
+import birchPlanksSrc from '../textures/blocks/birch_planks.png?url'
+import birchLeavesSrc from '../textures/blocks/birch_leaves.png?url'
+
+import jungleLogSrc from '../textures/blocks/jungle_log.png?url'
+import jungleLogTopSrc from '../textures/blocks/jungle_log_top.png?url'
+import junglePlanksSrc from '../textures/blocks/jungle_planks.png?url'
+import jungleLeavesSrc from '../textures/blocks/jungle_leaves.png?url'
+
+import quartzTopSrc from '../textures/blocks/quartz_block_top.png?url'
+import quartzSideSrc from '../textures/blocks/quartz_block_side.png?url'
+import quartzBottomSrc from '../textures/blocks/quartz_block_bottom.png?url'
+
 import coalOreSrc from '../textures/blocks/coal_ore.png?url'
 import ironOreSrc from '../textures/blocks/iron_ore.png?url'
 import goldOreSrc from '../textures/blocks/gold_ore.png?url'
@@ -107,6 +122,50 @@ export const blocksTextures: Texture[] = [
   {
     name: TEXTURES.DIAMOND_ORE,
     path: diamondOreSrc,
+  },
+  {
+    name: TEXTURES.QUARTZ_TOP,
+    path: quartzTopSrc,
+  },
+  {
+    name: TEXTURES.QUARTZ_SIDE,
+    path: quartzSideSrc,
+  },
+  {
+    name: TEXTURES.QUARTZ_BOTTOM,
+    path: quartzBottomSrc,
+  },
+  {
+    name: TEXTURES.BIRCH_LEAVES,
+    path: birchLeavesSrc,
+  },
+  {
+    name: TEXTURES.BIRCH_LOG,
+    path: birchLogSrc,
+  },
+  {
+    name: TEXTURES.BIRCH_LOG_TOP,
+    path: birchLogTopSrc,
+  },
+  {
+    name: TEXTURES.BIRCH_PLANKS,
+    path: birchPlanksSrc,
+  },
+  {
+    name: TEXTURES.JUNGLE_LEAVES,
+    path: jungleLeavesSrc,
+  },
+  {
+    name: TEXTURES.JUNGLE_LOG,
+    path: jungleLogSrc,
+  },
+  {
+    name: TEXTURES.JUNGLE_LOG_TOP,
+    path: jungleLogTopSrc,
+  },
+  {
+    name: TEXTURES.JUNGLE_PLANKS,
+    path: junglePlanksSrc,
   },
 
   // {
