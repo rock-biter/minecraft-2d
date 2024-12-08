@@ -27,7 +27,8 @@ export default class Water extends Block {
 
     this.game.time.on('tick',() => {
 
-      Water.WATER.filter((water) => {
+      /**
+       * .filter((water) => {
         const boundingBox = new Box3().setFromObject(water.entity.mesh!)
         const frustum = new Frustum()
         frustum.setFromProjectionMatrix(cam.projectionMatrix)
@@ -37,7 +38,10 @@ export default class Water extends Block {
         } else {
           return false
         }
-      }).map(block => block.entity.mesh).sort((a,b) => {
+      })
+       */
+
+      Water.WATER.map(block => block.entity.mesh).sort((a,b) => {
         const dA = cam.position.distanceTo(a!.position)
         const dB = cam.position.distanceTo(b!.position)
 

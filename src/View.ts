@@ -53,12 +53,12 @@ export default class View extends Events {
 
 	setCamera() {
 		this.camera = new PerspectiveCamera(
-			45,
+			60,
 			this.viewport.width / this.viewport.height,
 			0.1,
 			300
 		)
-		this.camera.position.set(0, 7, 20)
+		this.camera.position.set(0, 7, 10)
 		this.scene.add(this.camera)
 
 		if(this.debug.active) {

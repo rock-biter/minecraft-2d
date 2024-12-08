@@ -90,7 +90,7 @@ export default class Block {
     // console.log('new block')
     this.entity = this.getPhysics()
 
-    console.log('merge',this.merge)
+    // console.log('merge',this.merge)
 
     if(this.merge) {
       this.getGeometry()
@@ -256,7 +256,7 @@ export default class Block {
       t = b = r = l = f = bk = this.textureIndex
     }
 
-    return [t, b, l, r, f, bk] as number[]
+    return [t, r, f, l, bk, b] as number[]
 
   }
 

@@ -7,6 +7,12 @@ import specialBodiesMap from '../textures/map/specials-10.png?url'
 import collectablesMap from '../textures/map/collectables-08.png?url'
 import enemiesMap from '../textures/map/enemies-01.png?url'
 import ladderSrc from '../textures/blocks/ladder.png?url'
+
+// layers
+import layer_0 from '../textures/map/layers/layer-0.png?url'
+import layer_s from '../textures/map/layers/layer-s.png?url'
+import layer_e from '../textures/map/layers/layer-e.png?url'
+
 // import lifeHeartSrc from '../textures/life-heart.png?url'
 import lifeHeartSrc from '../textures/heart/full.png?url'
 import lavaStillSrc from '../textures/blocks/lava_still.png?url'
@@ -164,42 +170,60 @@ export const items = [
 ]
 
 export const mapSize =  {
-			width: 41,
-			height: 35
+			width: 240,
+			height: 250
 		}
 
 // dungeon
 export const mapLayers = [
 	{
-		name: 'background-2',
+		name: 'layer-s',
 		type: 'map',
-		path: background2Map,
+		path: layer_s,
 		sizes: mapSize
 	},
 	{
-		name: 'background',
+		name: 'layer-e',
 		type: 'map',
-		path: backgroundMap,
+		path: layer_e,
 		sizes: mapSize
 	},
 	{
-		name: 'bodies',
+		name: 'layer-0',
 		type: 'map',
-		path: bodiesMap,
+		path: layer_0,
 		sizes: mapSize
 	},
-	{
-		name: 'frontground',
-		type: 'map',
-		path: frontgroundMap,
-		sizes: mapSize
-	},
-	{
-		name: 'frontground-2',
-		type: 'map',
-		path: frontground2Map,
-		sizes: mapSize
-	},
+	// {
+	// 	name: 'background-2',
+	// 	type: 'map',
+	// 	path: background2Map,
+	// 	sizes: mapSize
+	// },
+	// {
+	// 	name: 'background',
+	// 	type: 'map',
+	// 	path: backgroundMap,
+	// 	sizes: mapSize
+	// },
+	// {
+	// 	name: 'bodies',
+	// 	type: 'map',
+	// 	path: bodiesMap,
+	// 	sizes: mapSize
+	// },
+	// {
+	// 	name: 'frontground',
+	// 	type: 'map',
+	// 	path: frontgroundMap,
+	// 	sizes: mapSize
+	// },
+	// {
+	// 	name: 'frontground-2',
+	// 	type: 'map',
+	// 	path: frontground2Map,
+	// 	sizes: mapSize
+	// },
 ]
 
 const sources: Source[] = [

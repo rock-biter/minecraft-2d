@@ -114,33 +114,43 @@ export default class MapBuilder {
   }
 
   build() {
-    const bodiesData: ImageData | undefined = this.getTextureData('bodies')
-    const backgroundData: ImageData | undefined = this.getTextureData('background')
-    const background2Data: ImageData | undefined = this.getTextureData('background-2')
-    const frontgroundData: ImageData | undefined = this.getTextureData('frontground')
-    const frontground2Data: ImageData | undefined = this.getTextureData('frontground-2')
-    // this.buildFixedBlocks(bodiesData,0)
+    const layer_0: ImageData | undefined = this.getTextureData('layer-0')
+    // const layer_s: ImageData | undefined = this.getTextureData('layer-s')
+    // const backgroundData: ImageData | undefined = this.getTextureData('background')
+    // const background2Data: ImageData | undefined = this.getTextureData('background-2')
+    // const frontgroundData: ImageData | undefined = this.getTextureData('frontground')
+    // const frontground2Data: ImageData | undefined = this.getTextureData('frontground-2')
+    this.buildSpecialBlocks()
+    this.buildFixedBlocks(layer_0,0)
 
-    for (let i = 0; i < 7; i++) {
-      new Block({ position: new Vector3(5,-4 - i,0), textureIndex: getTextureIndex('STONE')})
+    // for (let i = 0; i < 7; i++) {
+    //   new Block({ position: new Vector3(5,-4 - i,0), textureIndex: getTextureIndex('STONE')})
       
-    }
+    // }
 
-    for (let i = 0; i < 100; i++) {
-      new Grass({ position: new Vector3(i,0,0) })
-      new Grass({ position: new Vector3(-1-i,0,0) })
-    }
+    // for (let i = 0; i < 100; i++) {
+    //   for (let k = 0; k < 20; k++) {
+    //     new Grass({ position: new Vector3(i,0,k - 10) })
+    //     new Grass({ position: new Vector3(-1-i,0,k - 10) })
+    //   }
+    // }
 
-    new Block({ position: new Vector3(2,4,0), textureIndex: getTextureIndex('STONE')})
-    new Block({ position: new Vector3(4,4,0), textureIndex: getTextureIndex('STONE')})
-    new Block({ position: new Vector3(6,4,0), textureIndex: getTextureIndex('STONE')})
+    // new Block({ position: new Vector3(2,4,0), textureIndex: getTextureIndex('STONE')})
+    // new Block({ position: new Vector3(4,4,0), textureIndex: getTextureIndex('STONE')})
+    // new Block({ position: new Vector3(6,4,0), textureIndex: getTextureIndex('STONE')})
 
-    new QuestionBlock({ position: new Vector3(-2,4,0), content: 1 })
-    new QuestionBlock({ position: new Vector3(3,4,0), content: 1 })
-    new QuestionBlock({ position: new Vector3(5,4,0), content: 1 })
-    new QuestionBlock({ position: new Vector3(4,8,0), content: 1 })
+    // new QuestionBlock({ position: new Vector3(-2,4,0), content: 1 })
+    // new QuestionBlock({ position: new Vector3(3,4,0), content: 1 })
+    // new QuestionBlock({ position: new Vector3(5,4,0), content: 1 })
+    // new QuestionBlock({ position: new Vector3(4,8,0), content: 1 })
 
+    // new Oak({ position: new Vector3(-12.3,1,2)})
+    // new Oak({ position: new Vector3(-7.3,1,-8)})
+    // new Oak({ position: new Vector3(7,1,-6)})
 
+    // new Birch({ position: new Vector3(12,1,-2)})
+    // new Birch({ position: new Vector3(0,1,-6)})
+    // new Birch({ position: new Vector3(5,0,-12)})
 
 
     // this.buildFixedBlocks(backgroundData, -1)
@@ -156,7 +166,7 @@ export default class MapBuilder {
 
     // this.buildSpecialBlocks()
     // this.createCollectables()
-    // this.createEnemies()
+    this.createEnemies()
 
     // new House()
 
@@ -219,7 +229,7 @@ export default class MapBuilder {
   }
 
   createEnemies() {
-    const enemiesData: ImageData | undefined = this.getTextureData('enemies')
+    const enemiesData: ImageData | undefined = this.getTextureData('layer-e')
 
     if(!enemiesData) return
     const data = enemiesData.data
@@ -283,7 +293,7 @@ export default class MapBuilder {
 
   buildSpecialBlocks() {
     // console.log('build special blocks')
-    const specialBlocksData: ImageData | undefined = this.getTextureData('special-bodies')
+    const specialBlocksData: ImageData | undefined = this.getTextureData('layer-s')
 
     if(!specialBlocksData) return
     const data = specialBlocksData.data
@@ -323,8 +333,8 @@ export default class MapBuilder {
 
   getCoordinatesBy(index: number, width: number, height: number) {
 
-    const x = index % width - width / 2
-    const y = height - Math.floor(index / width)
+    const x = index % width - width / 2 + 28
+    const y = height - Math.floor(index / width) - mapSize.height + 38
     const z = 0
 
     return {x,y,z}
@@ -364,6 +374,12 @@ export default class MapBuilder {
 
     const { x,y } = this.getCoordinatesBy(i,mapSize.width,mapSize.height)
     const z = depth
+
+    // WATER
+    if(textureIndex === 20) {
+      new Water({ position: new Vector3(x,y,z)})
+      return
+    }
 
     const textureName = getTextureName(textureIndex)
 
