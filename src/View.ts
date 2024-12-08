@@ -53,12 +53,12 @@ export default class View extends Events {
 
 	setCamera() {
 		this.camera = new PerspectiveCamera(
-			60,
+			45,
 			this.viewport.width / this.viewport.height,
 			0.1,
 			300
 		)
-		this.camera.position.set(0, 7, 10)
+		this.camera.position.set(0, 7, 17)
 		this.scene.add(this.camera)
 
 		if(this.debug.active) {
@@ -110,7 +110,7 @@ export default class View extends Events {
 			this.camera.position.lerp(_V,this.time.delta * 0.003)
 			const {x,y,z} = this.world.player.entity.mesh.position
 
-			this.camera.lookAt(x,y,z)
+			this.camera.lookAt(x,y+2,z)
 		}
 	}
 }

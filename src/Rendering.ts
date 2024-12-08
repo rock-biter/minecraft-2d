@@ -18,7 +18,7 @@ export default class Rendering {
 		this.game = new Game()
 		this.debug = this.game.debug
 		this.viewport = this.game.viewport
-		this.camera = this.debug.params.camera === ENUMS.ORBIT_CONTROLS ? this.game.view.debugCamera : this.game.view.camera
+		this.camera = this.debug.active && this.debug.params.camera === ENUMS.ORBIT_CONTROLS ? this.game.view.debugCamera : this.game.view.camera
 		this.scene = this.game.world.scene
 		this.instance = new WebGLRenderer({
 			canvas: this.game.domElement,
