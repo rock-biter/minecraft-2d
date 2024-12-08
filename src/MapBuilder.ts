@@ -22,7 +22,7 @@ import { getTextureIndex, getTextureName } from "./Utils/BlocksTexture";
 import Grass from "./World/Blocks/Grass";
 import QuestionBlock from "./World/Blocks/QuestionBlock";
 import Lava from "./World/Blocks/Lava";
-import { mapSize } from "./Utils/sources";
+import { mapLayersName, mapSize } from "./Utils/sources";
 import Enemy from "./World/Mobs/Enemy";
 import Zombie from "./World/Mobs/Zombie";
 import Water from "./World/Blocks/Water";
@@ -114,14 +114,19 @@ export default class MapBuilder {
   }
 
   build() {
-    const layer_0: ImageData | undefined = this.getTextureData('layer-0')
+    // const layer_0: ImageData | undefined = this.getTextureData('layer-0')
     // const layer_s: ImageData | undefined = this.getTextureData('layer-s')
     // const backgroundData: ImageData | undefined = this.getTextureData('background')
     // const background2Data: ImageData | undefined = this.getTextureData('background-2')
     // const frontgroundData: ImageData | undefined = this.getTextureData('frontground')
     // const frontground2Data: ImageData | undefined = this.getTextureData('frontground-2')
     this.buildSpecialBlocks()
-    this.buildFixedBlocks(layer_0,0)
+
+    for (const key in mapLayersName) {
+      const data: ImageData | undefined = this.getTextureData(key)
+      const depth = mapLayersName[key]
+      this.buildFixedBlocks(data,depth)
+    }
 
     // for (let i = 0; i < 7; i++) {
     //   new Block({ position: new Vector3(5,-4 - i,0), textureIndex: getTextureIndex('STONE')})
@@ -378,6 +383,11 @@ export default class MapBuilder {
     // WATER
     if(textureIndex === 20) {
       new Water({ position: new Vector3(x,y,z)})
+      return
+    }
+
+    if(textureIndex === 19) {
+      new Lava({ position: new Vector3(x,y,z)})
       return
     }
 

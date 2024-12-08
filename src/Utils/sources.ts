@@ -3,12 +3,17 @@ import backgroundMap from '../textures/map/background-09.png?url'
 import background2Map from '../textures/map/background-2-02.png?url'
 import frontgroundMap from '../textures/map/frontground-06.png?url'
 import frontground2Map from '../textures/map/frontground-2-03.png?url'
-import specialBodiesMap from '../textures/map/specials-10.png?url'
-import collectablesMap from '../textures/map/collectables-08.png?url'
-import enemiesMap from '../textures/map/enemies-01.png?url'
+// import specialBodiesMap from '../textures/map/specials-10.png?url'
+// import collectablesMap from '../textures/map/collectables-08.png?url'
+// import enemiesMap from '../textures/map/enemies-01.png?url'
 import ladderSrc from '../textures/blocks/ladder.png?url'
 
 // layers
+import layer__6 from '../textures/map/layers/-layer-6.png?url'
+import layer__4 from '../textures/map/layers/-layer-4.png?url'
+import layer__3 from '../textures/map/layers/-layer-3.png?url'
+import layer__2 from '../textures/map/layers/-layer-2.png?url'
+import layer__1 from '../textures/map/layers/-layer-1.png?url'
 import layer_0 from '../textures/map/layers/layer-0.png?url'
 import layer_s from '../textures/map/layers/layer-s.png?url'
 import layer_e from '../textures/map/layers/layer-e.png?url'
@@ -174,6 +179,20 @@ export const mapSize =  {
 			height: 250
 		}
 
+type layersMap = {
+	[key: string]: number
+}
+
+export const mapLayersName: layersMap = {
+	'-layer-6': -6,
+	'-layer-5': -5,
+	'-layer-4': -4,
+	'-layer-3': -3,
+	'-layer-2': -2,
+	'-layer-1': -1,
+	'layer-0': 0
+}
+
 // dungeon
 export const mapLayers = [
 	{
@@ -188,6 +207,43 @@ export const mapLayers = [
 		path: layer_e,
 		sizes: mapSize
 	},
+	{
+		name: '-layer-6',
+		type: 'map',
+		path: layer__6,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-5',
+		type: 'map',
+		path: layer__4,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-4',
+		type: 'map',
+		path: layer__4,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-3',
+		type: 'map',
+		path: layer__3,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-2',
+		type: 'map',
+		path: layer__2,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-1',
+		type: 'map',
+		path: layer__1,
+		sizes: mapSize
+	},
+	
 	{
 		name: 'layer-0',
 		type: 'map',
@@ -237,12 +293,12 @@ const sources: Source[] = [
 		type: 'gltf',
 		path: zombieSrc,
 	},
-	{
-		name: 'enemies',
-		type: 'map',
-		path: enemiesMap,
-		sizes: mapSize
-	},
+	// {
+	// 	name: 'enemies',
+	// 	type: 'map',
+	// 	path: enemiesMap,
+	// 	sizes: mapSize
+	// },
 	{
 		name: 'player-texture',
 		type: 'texture',
@@ -284,18 +340,18 @@ const sources: Source[] = [
 			height: 512
 		},
 	},
-	{
-		name: 'collectables',
-		type: 'map',
-		path: collectablesMap,
-		sizes: mapSize
-	},
-	{
-		name: 'special-bodies',
-		type: 'map',
-		path: specialBodiesMap,
-		sizes: mapSize
-	},
+	// {
+	// 	name: 'collectables',
+	// 	type: 'map',
+	// 	path: collectablesMap,
+	// 	sizes: mapSize
+	// },
+	// {
+	// 	name: 'special-bodies',
+	// 	type: 'map',
+	// 	path: specialBodiesMap,
+	// 	sizes: mapSize
+	// },
 	{
 		name: 'blocks',
 		type: 'arrayTexture',

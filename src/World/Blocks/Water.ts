@@ -41,7 +41,11 @@ export default class Water extends Block {
       })
        */
 
-      Water.WATER.map(block => block.entity.mesh).sort((a,b) => {
+      Water.WATER.filter(block => {
+        const dx = Math.abs(block.position.x - cam.position.x)
+
+        return dx < 20
+      }).map(block => block.entity.mesh).sort((a,b) => {
         const dA = cam.position.distanceTo(a!.position)
         const dB = cam.position.distanceTo(b!.position)
 

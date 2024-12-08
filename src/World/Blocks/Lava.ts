@@ -34,7 +34,9 @@ export default class Lava extends Block {
     // console.log('lava phisics')
     let entity: Entity = {}
 
+    
     const {x,y,z} = this.position
+  if(z !== 0) return entity
 
     const w = this.width || 1
     const h = this.height || 1
