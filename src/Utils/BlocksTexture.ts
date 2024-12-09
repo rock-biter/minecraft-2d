@@ -31,6 +31,8 @@ import jungleLeavesSrc from '../textures/blocks/jungle_leaves.png?url'
 import quartzTopSrc from '../textures/blocks/quartz_block_top.png?url'
 import quartzSideSrc from '../textures/blocks/quartz_block_side.png?url'
 import quartzBottomSrc from '../textures/blocks/quartz_block_bottom.png?url'
+import limeConcreteSrc from '../textures/blocks/lime_concrete.png?url'
+limeConcreteSrc
 
 import coalOreSrc from '../textures/blocks/coal_ore.png?url'
 import ironOreSrc from '../textures/blocks/iron_ore.png?url'
@@ -178,6 +180,10 @@ export const blocksTextures: Texture[] = [
   {
     name: TEXTURES.ANDESITE,
     path: andesiteSrc,
+  },
+  {
+    name: TEXTURES.LIME_CONCRETE,
+    path: limeConcreteSrc,
   },
 
   // {

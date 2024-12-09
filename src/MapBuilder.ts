@@ -166,7 +166,7 @@ export default class MapBuilder {
     new Oak({ position: new Vector3(55,9,-10)})
     new Oak({ position: new Vector3(44,10,-12)})
     new Oak({ position: new Vector3(42,9,-18)})
-    new Oak({ position: new Vector3(37,4,0)})
+    new Oak({ position: new Vector3(37,5,-1)})
     
     new Birch({ position: new Vector3(5,7,-8)})
     new Birch({ position: new Vector3(-5,6,-12)})
@@ -192,6 +192,55 @@ export default class MapBuilder {
     // }
 
     // console.log(Block.BLOCKS)
+
+    // barrier left
+    for (let i = 0; i < 20; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(-10,6+i,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc) 
+    }
+
+    // barrier right
+    for (let i = 0; i < 20; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(100,0+i,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc) 
+    }
+
+    for (let i = 0; i < 2; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(20+i,7,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc)
+    }
+
+    for (let i = 0; i < 6; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(26+i,7,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc)
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(31+i,15,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc)
+    }
+
+    for (let i = 0; i < 2; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(38+i,14,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc)
+    }
+
+    new QuestionBlock({ position: new Vector3(21,11,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(30,14,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(70,9,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(74,9,0), content: 1 })
 
     const lavalight_1 = new RectAreaLight(0xff9900,2,25,20)
     lavalight_1.rotation.x = Math.PI * 0.5
@@ -226,6 +275,32 @@ export default class MapBuilder {
         step: 0.1
       })
       
+    }
+
+    // green pipe
+    {
+
+      new Block({ position: new Vector3(1,14,-1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(0,14,-1.5), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(0,14,1.5), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(-1,14,1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(1.5,14,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(1,14,1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(-1.5,14,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(-1,14,-1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      
+      // new Block({ position: new Vector3(1.75,14,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE), width: 0.5 })
+      // new Block({ position: new Vector3(-1.75,14,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE), width: 0.5 })
+      // new Block({ position: new Vector3(0,14,1.75), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE), blockDepth: 0.5 })
+      // new Block({ position: new Vector3(0,14,-1.75), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE), blockDepth: 0.5 })
+      
+      for (let i = 0; i < 20; i++) {
+        new Block({ position: new Vector3(0,15 + i,1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE) })
+        new Block({ position: new Vector3(0,15 + i,-1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE) })
+        new Block({ position: new Vector3(-1,15 + i,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE) })
+        new Block({ position: new Vector3(1,15 + i,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE) })
+      }
+
     }
     
     const helper = new RectAreaLightHelper(lavalight_1)

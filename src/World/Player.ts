@@ -511,13 +511,13 @@ export default class Player extends Events {
 			this.velocity.y = 0
 		}
 
-		if(newPosition.x > 60) {
-			newPosition.x -= 100
-			this.game.view.camera.position.x -= 100
-		} else if(newPosition.x < -60) {
-			newPosition.x += 100
-			this.game.view.camera.position.x += 100
-		}
+		// if(newPosition.x > 60) {
+		// 	newPosition.x -= 100
+		// 	this.game.view.camera.position.x -= 100
+		// } else if(newPosition.x < -60) {
+		// 	newPosition.x += 100
+		// 	this.game.view.camera.position.x += 100
+		// }
 
 		this.entity.body.setNextKinematicTranslation(newPosition)
 
