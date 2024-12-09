@@ -162,6 +162,10 @@ export default class MapBuilder {
     new Oak({ position: new Vector3(35,11,-15)})
     new Oak({ position: new Vector3(35,8,-8)})
     new Oak({ position: new Vector3(42,9,-6)})
+    new Oak({ position: new Vector3(50,9,-4)})
+    new Oak({ position: new Vector3(55,9,-10)})
+    new Oak({ position: new Vector3(44,10,-12)})
+    new Oak({ position: new Vector3(42,9,-18)})
     new Oak({ position: new Vector3(37,4,0)})
     
     new Birch({ position: new Vector3(5,7,-8)})
@@ -236,6 +240,8 @@ export default class MapBuilder {
     const bgBlack = new Mesh(new PlaneGeometry(300,100),new MeshBasicMaterial({ color: 0x000000}))
     bgBlack.position.set(50,-55,-18)
     this.scene.add(bgBlack)
+
+    
 
     // new House()
 

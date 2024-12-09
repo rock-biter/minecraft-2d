@@ -202,6 +202,8 @@ export default class Player extends Events {
 					this.removeEffect(name)
 				}
 			},750)
+		} else if(name === 'regeneration') {
+			effect.value += value
 		}
 
 	}
