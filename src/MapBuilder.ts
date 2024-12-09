@@ -32,12 +32,15 @@ import { BufferGeometryUtils, RectAreaLightHelper } from "three/examples/jsm/Add
 import Birch from "./World/Trees/Birch";
 import House from "./World/Structures/House";
 import NetherPortal from "./World/Structures/NetherPortal";
+import { createNoise3D } from 'simplex-noise'
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
   uDepth: IUniform< number >
   uDiffuse: IUniform< Texture | null>
 }
+
+export const noise = createNoise3D()
 
 export default class MapBuilder {
   
@@ -452,7 +455,38 @@ export default class MapBuilder {
 
     switch(textureName) {
       case TEXTURES.GRASS:
-        new Grass({ position: new Vector3(x,y,z),r,textureIndex,b})
+        new Grass({ position: new Vector3(x,y,z)})
+        break
+      case TEXTURES.STONE:
+
+        const val = noise(x * 0.05,y * 0.05,z * 0.05)
+        const coel_val = noise(x * 0.1,y * 0.1,z * 0.1)
+        const iron_val = noise(x * 0.07,y * 0.07,z * 0.07)
+        const gold_val = noise(x * 0.05,y * 0.05,z * 0.05)
+        const diamond_ore = noise(x * 0.2,y * 0.2,z * 0.2)
+
+        if(coel_val > 0.8 && coel_val < 0.95){
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('COAL_ORE'),b})
+        } else if(iron_val > 0.9 && iron_val < 1.){
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('IRON_ORE'),b})
+        } else if(gold_val > 0.9 && gold_val < 1. && y < - 10){
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('GOLD_ORE'),b})
+        } else if(diamond_ore ** 1.8 > 0.8 && diamond_ore ** 1.8 < 1. && y < - 30 ){
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('DIAMOND_ORE'),b})
+        }  else if(val < -0.8 ) {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('DIORITE'),b})
+        } else if(val < -0.7 ) {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('ANDESITE'),b})
+        } else if(val > 0.35) {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('GRANITE'),b})
+        } else if(val > 0.1) {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('GRAVEL'),b})
+        } else {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex,b})
+        }
+
+        // if(val <= 0.5 && val > 0.)
+
         break
       default:
         new Block({ position: new Vector3(x,y,z),r,textureIndex,b})
