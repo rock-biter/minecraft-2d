@@ -196,18 +196,22 @@ export default class MapBuilder {
     lavalight_2.position.x = 33
     lavalight_2.position.z = -5
 
-    this.debug.panel.addBinding(lavalight_1,'intensity',{
-      min: 0,
-      max: 4,
-      step: 0.1
-    })
+    if(this.game.debug.active) {
 
-    this.debug.panel.addBinding(lavalight_2,'intensity',{
-      min: 0,
-      max: 4,
-      step: 0.1
-    })
-
+      
+      this.debug.panel.addBinding(lavalight_1,'intensity',{
+        min: 0,
+        max: 4,
+        step: 0.1
+      })
+      
+      this.debug.panel.addBinding(lavalight_2,'intensity',{
+        min: 0,
+        max: 4,
+        step: 0.1
+      })
+      
+    }
     
     const helper = new RectAreaLightHelper(lavalight_1)
     console.log('light',lavalight_1)
