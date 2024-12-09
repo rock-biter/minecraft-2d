@@ -53,7 +53,7 @@ import marioTexture from '../assets/models/steve/textures/mario-texture.png?url'
 import playerModelSrc from '../assets/models/steve/source/model.gltf?url'
 
 // mob
-import zombieSrc from '../assets/models/mob/zombie/scene.gltf?url'
+import zombieSrc from '../assets/models/mob/zombie/zombie.glb?url'
 
 import { Source } from "../Types/resources.types";
 import { texturesPaths } from './BlocksTexture'
