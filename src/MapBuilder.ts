@@ -31,6 +31,7 @@ import Oak from "./World/Trees/Oak";
 import { BufferGeometryUtils, RectAreaLightHelper } from "three/examples/jsm/Addons";
 import Birch from "./World/Trees/Birch";
 import House from "./World/Structures/House";
+import NetherPortal from "./World/Structures/NetherPortal";
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
@@ -172,6 +173,7 @@ export default class MapBuilder {
     // new Birch({ position: new Vector3(0,1,-6)})
     // new Birch({ position: new Vector3(5,0,-12)})
 
+    new NetherPortal(new Vector3(-14,-50,-2))
 
     // this.buildFixedBlocks(backgroundData, -1)
     // for (let i = 0; i < 2; i++) {
@@ -184,10 +186,10 @@ export default class MapBuilder {
 
     // console.log(Block.BLOCKS)
 
-    const lavalight_1 = new RectAreaLight(0xff9900,2,20,20)
+    const lavalight_1 = new RectAreaLight(0xff9900,2,25,20)
     lavalight_1.rotation.x = Math.PI * 0.5
     lavalight_1.position.y = -50.6
-    lavalight_1.position.x = 3
+    lavalight_1.position.x = 0
     lavalight_1.position.z = -7
 
     const lavalight_2 = new RectAreaLight(0xff9900,2,8,10)
@@ -195,6 +197,12 @@ export default class MapBuilder {
     lavalight_2.position.y = -50.6
     lavalight_2.position.x = 33
     lavalight_2.position.z = -5
+
+    const lavalight_3 = new RectAreaLight(0xff9900,2,10,6)
+    lavalight_2.rotation.x = Math.PI * 0.5
+    lavalight_2.position.y = -50.6
+    lavalight_2.position.x = -20
+    lavalight_2.position.z = -4
 
     if(this.game.debug.active) {
 
