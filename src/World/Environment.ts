@@ -87,10 +87,10 @@ export default class Environment {
 		this.directionalLight.shadow.normalBias = 0.02
 		this.directionalLight.shadow.blurSamples = 20
 		this.directionalLight.shadow.camera.far = 50
-		this.directionalLight.shadow.camera.left = -20
-		this.directionalLight.shadow.camera.top = 20
-		this.directionalLight.shadow.camera.bottom = -20
-		this.directionalLight.shadow.camera.right = 20
+		this.directionalLight.shadow.camera.left = -30
+		this.directionalLight.shadow.camera.top = 30
+		this.directionalLight.shadow.camera.bottom = -30
+		this.directionalLight.shadow.camera.right = 30
 
 		// this.directionalLight.shadow.camera.updateProjectionMatrix()
 		this.scene.add(this.directionalLight,this.directionalLight.target)

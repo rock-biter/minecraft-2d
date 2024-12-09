@@ -392,7 +392,7 @@ export default class Player extends Events {
 
 		const intensity = MathUtils.clamp(MathUtils.mapLinear(this.position.y,0,-25,maxI,minI),0.4,3.5)
 
-		console.log(this.position.y,intensity)
+		// console.log(this.position.y,intensity)
 
 		if(this.game.world.environment) {
 			this.game.world.environment.directionalLight.intensity = intensity

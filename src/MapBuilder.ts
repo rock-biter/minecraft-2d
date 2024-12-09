@@ -1,4 +1,4 @@
-import {  BoxGeometry, BufferAttribute, BufferGeometry, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,   PlaneGeometry, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BoxGeometry, BufferAttribute, BufferGeometry, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,   PlaneGeometry, RectAreaLight, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -28,7 +28,7 @@ import Zombie from "./World/Mobs/Zombie";
 import Water from "./World/Blocks/Water";
 import Log from "./World/Blocks/Log";
 import Oak from "./World/Trees/Oak";
-import { BufferGeometryUtils } from "three/examples/jsm/Addons";
+import { BufferGeometryUtils, RectAreaLightHelper } from "three/examples/jsm/Addons";
 import Birch from "./World/Trees/Birch";
 import House from "./World/Structures/House";
 
@@ -183,6 +183,36 @@ export default class MapBuilder {
     // }
 
     // console.log(Block.BLOCKS)
+
+    const lavalight_1 = new RectAreaLight(0xff9900,2,20,20)
+    lavalight_1.rotation.x = Math.PI * 0.5
+    lavalight_1.position.y = -50.6
+    lavalight_1.position.x = 3
+    lavalight_1.position.z = -7
+
+    const lavalight_2 = new RectAreaLight(0xff9900,2,8,10)
+    lavalight_2.rotation.x = Math.PI * 0.5
+    lavalight_2.position.y = -50.6
+    lavalight_2.position.x = 33
+    lavalight_2.position.z = -5
+
+    this.debug.panel.addBinding(lavalight_1,'intensity',{
+      min: 0,
+      max: 4,
+      step: 0.1
+    })
+
+    this.debug.panel.addBinding(lavalight_2,'intensity',{
+      min: 0,
+      max: 4,
+      step: 0.1
+    })
+
+    
+    const helper = new RectAreaLightHelper(lavalight_1)
+    console.log('light',lavalight_1)
+
+    this.scene.add(lavalight_1,lavalight_2,helper)
 
     // this.buildSpecialBlocks()
     // this.createCollectables()
