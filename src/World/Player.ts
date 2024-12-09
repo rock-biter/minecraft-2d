@@ -61,6 +61,7 @@ export default class Player extends Events {
 	grabLadder = false
 	grounded = false
 	initialPosition: Vector3
+	isDeath = false
 
 	entity: Entity | undefined
 
@@ -192,6 +193,7 @@ export default class Player extends Events {
 			}
 			effect.damage && effect.damage > 0 && this.onDamage(effect.damage)
 			effect.timer = setInterval(() => {
+				if(this.isDeath) return
 				// console.log(`effect ${name}`)
 				effect.damage && this.onDamage(effect.damage)
 				effect.value--
@@ -378,11 +380,16 @@ export default class Player extends Events {
 
 	death() {
 		this.entity?.body?.setTranslation(this.initialPosition as RAPIER.Vector3,true)
-		setTimeout(() => {
+		this.isDeath = true
+		// setTimeout(() => {
 			// TODO FIX when player death on lava
 			this.removeAllEffect()
 			this.life.points = this.life.MAX_LIFE
-		},0)
+		// },0)
+
+		setTimeout(() => {
+			this.isDeath = false
+		},1000)
 	}
 
 	setLightIntensity() {
