@@ -55,6 +55,7 @@ export default class World {
 			new MapBuilder().build()
 			
 			// this.player = new Player(new Vector3(9.5, 16, 0)) // x: -9.5
+			// this.player = new Player(new Vector3(0, 10, 0)) // x: -9.5
 			this.player = new Player(new Vector3(0, 10, 0)) // x: -9.5
 
 			

@@ -41,18 +41,19 @@ export default class Water extends Block {
       })
        */
 
-      Water.WATER.filter(block => {
-        const dx = Math.abs(block.position.x - cam.position.x)
+      // Water.WATER.filter(block => {
+      //   const dx = block.position.x - cam.position.x
+      //   const dy = block.position.y - cam.position.y
 
-        return dx < 20
-      }).map(block => block.entity.mesh).sort((a,b) => {
-        const dA = cam.position.distanceTo(a!.position)
-        const dB = cam.position.distanceTo(b!.position)
+      //   return (dx < 15 && dx > -15)|| (dy < 15 && dy > -15)
+      // }).map(block => block.entity.mesh).sort((a,b) => {
+      //   const dA = cam.position.distanceTo(a!.position)
+      //   const dB = cam.position.distanceTo(b!.position)
 
-        return  dB - dA
-      }).forEach((block,i) => {
-        block!.renderOrder = Water.WATER.length + 10 - i
-      })
+      //   return  dB - dA
+      // }).forEach((block,i) => {
+      //   block!.renderOrder = Water.WATER.length + 10 - i
+      // })
 
     },)
   }

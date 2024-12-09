@@ -68,7 +68,7 @@ export default class View extends Events {
 				0.1,
 				300
 			)
-			this.debugCamera.position.set(0, 10, 30)
+			this.debugCamera.position.set(0, 10, 15)
 			this.scene.add(this.debugCamera)
 		}
 	}

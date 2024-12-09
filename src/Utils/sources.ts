@@ -9,12 +9,20 @@ import frontground2Map from '../textures/map/frontground-2-03.png?url'
 import ladderSrc from '../textures/blocks/ladder.png?url'
 
 // layers
+import layer__16 from '../textures/map/layers/-layer-16.png?url'
+import layer__14 from '../textures/map/layers/-layer-14.png?url'
+import layer__13 from '../textures/map/layers/-layer-13.png?url'
+import layer__11 from '../textures/map/layers/-layer-11.png?url'
+import layer__10 from '../textures/map/layers/-layer-10.png?url'
+import layer__9 from '../textures/map/layers/-layer-9.png?url'
+import layer__7 from '../textures/map/layers/-layer-7.png?url'
 import layer__6 from '../textures/map/layers/-layer-6.png?url'
 import layer__4 from '../textures/map/layers/-layer-4.png?url'
 import layer__3 from '../textures/map/layers/-layer-3.png?url'
 import layer__2 from '../textures/map/layers/-layer-2.png?url'
 import layer__1 from '../textures/map/layers/-layer-1.png?url'
 import layer_0 from '../textures/map/layers/layer-0.png?url'
+import layer_1 from '../textures/map/layers/layer-1.png?url'
 import layer_s from '../textures/map/layers/layer-s.png?url'
 import layer_e from '../textures/map/layers/layer-e.png?url'
 
@@ -184,13 +192,26 @@ type layersMap = {
 }
 
 export const mapLayersName: layersMap = {
+	'-layer-17': -17,
+	'-layer-16': -16,
+	'-layer-15': -15,
+	'-layer-14': -14,
+	'-layer-13': -13,
+	'-layer-12': -12,
+	'-layer-11': -11,
+	'-layer-10': -10,
+	'-layer-9': -9,
+	'-layer-8': -8,
+	'-layer-7': -7,
 	'-layer-6': -6,
 	'-layer-5': -5,
 	'-layer-4': -4,
 	'-layer-3': -3,
 	'-layer-2': -2,
 	'-layer-1': -1,
-	'layer-0': 0
+	'layer-0': 0,
+	'layer-1': 1,
+	'layer-2': 2,
 }
 
 // dungeon
@@ -205,6 +226,72 @@ export const mapLayers = [
 		name: 'layer-e',
 		type: 'map',
 		path: layer_e,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-17',
+		type: 'map',
+		path: layer__16,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-16',
+		type: 'map',
+		path: layer__16,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-15',
+		type: 'map',
+		path: layer__14,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-14',
+		type: 'map',
+		path: layer__14,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-13',
+		type: 'map',
+		path: layer__13,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-12',
+		type: 'map',
+		path: layer__11,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-11',
+		type: 'map',
+		path: layer__11,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-10',
+		type: 'map',
+		path: layer__10,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-9',
+		type: 'map',
+		path: layer__9,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-8',
+		type: 'map',
+		path: layer__7,
+		sizes: mapSize
+	},
+	{
+		name: '-layer-7',
+		type: 'map',
+		path: layer__7,
 		sizes: mapSize
 	},
 	{
@@ -248,6 +335,18 @@ export const mapLayers = [
 		name: 'layer-0',
 		type: 'map',
 		path: layer_0,
+		sizes: mapSize
+	},
+	{
+		name: 'layer-1',
+		type: 'map',
+		path: layer_1,
+		sizes: mapSize
+	},
+	{
+		name: 'layer-2',
+		type: 'map',
+		path: layer_1,
 		sizes: mapSize
 	},
 	// {
