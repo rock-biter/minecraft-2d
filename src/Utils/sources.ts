@@ -50,7 +50,7 @@ import diamondSrc from '../textures/item/diamond.png?url'
 
 // player
 import marioTexture from '../assets/models/steve/textures/mario-texture.png?url'
-import playerModelSrc from '/models/steve/source/model.gltf?url'
+import playerModelSrc from '../assets/models/steve/source/model.gltf?url'
 
 // mob
 import zombieSrc from '/models/mob/zombie/scene.gltf?url'
