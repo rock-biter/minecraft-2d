@@ -1,4 +1,4 @@
-import {  BoxGeometry, BufferAttribute, BufferGeometry, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,   PlaneGeometry, RectAreaLight, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BoxGeometry, BufferAttribute, BufferGeometry, Euler, IUniform, MathUtils, Mesh, MeshBasicMaterial, MeshStandardMaterial,   PlaneGeometry, RectAreaLight, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -202,10 +202,10 @@ export default class MapBuilder {
     lavalight_2.position.z = -5
 
     const lavalight_3 = new RectAreaLight(0xff9900,2,10,6)
-    lavalight_2.rotation.x = Math.PI * 0.5
-    lavalight_2.position.y = -50.6
-    lavalight_2.position.x = -20
-    lavalight_2.position.z = -4
+    lavalight_3.rotation.x = Math.PI * 0.5
+    lavalight_3.position.y = -50.6
+    lavalight_3.position.x = -20
+    lavalight_3.position.z = -4
 
     if(this.game.debug.active) {
 
@@ -227,11 +227,15 @@ export default class MapBuilder {
     const helper = new RectAreaLightHelper(lavalight_1)
     console.log('light',lavalight_1)
 
-    this.scene.add(lavalight_1,lavalight_2,helper)
+    this.scene.add(lavalight_1,lavalight_2,lavalight_3,helper)
 
     // this.buildSpecialBlocks()
     // this.createCollectables()
     this.createEnemies()
+
+    const bgBlack = new Mesh(new PlaneGeometry(300,100),new MeshBasicMaterial({ color: 0x000000}))
+    bgBlack.position.set(50,-55,-18)
+    this.scene.add(bgBlack)
 
     // new House()
 

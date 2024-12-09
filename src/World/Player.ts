@@ -397,7 +397,7 @@ export default class Player extends Events {
 		const maxI = 3.5
 		const minI = 0.4
 
-		const intensity = MathUtils.clamp(MathUtils.mapLinear(this.position.y,0,-25,maxI,minI),0.4,3.5)
+		const intensity = MathUtils.clamp(MathUtils.mapLinear(this.position.y,0,-20,maxI,minI),0.3,3.5)
 
 		// console.log(this.position.y,intensity)
 
