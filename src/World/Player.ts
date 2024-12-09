@@ -98,6 +98,10 @@ export default class Player extends Events {
 		return this.game.debug
 	}
 
+	get position(): Vector3 {
+		return this.entity?.mesh?.position || new Vector3()
+	}
+
 	init() {
 		this.createBody()
 		this.time.on(
@@ -381,7 +385,24 @@ export default class Player extends Events {
 		},0)
 	}
 
+	setLightIntensity() {
+
+		const maxI = 3.5
+		const minI = 0.4
+
+		const intensity = MathUtils.clamp(MathUtils.mapLinear(this.position.y,0,-25,maxI,minI),0.4,3.5)
+
+		console.log(this.position.y,intensity)
+
+		if(this.game.world.environment) {
+			this.game.world.environment.directionalLight.intensity = intensity
+		}
+
+	}
+
 	updateVelocity() {
+		
+
 		if(!this.entity || !this.entity.body || !this.entity.collider) return
 		// const { x, y, z } = this.body.translation()
 		// this.entity.mesh.position.copy(this.entity.body.translation())
@@ -500,6 +521,8 @@ export default class Player extends Events {
 			walkAction && (walkAction.weight = (Math.max(Math.abs(this.velocity.x),this.velocity.y) / this.speed))
 
 		}
+
+		this.setLightIntensity()
 	}
 
 }
