@@ -55,10 +55,10 @@ export default class Lava extends Block {
         console.log('collision with lava',started)
 
         if(started) {
-          this.game.world.player.addEffect({ name: 'burn', value: -1, damage: 0.5 })
+          this.game.world.player.addEffect({ name: 'burn', value: -1, damage: 1 })
           this.game.world.player.addEffect({ name: 'slowness', value: 0 })
         } else {
-          this.game.world.player.addEffect({ name: 'burn', value: 4, damage: 0.5 })
+          !this.game.world.player.isDeath && this.game.world.player.addEffect({ name: 'burn', value: 4, damage: 0.5 })
           this.game.world.player.removeEffect('slowness')
 
         }

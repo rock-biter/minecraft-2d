@@ -1,4 +1,4 @@
-import {  BoxGeometry, BufferAttribute, BufferGeometry, Euler, IUniform, MathUtils, Mesh, MeshStandardMaterial,   PlaneGeometry, RectAreaLight, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
+import {  BoxGeometry, BufferAttribute, BufferGeometry, Euler, IUniform, MathUtils, Mesh, MeshBasicMaterial, MeshStandardMaterial,   PlaneGeometry, RectAreaLight, Scene, ShaderMaterial, Texture, Uniform, Vector3 } from "three";
 import Game from "./Game";
 import Physics from "./Physics";
 import Resources from "./Utils/Resources";
@@ -31,12 +31,16 @@ import Oak from "./World/Trees/Oak";
 import { BufferGeometryUtils, RectAreaLightHelper } from "three/examples/jsm/Addons";
 import Birch from "./World/Trees/Birch";
 import House from "./World/Structures/House";
+import NetherPortal from "./World/Structures/NetherPortal";
+import { createNoise3D } from 'simplex-noise'
 
 interface blockUniform {
   [uniform: string]: IUniform<any>
   uDepth: IUniform< number >
   uDiffuse: IUniform< Texture | null>
 }
+
+export const noise = createNoise3D()
 
 export default class MapBuilder {
   
@@ -158,7 +162,11 @@ export default class MapBuilder {
     new Oak({ position: new Vector3(35,11,-15)})
     new Oak({ position: new Vector3(35,8,-8)})
     new Oak({ position: new Vector3(42,9,-6)})
-    new Oak({ position: new Vector3(37,4,0)})
+    new Oak({ position: new Vector3(50,9,-4)})
+    new Oak({ position: new Vector3(55,9,-10)})
+    new Oak({ position: new Vector3(44,10,-12)})
+    new Oak({ position: new Vector3(42,9,-18)})
+    new Oak({ position: new Vector3(37,5,-1)})
     
     new Birch({ position: new Vector3(5,7,-8)})
     new Birch({ position: new Vector3(-5,6,-12)})
@@ -172,6 +180,7 @@ export default class MapBuilder {
     // new Birch({ position: new Vector3(0,1,-6)})
     // new Birch({ position: new Vector3(5,0,-12)})
 
+    new NetherPortal(new Vector3(-14,-50,-2))
 
     // this.buildFixedBlocks(backgroundData, -1)
     // for (let i = 0; i < 2; i++) {
@@ -184,10 +193,59 @@ export default class MapBuilder {
 
     // console.log(Block.BLOCKS)
 
-    const lavalight_1 = new RectAreaLight(0xff9900,2,20,20)
+    // barrier left
+    for (let i = 0; i < 20; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(-10,6+i,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc) 
+    }
+
+    // barrier right
+    for (let i = 0; i < 20; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(100,0+i,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc) 
+    }
+
+    for (let i = 0; i < 2; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(20+i,7,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc)
+    }
+
+    for (let i = 0; i < 6; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(26+i,7,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc)
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(31+i,15,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc)
+    }
+
+    for (let i = 0; i < 2; i++) {
+      const bodyDesc = RAPIER.RigidBodyDesc.fixed()
+      bodyDesc.setTranslation(38+i,14,0)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      this.physics.addEntity(bodyDesc, colliderDesc)
+    }
+
+    new QuestionBlock({ position: new Vector3(21,11,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(30,14,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(70,9,0), content: 1 })
+    new QuestionBlock({ position: new Vector3(74,9,0), content: 1 })
+
+    const lavalight_1 = new RectAreaLight(0xff9900,2,25,20)
     lavalight_1.rotation.x = Math.PI * 0.5
     lavalight_1.position.y = -50.6
-    lavalight_1.position.x = 3
+    lavalight_1.position.x = 0
     lavalight_1.position.z = -7
 
     const lavalight_2 = new RectAreaLight(0xff9900,2,8,10)
@@ -195,6 +253,12 @@ export default class MapBuilder {
     lavalight_2.position.y = -50.6
     lavalight_2.position.x = 33
     lavalight_2.position.z = -5
+
+    const lavalight_3 = new RectAreaLight(0xff9900,2,10,6)
+    lavalight_3.rotation.x = Math.PI * 0.5
+    lavalight_3.position.y = -50.6
+    lavalight_3.position.x = -20
+    lavalight_3.position.z = -4
 
     if(this.game.debug.active) {
 
@@ -212,15 +276,47 @@ export default class MapBuilder {
       })
       
     }
+
+    // green pipe
+    {
+
+      new Block({ position: new Vector3(1,14,-1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(0,14,-1.5), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(0,14,1.5), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(-1,14,1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(1.5,14,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(1,14,1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(-1.5,14,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      new Block({ position: new Vector3(-1,14,-1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE)})
+      
+      // new Block({ position: new Vector3(1.75,14,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE), width: 0.5 })
+      // new Block({ position: new Vector3(-1.75,14,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE), width: 0.5 })
+      // new Block({ position: new Vector3(0,14,1.75), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE), blockDepth: 0.5 })
+      // new Block({ position: new Vector3(0,14,-1.75), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE), blockDepth: 0.5 })
+      
+      for (let i = 0; i < 20; i++) {
+        new Block({ position: new Vector3(0,15 + i,1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE) })
+        new Block({ position: new Vector3(0,15 + i,-1), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE) })
+        new Block({ position: new Vector3(-1,15 + i,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE) })
+        new Block({ position: new Vector3(1,15 + i,0), textureIndex: getTextureIndex(TEXTURES.LIME_CONCRETE) })
+      }
+
+    }
     
     const helper = new RectAreaLightHelper(lavalight_1)
     console.log('light',lavalight_1)
 
-    this.scene.add(lavalight_1,lavalight_2,helper)
+    this.scene.add(lavalight_1,lavalight_2,lavalight_3,helper)
 
     // this.buildSpecialBlocks()
     // this.createCollectables()
     this.createEnemies()
+
+    const bgBlack = new Mesh(new PlaneGeometry(300,100),new MeshBasicMaterial({ color: 0x000000}))
+    bgBlack.position.set(50,-55,-18)
+    this.scene.add(bgBlack)
+
+    
 
     // new House()
 
@@ -444,7 +540,38 @@ export default class MapBuilder {
 
     switch(textureName) {
       case TEXTURES.GRASS:
-        new Grass({ position: new Vector3(x,y,z),r,textureIndex,b})
+        new Grass({ position: new Vector3(x,y,z)})
+        break
+      case TEXTURES.STONE:
+
+        const val = noise(x * 0.05,y * 0.05,z * 0.05)
+        const coel_val = noise(x * 0.1,y * 0.1,z * 0.1)
+        const iron_val = noise(x * 0.07,y * 0.07,z * 0.07)
+        const gold_val = noise(x * 0.05,y * 0.05,z * 0.05)
+        const diamond_ore = noise(x * 0.2,y * 0.2,z * 0.2)
+
+        if(coel_val > 0.8 && coel_val < 0.95){
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('COAL_ORE'),b})
+        } else if(iron_val > 0.9 && iron_val < 1.){
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('IRON_ORE'),b})
+        } else if(gold_val > 0.9 && gold_val < 1. && y < - 10){
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('GOLD_ORE'),b})
+        } else if(diamond_ore ** 1.8 > 0.8 && diamond_ore ** 1.8 < 1. && y < - 30 ){
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('DIAMOND_ORE'),b})
+        }  else if(val < -0.8 ) {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('DIORITE'),b})
+        } else if(val < -0.7 ) {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('ANDESITE'),b})
+        } else if(val > 0.35) {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('GRANITE'),b})
+        } else if(val > 0.1) {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex: getTextureIndex('GRAVEL'),b})
+        } else {
+          new Block({ position: new Vector3(x,y,z),r,textureIndex,b})
+        }
+
+        // if(val <= 0.5 && val > 0.)
+
         break
       default:
         new Block({ position: new Vector3(x,y,z),r,textureIndex,b})

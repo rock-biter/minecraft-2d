@@ -61,6 +61,7 @@ export default class Player extends Events {
 	grabLadder = false
 	grounded = false
 	initialPosition: Vector3
+	isDeath = false
 
 	entity: Entity | undefined
 
@@ -192,6 +193,7 @@ export default class Player extends Events {
 			}
 			effect.damage && effect.damage > 0 && this.onDamage(effect.damage)
 			effect.timer = setInterval(() => {
+				if(this.isDeath) return
 				// console.log(`effect ${name}`)
 				effect.damage && this.onDamage(effect.damage)
 				effect.value--
@@ -200,6 +202,8 @@ export default class Player extends Events {
 					this.removeEffect(name)
 				}
 			},750)
+		} else if(name === 'regeneration') {
+			effect.value += value
 		}
 
 	}
@@ -378,11 +382,16 @@ export default class Player extends Events {
 
 	death() {
 		this.entity?.body?.setTranslation(this.initialPosition as RAPIER.Vector3,true)
-		setTimeout(() => {
+		this.isDeath = true
+		// setTimeout(() => {
 			// TODO FIX when player death on lava
 			this.removeAllEffect()
 			this.life.points = this.life.MAX_LIFE
-		},0)
+		// },0)
+
+		setTimeout(() => {
+			this.isDeath = false
+		},1000)
 	}
 
 	setLightIntensity() {
@@ -390,7 +399,7 @@ export default class Player extends Events {
 		const maxI = 3.5
 		const minI = 0.4
 
-		const intensity = MathUtils.clamp(MathUtils.mapLinear(this.position.y,0,-25,maxI,minI),0.4,3.5)
+		const intensity = MathUtils.clamp(MathUtils.mapLinear(this.position.y,0,-20,maxI,minI),0.3,3.5)
 
 		// console.log(this.position.y,intensity)
 
@@ -502,13 +511,13 @@ export default class Player extends Events {
 			this.velocity.y = 0
 		}
 
-		if(newPosition.x > 60) {
-			newPosition.x -= 100
-			this.game.view.camera.position.x -= 100
-		} else if(newPosition.x < -60) {
-			newPosition.x += 100
-			this.game.view.camera.position.x += 100
-		}
+		// if(newPosition.x > 60) {
+		// 	newPosition.x -= 100
+		// 	this.game.view.camera.position.x -= 100
+		// } else if(newPosition.x < -60) {
+		// 	newPosition.x += 100
+		// 	this.game.view.camera.position.x += 100
+		// }
 
 		this.entity.body.setNextKinematicTranslation(newPosition)
 

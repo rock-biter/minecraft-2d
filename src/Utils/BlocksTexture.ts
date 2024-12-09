@@ -7,6 +7,8 @@ import sandSrc from '../textures/blocks/sand.png?url'
 import dirtSrc from '../textures/blocks/dirt.png?url'
 import stoneSrc from '../textures/blocks/stone.png?url'
 import graniteSrc from '../textures/blocks/granite.png?url'
+import dioriteSrc from '../textures/blocks/diorite.png?url'
+import andesiteSrc from '../textures/blocks/andesite.png?url'
 import snowyGrassSrc from '../textures/blocks/grass_block_snow.png?url'
 // import ladderSrc from '../textures/ladder.png?url'
 import questionMarkSrc from '../textures/question-mark.png?url'
@@ -29,6 +31,8 @@ import jungleLeavesSrc from '../textures/blocks/jungle_leaves.png?url'
 import quartzTopSrc from '../textures/blocks/quartz_block_top.png?url'
 import quartzSideSrc from '../textures/blocks/quartz_block_side.png?url'
 import quartzBottomSrc from '../textures/blocks/quartz_block_bottom.png?url'
+import limeConcreteSrc from '../textures/blocks/lime_concrete.png?url'
+limeConcreteSrc
 
 import coalOreSrc from '../textures/blocks/coal_ore.png?url'
 import ironOreSrc from '../textures/blocks/iron_ore.png?url'
@@ -46,6 +50,8 @@ interface Texture {
   path: string
 }
 
+// FIX index 20 === WATER
+// FIX index 19 === LAVA
 export const blocksTextures: Texture[] = [
   {
     name: TEXTURES.COBBLESTONE,
@@ -166,6 +172,18 @@ export const blocksTextures: Texture[] = [
   {
     name: TEXTURES.JUNGLE_PLANKS,
     path: junglePlanksSrc,
+  },
+  {
+    name: TEXTURES.DIORITE,
+    path: dioriteSrc,
+  },
+  {
+    name: TEXTURES.ANDESITE,
+    path: andesiteSrc,
+  },
+  {
+    name: TEXTURES.LIME_CONCRETE,
+    path: limeConcreteSrc,
   },
 
   // {

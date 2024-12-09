@@ -23,6 +23,11 @@ import layer__2 from '../textures/map/layers/-layer-2.png?url'
 import layer__1 from '../textures/map/layers/-layer-1.png?url'
 import layer_0 from '../textures/map/layers/layer-0.png?url'
 import layer_1 from '../textures/map/layers/layer-1.png?url'
+import layer_3 from '../textures/map/layers/layer-3.png?url'
+import layer_4 from '../textures/map/layers/layer-4.png?url'
+import layer_6 from '../textures/map/layers/layer-6.png?url'
+import layer_7 from '../textures/map/layers/layer-7.png?url'
+import layer_8 from '../textures/map/layers/layer-8.png?url'
 import layer_s from '../textures/map/layers/layer-s.png?url'
 import layer_e from '../textures/map/layers/layer-e.png?url'
 
@@ -212,6 +217,12 @@ export const mapLayersName: layersMap = {
 	'layer-0': 0,
 	'layer-1': 1,
 	'layer-2': 2,
+	'layer-3': 3,
+	'layer-4': 4,
+	'layer-5': 5,
+	'layer-6': 6,
+	'layer-7': 7,
+	'layer-8': 8,
 }
 
 // dungeon
@@ -347,6 +358,42 @@ export const mapLayers = [
 		name: 'layer-2',
 		type: 'map',
 		path: layer_1,
+		sizes: mapSize
+	},
+	{
+		name: 'layer-3',
+		type: 'map',
+		path: layer_3,
+		sizes: mapSize
+	},
+	{
+		name: 'layer-4',
+		type: 'map',
+		path: layer_4,
+		sizes: mapSize
+	},
+	{
+		name: 'layer-5',
+		type: 'map',
+		path: layer_4,
+		sizes: mapSize
+	},
+	{
+		name: 'layer-6',
+		type: 'map',
+		path: layer_6,
+		sizes: mapSize
+	},
+	{
+		name: 'layer-7',
+		type: 'map',
+		path: layer_7,
+		sizes: mapSize
+	},
+	{
+		name: 'layer-8',
+		type: 'map',
+		path: layer_8,
 		sizes: mapSize
 	},
 	// {
