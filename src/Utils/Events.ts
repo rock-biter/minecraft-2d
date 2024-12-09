@@ -1,7 +1,7 @@
 
 import { CallbackArg } from '../Types/callbacks.types'
 
-type callback = (arg?: CallbackArg) => void
+export type callback = (arg?: CallbackArg) => void
 
 interface callbacks {
 	[key: string] : callback[][]

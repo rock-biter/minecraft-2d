@@ -8,24 +8,14 @@ import ENUMS, { TEXTURES } from "../../Utils/Enums";
 
 export interface LavaBlockProps {
   position: Vector3
-  width: number
-  height: number
-  depth: number
+  width?: number
+  height?: number
 }
 
 export default class Lava extends Block {
 
-  constructor({ position = new Vector3(), width = 1, height = 1, depth }: LavaBlockProps) {
-    super({position, r: 0,textureIndex: 9,b: 0,depth, width, height})
-    
-    this.height = height
-    this.width = width
-
-    console.log('lava',width,height)
-
-    const geom = this.getGeometry()
-    this.setGeometryAttributes(geom)
-    this.entity.mesh!.geometry = geom
+  constructor({ position = new Vector3(), width = 1, height = 1 }: LavaBlockProps) {
+    super({position, r: 0,textureIndex: 9,b: 0, width, height})
 
     if(this.debug.active) {
       this.debug.on('texturePackChange',(e) => {
@@ -36,15 +26,17 @@ export default class Lava extends Block {
 
   }
 
-  get material(): ShaderMaterial | MeshStandardMaterial {
+  get material(): ShaderMaterial | MeshStandardMaterial | MeshBasicMaterial {
     return this.game.world.materials.lavaStillMaterial
   }
 
   getPhysics(): Entity {
-    console.log('lava phisics')
+    // console.log('lava phisics')
     let entity: Entity = {}
 
+    
     const {x,y,z} = this.position
+  if(z !== 0) return entity
 
     const w = this.width || 1
     const h = this.height || 1
@@ -63,10 +55,10 @@ export default class Lava extends Block {
         console.log('collision with lava',started)
 
         if(started) {
-          this.game.world.player.addEffect({ name: 'burn', value: -1 })
+          this.game.world.player.addEffect({ name: 'burn', value: -1, damage: 0.5 })
           this.game.world.player.addEffect({ name: 'slowness', value: 0 })
         } else {
-          this.game.world.player.addEffect({ name: 'burn', value: 4 })
+          this.game.world.player.addEffect({ name: 'burn', value: 4, damage: 0.5 })
           this.game.world.player.removeEffect('slowness')
 
         }
@@ -101,6 +93,7 @@ export default class Lava extends Block {
     }
 
     const geometry = BufferGeometryUtils.mergeGeometries(geometries)
+    this._geometry = geometry
 
     return geometry
   }

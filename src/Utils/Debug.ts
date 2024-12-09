@@ -16,7 +16,7 @@ export default class Debug extends Events {
 	game: Game
 
 	params = {
-		camera: ENUMS.CAMERA_FOLLOW,
+		camera: ENUMS.ORBIT_CONTROLS,
 		texturePack: ENUMS.TEXTURE_MINECRAFT_TRAILER
 	}
 

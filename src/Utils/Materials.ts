@@ -1,4 +1,4 @@
-import { Color, IUniform, MeshBasicMaterial, MeshStandardMaterial, ShaderMaterial, Texture, Vector3 } from "three"
+import { Color, IUniform, MeshBasicMaterial, MeshStandardMaterial, ShaderMaterial, SRGBColorSpace, Texture, Vector3 } from "three"
 import Game from "../Game"
 import Resources from "./Resources"
 
@@ -32,8 +32,9 @@ export default class Materials {
   blocksMaterial!: ShaderMaterial | MeshStandardMaterial
   ladderMaterial!: MeshBasicMaterial | MeshStandardMaterial
   grassMaterial!: ShaderMaterial | MeshStandardMaterial
-  lavaStillMaterial!: ShaderMaterial | MeshStandardMaterial
+  lavaStillMaterial!: ShaderMaterial | MeshStandardMaterial | MeshBasicMaterial
   fireMaterial!: ShaderMaterial | MeshBasicMaterial
+  waterMaterial!: ShaderMaterial | MeshStandardMaterial
 
   constructor() {
     this.game = new Game()
@@ -41,25 +42,26 @@ export default class Materials {
     this.uniforms.uDiffuse.value = this.resources.items['blocks'] as Texture
 
     this.initBlockMaterial()
-    this.initGrassMaterial()
+    // this.initGrassMaterial()
     this.initLadderMaterial()
     this.initLavaMaterials()
     this.initFireMaterial()
+    this.initWaterMaterial()
 
   }
 
-  initBlockMaterial() {
-    // this.blocksMaterial = new ShaderMaterial({
-		// 	uniforms: this.uniforms,
-		// 	fragmentShader: fragment,
-		// 	vertexShader: vertex,
-    //   // transparent: true,
-		// })
+  initWaterMaterial() {
+    this.waterMaterial = new MeshStandardMaterial({ 
+      color: 0x3355ff,
+      transparent: true,
+      opacity: 0.7,
+      name: 'water'
+    })
+  }
 
-    this.blocksMaterial = new MeshStandardMaterial()
-    // this.blocksMaterial.defines = {
-    //   USE_UV: true
-    // }
+  initBlockMaterial() {
+
+    this.blocksMaterial = new MeshStandardMaterial({ name: 'block'})
 
     this.blocksMaterial.onBeforeCompile = (shader) => {
 
@@ -73,6 +75,7 @@ export default class Materials {
         attribute vec3 aUv;
         uniform sampler2DArray uDiffuse;
         varying vec3 vUv;
+        varying vec3 vWPos;
         `
       )
 
@@ -81,6 +84,7 @@ export default class Materials {
         ${token}
         uniform sampler2DArray uDiffuse;
         varying vec3 vUv;
+        varying vec3 vWPos;
         `
       )
 
@@ -91,6 +95,7 @@ export default class Materials {
         ${token}
         vUv.xyz = aUv.xyz;
         vUv.y = 1. - vUv.y;
+        vWPos = vec4(modelMatrix * vec4( position, 1.0 )).xyz;
         `
       )
 
@@ -104,79 +109,91 @@ export default class Materials {
         `
       )
 
+      token = `vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse;`
+
+      shader.fragmentShader = shader.fragmentShader.replace(token,
+        /* glsl */`
+        // ${token}
+        
+        vec3 totalDiffuse = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse * (smoothstep(20.,24.,vWPos.y) * 0.72 + 0.28);
+        `
+      )
+
 
     }
   }
 
-  initGrassMaterial() {
-    // this.grassMaterial = new ShaderMaterial({
-		// 	uniforms: this.uniforms,
-		// 	fragmentShader: grassFragment,
-		// 	vertexShader: grassVertex,
-    //   transparent: true,
-		// })
+  // initGrassMaterial() {
+  //   // this.grassMaterial = new ShaderMaterial({
+	// 	// 	uniforms: this.uniforms,
+	// 	// 	fragmentShader: grassFragment,
+	// 	// 	vertexShader: grassVertex,
+  //   //   transparent: true,
+	// 	// })
 
-    this.grassMaterial = new MeshStandardMaterial()
+  //   this.grassMaterial = new MeshStandardMaterial()
+  //   this.grassMaterial.name = 'grass'
 
-    this.grassMaterial.onBeforeCompile = (shader) => {
+  //   this.grassMaterial.onBeforeCompile = (shader) => {
 
-      shader.uniforms.uDiffuse = this.uniforms.uDiffuse
-      shader.uniforms.uColor = this.uniforms.uColor
+  //     shader.uniforms.uDiffuse = this.uniforms.uDiffuse
+  //     shader.uniforms.uColor = this.uniforms.uColor
       
-      let token = '#include <common>'
+  //     let token = '#include <common>'
 
-      shader.vertexShader = shader.vertexShader.replace(token,
-        /* glsl */`
-        ${token}
-        attribute vec3 aUv;
-        uniform sampler2DArray uDiffuse;
-        varying vec3 vUv;
-        `
-      )
+  //     shader.vertexShader = shader.vertexShader.replace(token,
+  //       /* glsl */`
+  //       ${token}
+  //       attribute vec3 aUv;
+  //       uniform sampler2DArray uDiffuse;
+  //       varying vec3 vUv;
+  //       `
+  //     )
 
-      shader.fragmentShader = shader.fragmentShader.replace(token,
-        /* glsl */`
-        ${token}
-        uniform sampler2DArray uDiffuse;
-        varying vec3 vUv;
-        `
-      )
+  //     shader.fragmentShader = shader.fragmentShader.replace(token,
+  //       /* glsl */`
+  //       ${token}
+  //       uniform sampler2DArray uDiffuse;
+  //       varying vec3 vUv;
+  //       `
+  //     )
 
-      token = '#include <uv_vertex>'
+  //     token = '#include <uv_vertex>'
 
-      shader.vertexShader = shader.vertexShader.replace(token,
-        /* glsl */`
-        ${token}
-        vUv.xyz = aUv.xyz;
-        vUv.y = 1. - vUv.y;
-        `
-      )
+  //     shader.vertexShader = shader.vertexShader.replace(token,
+  //       /* glsl */`
+  //       ${token}
+  //       vUv.xyz = aUv.xyz;
+  //       vUv.y = 1. - vUv.y;
+  //       `
+  //     )
 
-      token = '#include <map_fragment>'
+  //     token = '#include <map_fragment>'
 
-      shader.fragmentShader = shader.fragmentShader.replace(token,
-        /* glsl */`
-        // ${token}
+  //     shader.fragmentShader = shader.fragmentShader.replace(token,
+  //       /* glsl */`
+  //       // ${token}
         
-        diffuseColor.rgb = texture( uDiffuse, vUv ).rgb;
+  //       diffuseColor.rgb = texture( uDiffuse, vUv ).rgb;
 
-        if(vUv.z == 8.) {
-          // top grass
-          vec4 g_color = texture( uDiffuse, vec3(0.,0.,1.) );
-          diffuseColor.rgb -= vec3(0.42);
-          diffuseColor.rgb += g_color.rgb;
-        }
-        `
-      )
+  //       if(vUv.z == 8.) {
+  //         // top grass
+  //         vec4 g_color = texture( uDiffuse, vec3(0.,0.,1.) );
+  //         diffuseColor.rgb -= vec3(0.42);
+  //         diffuseColor.rgb += g_color.rgb;
+  //       }
+  //       `
+  //     )
 
 
-    }
-  }
+  //   }
+  // }
 
   initLadderMaterial() {
     this.ladderMaterial = new MeshStandardMaterial({
       map: this.resources.items['ladder'] as Texture,
-      transparent: true
+      transparent: true,
+      name: 'ladder'
     })
   }
 
@@ -185,6 +202,7 @@ export default class Materials {
     const map = this.resources.items['lava_still'] as Texture
     map.repeat.y = 1/20
     let count = 0
+    // TODO do this on shader!!
     setInterval(() => {
       count++
       count = count % (19 * 16)
@@ -193,9 +211,22 @@ export default class Materials {
 
     this.lavaStillMaterial = new MeshStandardMaterial({
       map,
-      transparent: true,
-      opacity: 1
+      // transparent: true,
+      // opacity: 1,
+      emissiveIntensity: 0.5,
+      emissive: new Color(0xffffff),
+      emissiveMap: map,
+      name: 'lava'
     })
+
+    // this.lavaStillMaterial = new MeshBasicMaterial({
+    //   map,
+    //   // transparent: true,
+    //   // opacity: 1,
+    //   // emissiveIntensity: 0.3,
+    //   // emissive: new Color(0xffffff),
+    //   // emissiveMap: map
+    // })
   }
 
   initFireMaterial() {
@@ -214,6 +245,7 @@ export default class Materials {
       transparent: true,
       // wireframe: true,
       opacity: 1,
+      name: 'fire'
     })
   }
 

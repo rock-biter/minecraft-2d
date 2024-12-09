@@ -27,12 +27,16 @@ export default class ChestBlock extends Block {
     value: 0
   }
 
-  constructor({ position = new Vector3(), r, textureIndex, b, depth, content}: ChestBlockProps) {
+  constructor({ position = new Vector3(), r, textureIndex, b = 0, content}: ChestBlockProps) {
 
-    super({ position, r, textureIndex, b: 0, depth})
+    super({ position, r, textureIndex, b: 0, merge: false})
 
     this.contentType = content
     this.contentNumber = b
+
+    // console.log('chest',this)
+    // this.entity.mesh = this.getMesh()
+    // this.scene.add(this.entity.mesh)
 
     this.entity.mesh!.geometry.translate(0,-0.1,0)
 
@@ -42,15 +46,13 @@ export default class ChestBlock extends Block {
 
   getPhysics(): Entity {
 
-    let entity: Entity = {}
-
     const {x,y,z} = this.position
 
     const bodyDesc = RAPIER.RigidBodyDesc.fixed()
 			.setTranslation(x, y + 0.1, z)
 		const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.4, 0.5).setActiveEvents(ActiveEvents['COLLISION_EVENTS'])
     .setActiveCollisionTypes(ActiveCollisionTypes['ALL'])
-		entity = this.physics.addEntity(bodyDesc, colliderDesc)
+		let entity = this.physics.addEntity(bodyDesc, colliderDesc)
 
     const sensor = RAPIER.ColliderDesc.cuboid(0.5, 0.05, 0.5).
     setSensor(true).setTranslation(x, y - 0.45, z)

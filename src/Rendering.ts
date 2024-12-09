@@ -1,4 +1,4 @@
-import { OrthographicCamera, PerspectiveCamera, Scene, ToneMapping, WebGLRenderer, VSMShadowMap } from 'three'
+import { OrthographicCamera, PerspectiveCamera, Scene, ToneMapping, WebGLRenderer, VSMShadowMap, ReinhardToneMapping, CineonToneMapping, AgXToneMapping, ACESFilmicToneMapping, LinearToneMapping, NeutralToneMapping } from 'three'
 import Game from './Game'
 import Viewport from './Viewport'
 import Debug from './Utils/Debug'
@@ -18,7 +18,7 @@ export default class Rendering {
 		this.game = new Game()
 		this.debug = this.game.debug
 		this.viewport = this.game.viewport
-		this.camera = this.game.view.camera
+		this.camera = this.debug.active && this.debug.params.camera === ENUMS.ORBIT_CONTROLS ? this.game.view.debugCamera : this.game.view.camera
 		this.scene = this.game.world.scene
 		this.instance = new WebGLRenderer({
 			canvas: this.game.domElement,
@@ -27,7 +27,8 @@ export default class Rendering {
 		this.instance.shadowMap.enabled = true
 		this.instance.shadowMap.type = VSMShadowMap;
 
-		// this.instance.toneMapping = THREE.LinearToneMapping
+		this.instance.toneMapping = NeutralToneMapping
+		this.instance.toneMappingExposure = 1.6
 
 
 		this.resize()
