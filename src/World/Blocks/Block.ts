@@ -17,6 +17,7 @@ export interface BlockProps {
   depth?: number
   height?: number
   width?: number
+  blockDepth?: number
   merge?: boolean
 }
 
@@ -35,17 +36,19 @@ export default class Block {
   entity!: Entity
   width: number
   height: number
+  blockDepth: number
 
   _geometry?: BufferGeometry
   merge = true
 
-  constructor({ position = new Vector3(), r, textureIndex, b = 0, depth, width = 1, height = 1, merge = true }: BlockProps) {
+  constructor({ position = new Vector3(), r, textureIndex, b = 0, depth, width = 1, height = 1, blockDepth = 1, merge = true }: BlockProps) {
 
     this.merge = merge
     this.game = new Game()
 
     this.width = width
     this.height = height
+    this.blockDepth = blockDepth
 
     this.position = position
     // this.position.z = 
@@ -126,7 +129,7 @@ export default class Block {
     if(bodyDesc) {
       const { x, y, z } = this.position
       bodyDesc.setTranslation(x, y, z)
-      const colliderDesc = RAPIER.ColliderDesc.cuboid(0.5, 0.5, 0.5)
+      const colliderDesc = RAPIER.ColliderDesc.cuboid(this.width/2, this.width/2, this.blockDepth/2)
       entity = this.physics.addEntity(bodyDesc, colliderDesc)
     }
 
@@ -149,7 +152,7 @@ export default class Block {
 
     // const bright = MathUtils.mapLinear(this.b,0,200,-1,1)
 
-    const box = new BoxGeometry(1, 1,1)
+    const box = new BoxGeometry(this.width, this.height,this.blockDepth)
     this.setGeometryAttributes(box)
     this._geometry = box
 

@@ -183,6 +183,7 @@ export default class Enemy extends Events {
     
     if(!this.entity || !this.entity?.collider || !this.entity.sensor) return
 
+
     if(!started) {
       if(this.damageTimer) {
         clearInterval(this.damageTimer)
@@ -230,6 +231,9 @@ export default class Enemy extends Events {
 
   destroy() {
 
+    clearInterval(this.damageTimer)
+    this.damageTimer = undefined
+    
     this.trigger('beforeDestroy',true)
     this.physics.removeEntity(this.entity)
 
