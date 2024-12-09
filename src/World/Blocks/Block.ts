@@ -1,4 +1,4 @@
-import { BoxGeometry, BufferAttribute, BufferGeometry, MathUtils, Mesh, MeshStandardMaterial, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
+import { BoxGeometry, BufferAttribute, BufferGeometry, MathUtils, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
 import Game from "../../Game";
 import Resources from "../../Utils/Resources";
 import Debug from "../../Utils/Debug";
@@ -11,19 +11,22 @@ import { PaneArgs } from "../../Types/callbacks.types";
 
 export interface BlockProps {
   position: Vector3,
-  r: number,
-  textureIndex: number,
-  b: number,
-  depth: number
+  r?: number,
+  textureIndex: number | number[],
+  b?: number,
+  depth?: number
   height?: number
   width?: number
+  merge?: boolean
 }
 
 export default class Block {
 
+  static BLOCKS: Block[] = []
+
   position: Vector3
   r: number
-  textureIndex: number
+  textureIndex: number | number[]
   b: number
   depth: number
 
@@ -33,20 +36,29 @@ export default class Block {
   width: number
   height: number
 
-  constructor({ position = new Vector3(), r, textureIndex, b, depth, width = 1, height = 1 }: BlockProps) {
+  _geometry?: BufferGeometry
+  merge = true
 
+  constructor({ position = new Vector3(), r, textureIndex, b = 0, depth, width = 1, height = 1, merge = true }: BlockProps) {
+
+    this.merge = merge
     this.game = new Game()
 
     this.width = width
     this.height = height
 
     this.position = position
-    this.r = r
+    // this.position.z = 
+    this.r = r ?? this.position.z === 0 ? 1 : 0
     this.textureIndex = textureIndex
     this.b = b
-    this.depth = depth
+    this.depth = depth ?? this.position.z
 
     this.create()
+
+    if(this.merge) {
+      Block.BLOCKS.push(this)
+    }
 
   }
 
@@ -66,34 +78,42 @@ export default class Block {
     return this.game.world.scene
   }
 
-  get material(): ShaderMaterial | MeshStandardMaterial {
+  get material(): ShaderMaterial | MeshStandardMaterial | MeshBasicMaterial {
     return this.game.world.materials.blocksMaterial
   }
 
   get geometry(): BufferGeometry | undefined {
-    return this.entity.mesh?.geometry
+    return this._geometry || this.entity.mesh?.geometry
   }
 
   create() {
     // console.log('new block')
-    const entity = this.getPhysics()
-    const mesh = this.getMesh()
+    this.entity = this.getPhysics()
 
-    mesh.position.copy(this.position)
-    mesh.castShadow = true
-    mesh.receiveShadow = true
-    entity.mesh = mesh
+    // console.log('merge',this.merge)
 
-    this.scene.add(entity.mesh)
-
-    if(this.debug.active) {
-      this.debug.on('texturePackChange',(e) => {
-        const event = e as PaneArgs
-        mesh.material = this.getMaterial(event.value)
-      })
+    if(this.merge) {
+      this.getGeometry()
+    } else {
+      console.log('merge false')
+      const mesh = this.getMesh()
+  
+      mesh.position.copy(this.position)
+      mesh.castShadow = true
+      mesh.receiveShadow = true
+      this.entity.mesh = mesh
+  
+      this.scene.add(this.entity.mesh)
     }
 
-    this.entity = entity
+    // if(this.debug.active) {
+    //   this.debug.on('texturePackChange',(e) => {
+    //     const event = e as PaneArgs
+    //     mesh.material = this.getMaterial(event.value)
+    //   })
+    // }
+
+    // this.entity = entity
   }
 
   getPhysics() {
@@ -117,7 +137,6 @@ export default class Block {
   getMesh() {
 
     const geom = this.getGeometry()
-    this.setGeometryAttributes(geom)
 
     return new Mesh(
 			geom,
@@ -131,12 +150,15 @@ export default class Block {
     // const bright = MathUtils.mapLinear(this.b,0,200,-1,1)
 
     const box = new BoxGeometry(1, 1,1)
+    this.setGeometryAttributes(box)
+    this._geometry = box
 
     return box
   }
 
   setGeometryAttributes(geometry: BufferGeometry) {
     const uvAttribute = geometry.getAttribute('uv')
+    const normalAttribute = geometry?.getAttribute('normal') as BufferAttribute
     // console.log(uvAttribute)
     const uvCount = uvAttribute.count
     const uvSize = 3
@@ -151,11 +173,41 @@ export default class Block {
     const opacityArray = new Float32Array(uvCount * 1)
     const opacityAttribute = new BufferAttribute(opacityArray, 1)
 
+    const [t, r, f, l, bk, b] = this.getTextureIndexes()
+
     for (let i = 0; i < uvCount; i++) {
       const u = uvAttribute.getX(i)
       const v = uvAttribute.getY(i)
+      const y = normalAttribute.getY(i)
+      const x = normalAttribute.getX(i)
+      const z = normalAttribute.getZ(i)
 
-      newUvAttribute.setXYZ(i, u, v, this.textureIndex)
+      newUvAttribute.setXYZ(i, u, v, 0)
+
+      if(y === 1) {
+        newUvAttribute.setZ(i, t)
+      }
+
+      if(y === -1) {
+        newUvAttribute.setZ(i, b)
+      }
+
+      if(x === 1) {
+        newUvAttribute.setZ(i, r)
+      }
+
+      if(x === -1) {
+        newUvAttribute.setZ(i, l)
+      }
+
+      if(z === 1) {
+        newUvAttribute.setZ(i, f)
+      }
+
+      if(z === -1) {
+        newUvAttribute.setZ(i, bk)
+      }
+
       // brightAttribute.setX(i,bright)
       brightAttribute.setX(i,0)
       // opacityAttribute.setX(i,opacity / 255)
@@ -171,7 +223,41 @@ export default class Block {
     geometry.setAttribute('aBright', brightAttribute)
     geometry.setAttribute('aOpacity', opacityAttribute)
 
-    geometry.translate(0,0,this.depth)
+    // geometry.translate(0,0,this.depth)
+  }
+
+  getTextureIndexes(): number[] {
+
+    let t, r, f, l, bk, b
+
+    if(Array.isArray(this.textureIndex)) {
+
+      switch(this.textureIndex.length) {
+        case 2:
+          t = this.textureIndex[0]
+          b = r = l = f = bk = this.textureIndex[1]
+          break
+        case 3:
+          t = this.textureIndex[0]
+          r = l = f = bk = this.textureIndex[1]
+          b = this.textureIndex[2]
+          break
+        case 6:
+          t = this.textureIndex[0]
+          r = this.textureIndex[1]
+          f = this.textureIndex[2]
+          l = this.textureIndex[3]
+          bk = this.textureIndex[4]
+          b = this.textureIndex[5]
+          break
+      } 
+
+    } else {
+      t = b = r = l = f = bk = this.textureIndex
+    }
+
+    return [t, r, f, l, bk, b] as number[]
+
   }
 
   getMaterial(type?: string) {

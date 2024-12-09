@@ -58,17 +58,17 @@ export default class View extends Events {
 			0.1,
 			300
 		)
-		this.camera.position.set(0, 5, 15)
+		this.camera.position.set(0, 7, 17)
 		this.scene.add(this.camera)
 
 		if(this.debug.active) {
 			this.debugCamera = new PerspectiveCamera(
-				45,
+				60,
 				this.viewport.width / this.viewport.height,
 				0.1,
 				300
 			)
-			this.debugCamera.position.set(-10, 10, 20)
+			this.debugCamera.position.set(0, 10, 15)
 			this.scene.add(this.debugCamera)
 		}
 	}
@@ -110,7 +110,7 @@ export default class View extends Events {
 			this.camera.position.lerp(_V,this.time.delta * 0.003)
 			const {x,y,z} = this.world.player.entity.mesh.position
 
-			this.camera.lookAt(x,y,z)
+			this.camera.lookAt(x,y+2,z)
 		}
 	}
 }

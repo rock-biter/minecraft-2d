@@ -1,4 +1,4 @@
-import { Mesh, MeshBasicMaterial, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
+import { Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, Scene, ShaderMaterial, Vector3 } from "three";
 import Game from "../../Game";
 import { Entity } from "../../Types/entity.types";
 import Debug from "../../Utils/Debug";
@@ -30,8 +30,8 @@ export default class Sprite {
     return this.game.world.scene
   }
 
-  get material(): MeshBasicMaterial | ShaderMaterial {
-    return new MeshBasicMaterial({ color: 0xffffff })
+  get material(): MeshStandardMaterial | ShaderMaterial {
+    return new MeshStandardMaterial({ color: 0xffffff, transparent: true })
   }
 
   create() {
